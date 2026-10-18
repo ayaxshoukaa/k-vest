@@ -10,6 +10,8 @@ servers:
 tags:
   - name: health
     description: Health operations
+  - name: market
+    description: Educational Kuwait market data
 paths:
   /healthz:
     get:
@@ -24,6 +26,18 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+  /market/quotes:
+    get:
+      operationId: getMarketQuotes
+      tags: [market]
+      summary: Get delayed Kuwait stock quotes for the educational demo
+      responses:
+        "200":
+          description: Quotes, including stale last-known values when a refresh fails
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MarketQuotesResponse"
 components:
   schemas:
     HealthStatus:
@@ -33,4 +47,51 @@ components:
           type: string
       required:
         - status
+    MarketQuote:
+      type: object
+      properties:
+        symbol:
+          type: string
+        companyName:
+          type: string
+        priceKwd:
+          type: ["number", "null"]
+        changeKwd:
+          type: ["number", "null"]
+        changePercent:
+          type: ["number", "null"]
+        marketTime:
+          type: ["string", "null"]
+          format: date-time
+        updatedAt:
+          type: ["string", "null"]
+          format: date-time
+        stale:
+          type: boolean
+      required:
+        - symbol
+        - companyName
+        - priceKwd
+        - changeKwd
+        - changePercent
+        - marketTime
+        - updatedAt
+        - stale
+    MarketQuotesResponse:
+      type: object
+      properties:
+        refreshStatus:
+          type: string
+          enum: [fresh, stale, unavailable]
+        lastUpdatedAt:
+          type: ["string", "null"]
+          format: date-time
+        quotes:
+          type: array
+          items:
+            $ref: "#/components/schemas/MarketQuote"
+      required:
+        - refreshStatus
+        - lastUpdatedAt
+        - quotes
 

@@ -11,4 +11,4 @@ For the private educational class demo, use Yahoo Finance through `yahoo-finance
 
 **Why:** the user clarified this is a private class demonstration and explicitly chose Yahoo Finance for the prototype, with a future move to licensed data.
 
-**How to apply:** keep Yahoo Finance server-side and scope it to the demo. Display the source, delay, and educational purpose; preserve stale last-good values if refreshes fail. Use a licensed vendor before making market data public or commercial.
+**How to apply:** keep Yahoo Finance server-side and scope it to the demo. Yahoo returns Kuwait prices in KWF (fils); normalize by 1,000 to KWD. Display the source, delay, and educational purpose; preserve stale last-good values if refreshes fail. Use a licensed vendor before making market data public or commercial.
