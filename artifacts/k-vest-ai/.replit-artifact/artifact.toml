@@ -1,0 +1,28 @@
+kind = "web"
+previewPath = "/"
+title = "K-vest AI"
+description = "An investing education website for beginners in Kuwait. Starting with a KWD scenario calculator that estimates possible outcomes from user-entered assumptions, without presenting them as predictions or financial advice."
+version = "1.0.0"
+id = "artifacts/k-vest-ai"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 20904
+
+[services.development]
+run = "pnpm --filter @workspace/k-vest-ai run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/k-vest-ai", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/k-vest-ai/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "20904"
+BASE_PATH = "/"

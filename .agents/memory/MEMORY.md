@@ -1,0 +1,1 @@
+- [K-vest AI scope](kvest-ai-scope.md) — build the MVP incrementally; do not invent stock data or extend beyond the stated features.
