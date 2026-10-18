@@ -7,6 +7,12 @@ K-vest AI is an investing intelligence and education website for beginner invest
 
 Build one feature fully before moving to the next. Keep increments small and explain each change. Do not add features outside the MVP.
 
+Preserve the current K-vest AI visual design when implementing features; do not restyle existing pages unless the user explicitly asks.
+
+**Why:** the user asked to keep the website's existing design unchanged.
+
+**How to apply:** reuse the existing colors, typography, and components. Keep feature work scoped to the requested screen or interaction.
+
 For the private educational class demo, use Yahoo Finance through `yahoo-finance2` on the backend only for Kuwait `.KW` quotes. Cache briefly and use the last successful quote as a clearly marked stale fallback; never invent a price. Show the requested delayed/educational note. Before any public or commercial launch, switch to a licensed provider through Boursa Kuwait.
 
 **Why:** the user clarified this is a private class demonstration and explicitly chose Yahoo Finance for the prototype, with a future move to licensed data.
