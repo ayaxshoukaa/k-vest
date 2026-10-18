@@ -29,6 +29,7 @@ export default function Home() {
           </Link>
           <nav className="kv-links" aria-label="Primary">
             {links.map((l) => <a key={l.href} href={l.href} data-testid={`link-nav-${l.href.slice(1)}`}>{l.label}</a>)}
+            <Link href="/sign-in" data-testid="link-nav-sign-in">Sign in</Link>
           </nav>
           <a href="#calculator" className="kv-btn kv-nav-cta" data-testid="button-nav-calculator"><span>Try the calculator</span><ArrowRight size={16} /></a>
           <button type="button" className="kv-burger" aria-label={open ? 'Close menu' : 'Open menu'} aria-expanded={open} onClick={() => setOpen(!open)} data-testid="button-menu">
@@ -38,6 +39,7 @@ export default function Home() {
         {open && (
           <nav className="kv-drawer" aria-label="Mobile">
             {links.map((l) => <a key={l.href} href={l.href} onClick={() => setOpen(false)} data-testid={`link-mobile-${l.href.slice(1)}`}>{l.label}</a>)}
+              <Link href="/sign-in" onClick={() => setOpen(false)} data-testid="link-mobile-sign-in">Sign in</Link>
           </nav>
         )}
       </header>
