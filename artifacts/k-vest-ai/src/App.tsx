@@ -81,7 +81,7 @@ const clerkAppearance = {
     logoBox: 'rounded-xl',
     logoImage: 'object-contain',
     socialButtonsBlockButton: 'rounded-xl border-[#594139] bg-[#1a1f31] hover:bg-[#24293c]',
-    formButtonPrimary: 'min-h-11 rounded-xl bg-gradient-to-r from-[#ff7138] to-[#ff925c] font-semibold text-[#1b1110] shadow-lg shadow-[#ff7138]/20 hover:brightness-110',
+    formButtonPrimary: 'kv-auth__login-button min-h-11 rounded-xl bg-gradient-to-r from-[#ff7138] to-[#ff925c] font-semibold text-[#1b1110] shadow-lg shadow-[#ff7138]/20 hover:brightness-110',
     formFieldInput: 'min-h-11 rounded-xl border-[#594139] bg-[#080d1f] text-[#dde1fb] placeholder:text-[#929db7] focus:ring-2 focus:ring-[#ff7138]/40',
     footerAction: 'border-t border-[#594139]/60',
     dividerLine: 'bg-[#594139]/70',
@@ -249,6 +249,8 @@ function ClerkRoutes() {
           start: {
             title: 'Welcome back',
             subtitle: 'Sign in to continue learning with K-vest AI',
+            actionText: 'New to K-vest AI?',
+            actionLink: 'Create account',
           },
         },
         signUp: {

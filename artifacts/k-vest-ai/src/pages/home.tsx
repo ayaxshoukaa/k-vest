@@ -244,7 +244,7 @@ export default function Home() {
       <footer className="kv-foot">
         <div className="kv-wrap">
           <div><strong>K-vest AI</strong> | Learn at your own pace.</div>
-          <p>Data from Yahoo Finance, delayed, for educational purposes only. Not financial advice or investment recommendations. Fees and taxes are not included in the calculator.</p>
+          <p>For education only. Not financial advice. Data from Yahoo Finance, delayed, for educational purposes only. Not financial advice or investment recommendations. Fees and taxes are not included in the calculator.</p>
         </div>
       </footer>
     </div>
