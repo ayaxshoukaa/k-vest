@@ -52,15 +52,11 @@
 }
 
 .kv-auth__mark {
+  display: block;
   width: 36px;
   height: 36px;
-  display: grid;
-  place-items: center;
-  border-radius: 9px;
-  color: #fff4ef;
-  background: linear-gradient(145deg, #ff7138, #e85228);
-  font: 800 18px/1 var(--app-font-serif, 'Manrope', sans-serif);
-  box-shadow: 0 7px 18px rgba(255, 113, 56, 0.2);
+  flex: 0 0 auto;
+  filter: drop-shadow(0 5px 10px rgba(255, 113, 56, 0.16));
 }
 
 .kv-auth__brand-name {

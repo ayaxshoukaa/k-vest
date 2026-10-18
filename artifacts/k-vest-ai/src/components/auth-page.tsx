@@ -2,6 +2,7 @@ import { type ReactNode } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { ArrowLeft } from 'lucide-react';
 import { Link } from 'wouter';
+import { BrandMark } from '@/components/brand-mark';
 import './auth-page.css';
 
 type AuthPageProps = {
@@ -23,7 +24,7 @@ export function AuthPage({ mode, children }: AuthPageProps) {
     <div className="kv-auth" data-testid="page-auth">
       <header className="kv-auth__header">
         <Link href="/" className="kv-auth__brand" aria-label="K-vest AI home" data-testid="link-auth-home">
-          <span className="kv-auth__mark" aria-hidden="true">K</span>
+          <BrandMark className="kv-auth__mark" />
           <span>
             <span className="kv-auth__brand-name">K-vest AI</span>
             <span className="kv-auth__brand-caption">Kuwait investing research</span>

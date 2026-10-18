@@ -15,6 +15,7 @@ import { shadcn } from '@clerk/themes';
 import { Link, Redirect, Route, Switch, useLocation, Router as WouterRouter } from 'wouter';
 import { ErrorBoundary } from '@/components/error-boundary';
 import { AuthPage } from '@/components/auth-page';
+import { BrandMark } from '@/components/brand-mark';
 import { Toaster } from '@/components/ui/toaster';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import Home from '@/pages/home';
@@ -178,7 +179,7 @@ function SignedInPortal() {
     <div className="kv-auth" data-testid="page-account">
       <header className="kv-auth__header">
         <Link href="/" className="kv-auth__brand" data-testid="link-account-home">
-          <span className="kv-auth__mark" aria-hidden="true">K</span>
+          <BrandMark className="kv-auth__mark" />
           <span>
             <span className="kv-auth__brand-name">K-vest AI</span>
             <span className="kv-auth__brand-caption">Kuwait investing research</span>

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link } from 'wouter';
 import { ArrowRight, Calculator, Menu, X, ScanSearch, Star, ListChecks, Sparkles, ShieldCheck, Database } from 'lucide-react';
 import { ScenarioCalculator } from '@/components/scenario-calculator';
+import { BrandMark } from '@/components/brand-mark';
 
 const links = [
   { href: '#calculator', label: 'Calculator' },
@@ -24,7 +25,7 @@ export default function Home() {
       <header className="kv-nav">
         <div className="kv-nav-in">
           <Link href="/" className="kv-brand" aria-label="K-vest AI home" data-testid="link-home">
-            <span className="kv-mark" aria-hidden="true">K</span>
+            <BrandMark className="kv-mark" />
             <span><span className="kv-bname">K-vest AI</span><span className="kv-bcap">Kuwait investing research</span></span>
           </Link>
           <nav className="kv-links" aria-label="Primary">
