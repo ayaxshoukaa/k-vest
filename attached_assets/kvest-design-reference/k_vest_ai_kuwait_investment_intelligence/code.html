@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_standard" name="shell-type"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600;700&amp;family=Manrope:wght@600;700;800&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{"colors":{"surface-container-lowest":"#080d1f","on-secondary-fixed-variant":"#004398","inverse-primary":"#a93800","on-error":"#690005","tertiary-fixed":"#43ffbb","error-container":"#93000a","on-primary-fixed-variant":"#812900","on-error-container":"#ffdad6","surface-container-highest":"#2f3448","on-tertiary":"#003825","surface-bright":"#34384c","on-tertiary-fixed":"#002114","on-secondary-container":"#d5e0ff","on-tertiary-container":"#003c28","on-surface-variant":"#e1bfb4","primary-fixed-dim":"#ffb59b","surface-variant":"#2f3448","primary-fixed":"#ffdbcf","inverse-on-surface":"#2b3043","on-secondary":"#002d6c","on-tertiary-fixed-variant":"#005138","outline":"#a88a80","surface-container":"#1a1f31","secondary-container":"#045ecf","on-primary-fixed":"#380d00","secondary-fixed":"#d9e2ff","inverse-surface":"#dde1fb","tertiary-container":"#00b27e","secondary-fixed-dim":"#afc6ff","primary":"#ffb59b","secondary":"#afc6ff","surface":"#0d1225","on-primary":"#5b1a00","surface-tint":"#ffb59b","background":"#0d1225","tertiary":"#00e2a0","tertiary-fixed-dim":"#00e2a0","error":"#ffb4ab","surface-container-low":"#161b2d","outline-variant":"#594139","surface-dim":"#0d1225","on-surface":"#dde1fb","on-secondary-fixed":"#001a43","on-background":"#dde1fb","on-primary-container":"#611d00","primary-container":"#ff7138","surface-container-high":"#24293c"},"borderRadius":{"DEFAULT":"0.125rem","lg":"0.25rem","xl":"0.5rem","full":"0.75rem"},"spacing":{"gutter-mobile":"0.75rem","gutter-desktop":"1.5rem","margin-mobile":"1rem","gutter":"1rem","space-md":"1rem","margin":"1.5rem","space-xl":"2.5rem","margin-desktop":"2.5rem","space-sm":"0.5rem","space-lg":"1.5rem","space-xs":"0.25rem"},"fontFamily":{"display-hero":["Manrope"],"body-md":["Inter"],"body-sm":["Inter"],"headline-sm":["Manrope"],"headline-lg":["Manrope"],"mono-data-lg":["JetBrains Mono"],"headline-lg-mobile":["Manrope"],"body-lg":["Inter"],"label-caps":["Inter"],"mono-data-md":["JetBrains Mono"],"headline-md":["Manrope"]},"fontSize":{"display-hero":["48px",{"lineHeight":"56px","letterSpacing":"-0.03em","fontWeight":"800"}],"body-md":["14px",{"lineHeight":"20px","fontWeight":"400"}],"body-sm":["12px",{"lineHeight":"18px","fontWeight":"400"}],"headline-sm":["18px",{"lineHeight":"26px","letterSpacing":"-0.01em","fontWeight":"600"}],"headline-lg":["32px",{"lineHeight":"40px","letterSpacing":"-0.02em","fontWeight":"700"}],"mono-data-lg":["18px",{"lineHeight":"24px","letterSpacing":"-0.02em","fontWeight":"600"}],"headline-lg-mobile":["26px",{"lineHeight":"34px","letterSpacing":"-0.01em","fontWeight":"700"}],"body-lg":["16px",{"lineHeight":"24px","fontWeight":"400"}],"label-caps":["10px",{"lineHeight":"14px","letterSpacing":"0.08em","fontWeight":"700"}],"mono-data-md":["13px",{"lineHeight":"18px","letterSpacing":"-0.01em","fontWeight":"500"}],"headline-md":["22px",{"lineHeight":"30px","letterSpacing":"-0.015em","fontWeight":"600"}]}}}}</script></head><body class="bg-surface font-body-md text-body-md text-on-surface antialiased selection:bg-primary-container selection:text-on-primary-container min-h-screen"><header class="fixed top-0 left-0 right-0 w-full z-50 bg-surface-container-lowest/85 backdrop-blur-xl border-b border-outline-variant/30 shadow-[0_4px_24px_rgba(8,13,31,0.6)]"><div class="h-20 w-full px-margin-desktop flex items-center justify-between gap-space-md"><div class="flex items-center gap-space-md shrink-0"><a class="flex items-center gap-space-sm group focus:outline-none" data-path="home" href="#"><img alt="K-Vest Logo" class="h-8 w-auto object-contain transition-transform group-hover:scale-105" src="https://lh3.googleusercontent.com/aida/AEtjO1VyQLwnhYrQt7H_kbpwUZs6VsHJt9gNGu2dZ-A23f-7y3BcVQ18a-w1ruwE9C9zDNXfHDxJAW8PYYvMeNjzEzRwADw_OyktEdlWT3utbxNDMAz3ugJHUQH3yAcwczNmCIprm9uEIA9zKOoyO03AFOptV9nZraanjOscggqCwpBtCCpx3U8QdPUGF_0_ZOMEXuaBbO9BJZ1SG7uAKo3bd1bwAKKmbGSaPorG6TPbi3bfx6hjjNjY0cPcjyVv"/><div class="flex flex-col"><span class="font-headline-sm text-headline-sm font-bold tracking-tight text-on-surface leading-none">K-VEST</span><span class="font-label-caps text-label-caps uppercase tracking-wider text-primary mt-0.5 leading-none">Kuwait Intelligence</span></div></a></div><nav class="hidden xl:flex items-center gap-space-lg" data-active-classes="text-primary font-semibold"><a aria-current="page" class="transition-colors py-1 text-primary font-semibold" data-path="home" href="#">Home</a><a class="font-body-md text-body-md text-on-surface-variant hover:text-on-surface transition-colors py-1" data-path="platform" href="#">Platform</a><a class="font-body-md text-body-md text-on-surface-variant hover:text-on-surface transition-colors py-1" data-path="how-it-works" href="#">How It Works</a><a class="font-body-md text-body-md text-on-surface-variant hover:text-on-surface transition-colors py-1" data-path="intelligence" href="#">Intelligence</a><a class="font-body-md text-body-md text-on-surface-variant hover:text-on-surface transition-colors py-1" data-path="our-vision" href="#">Our Vision</a><a class="font-body-md text-body-md text-on-surface-variant hover:text-on-surface transition-colors py-1" data-path="why-k-vest" href="#">Why K-Vest</a></nav><div class="flex items-center gap-space-sm shrink-0"><div class="hidden 2xl:flex items-center gap-space-xs px-2.5 py-1.5 rounded-full bg-surface-container-low border border-outline-variant/40"><span class="relative flex h-2 w-2"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-tertiary opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 bg-tertiary"></span></span><span class="font-mono-data-md text-mono-data-md text-on-surface-variant"><span class="text-tertiary font-medium">Boursa Kuwait:</span> Closed (Pre-Market 09:00 AST)</span></div><button class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface-container hover:bg-surface-container-high border border-outline-variant/30 text-on-surface font-body-sm text-body-sm transition-all focus:outline-none" type="button"><span class="material-symbols-outlined text-[16px] text-primary">language</span><span>العربية / EN</span></button><a class="hidden sm:flex items-center gap-space-xs px-4 py-2 rounded-lg bg-primary-container hover:bg-primary-container/90 text-on-primary-container font-headline-sm text-body-md font-bold transition-all shadow-[0_0_16px_rgba(255,113,56,0.35)] focus:outline-none" data-path="platform" href="#"><span>Explore the Platform</span><span class="material-symbols-outlined text-[18px]">arrow_forward</span></a><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="w-full pt-20 bg-surface min-h-[calc(100vh-20rem)]"><div class="flex flex-col w-full text-on-surface overflow-x-hidden selection:bg-primary-container selection:text-on-primary-container font-body-md" id="kvest-root">
+<!-- TOP TICKER TAPE / MARQUEE -->
+<section class="w-full bg-surface-container-lowest/90 backdrop-blur-md border-b border-outline-variant/30 py-2.5 px-margin-desktop overflow-hidden relative z-20">
+<div class="flex items-center justify-between gap-space-md max-w-7xl mx-auto">
+<div class="flex items-center gap-space-sm shrink-0">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-surface-container-high text-primary font-mono-data-md text-body-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-primary animate-ping"></span>
+<span data-lang-ar="السوق الأول - بورصة الكويت" data-lang-en="BOURSA KUWAIT PREMIER">BOURSA KUWAIT PREMIER</span>
+</span>
+<span class="font-mono-data-md text-body-sm text-tertiary hidden sm:inline-flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">trending_up</span> BKX 8,142.60 (+0.44%)
+        </span>
+</div>
+<!-- Marquee Flow -->
+<div class="flex items-center gap-space-lg overflow-x-auto no-scrollbar py-0.5 text-mono-data-md font-mono-data-md text-body-sm">
+<div class="flex items-center gap-space-xs shrink-0 px-2.5 py-1 rounded bg-surface-container/60 hover:bg-surface-container transition-colors">
+<span class="text-on-surface font-semibold">NBK</span>
+<span class="text-on-surface-variant font-normal">982 fils</span>
+<span class="text-tertiary flex items-center font-bold">+1.22%</span>
+<span class="px-1.5 py-0.2 rounded text-[10px] bg-tertiary/10 text-tertiary">BULLISH</span>
+</div>
+<div class="flex items-center gap-space-xs shrink-0 px-2.5 py-1 rounded bg-surface-container/60 hover:bg-surface-container transition-colors">
+<span class="text-on-surface font-semibold">KFH</span>
+<span class="text-on-surface-variant font-normal">768 fils</span>
+<span class="text-tertiary flex items-center font-bold">+0.79%</span>
+<span class="px-1.5 py-0.2 rounded text-[10px] bg-tertiary/10 text-tertiary">ACCUM</span>
+</div>
+<div class="flex items-center gap-space-xs shrink-0 px-2.5 py-1 rounded bg-surface-container/60 hover:bg-surface-container transition-colors">
+<span class="text-on-surface font-semibold">ZAIN</span>
+<span class="text-on-surface-variant font-normal">512 fils</span>
+<span class="text-error flex items-center font-bold">-0.39%</span>
+<span class="px-1.5 py-0.2 rounded text-[10px] bg-secondary/15 text-secondary">FAIR VALUE</span>
+</div>
+<div class="flex items-center gap-space-xs shrink-0 px-2.5 py-1 rounded bg-surface-container/60 hover:bg-surface-container transition-colors">
+<span class="text-on-surface font-semibold">AGLTY</span>
+<span class="text-on-surface-variant font-normal">625 fils</span>
+<span class="text-tertiary flex items-center font-bold">+2.12%</span>
+<span class="px-1.5 py-0.2 rounded text-[10px] bg-tertiary/10 text-tertiary">MOMENTUM</span>
+</div>
+<div class="flex items-center gap-space-xs shrink-0 px-2.5 py-1 rounded bg-surface-container/60 hover:bg-surface-container transition-colors">
+<span class="text-on-surface font-semibold">BOUBYAN</span>
+<span class="text-on-surface-variant font-normal">640 fils</span>
+<span class="text-tertiary flex items-center font-bold">+0.63%</span>
+<span class="px-1.5 py-0.2 rounded text-[10px] bg-tertiary/10 text-tertiary">NEUTRAL</span>
+</div>
+<div class="flex items-center gap-space-xs shrink-0 px-2.5 py-1 rounded bg-surface-container/60 hover:bg-surface-container transition-colors">
+<span class="text-on-surface font-semibold">GBK</span>
+<span class="text-on-surface-variant font-normal">295 fils</span>
+<span class="text-tertiary flex items-center font-bold">+0.34%</span>
+<span class="px-1.5 py-0.2 rounded text-[10px] bg-secondary/15 text-secondary">STABLE</span>
+</div>
+</div>
+<!-- Quick Language Control Pill -->
+<div class="shrink-0 flex items-center">
+<button class="group flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container hover:bg-surface-container-high border border-outline-variant/40 text-primary hover:text-on-surface font-mono-data-md text-body-sm transition-all shadow-sm" id="langToggleBtn" type="button">
+<span class="material-symbols-outlined text-[15px] group-hover:rotate-180 transition-transform">sync_alt</span>
+<span class="font-semibold" id="currentLangLabel">العربية</span>
+</button>
+</div>
+</div>
+</section>
+<!-- HERO SECTION -->
+<section class="relative w-full pt-10 pb-20 px-margin-desktop overflow-hidden">
+<!-- Atmospheric glows -->
+<div class="absolute top-1/4 -left-48 w-96 h-96 rounded-full bg-primary-container/15 blur-[120px] pointer-events-none"></div>
+<div class="absolute top-1/3 -right-48 w-[500px] h-[500px] rounded-full bg-secondary-container/20 blur-[150px] pointer-events-none"></div>
+<div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-space-xl items-center relative z-10">
+<!-- Left Column: Copy & Value Proposition -->
+<div class="lg:col-span-6 flex flex-col gap-space-lg text-start">
+<!-- Live AI Pill -->
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface-container-low border border-outline-variant/30 w-fit">
+<span class="relative flex h-2 w-2">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+</span>
+<span class="font-label-caps text-label-caps uppercase tracking-wider text-primary font-bold" data-lang-ar="ذكاء استثماري مدعوم بالذكاء الاصطناعي" data-lang-en="AI-POWERED INVESTMENT INTELLIGENCE">AI-POWERED INVESTMENT INTELLIGENCE</span>
+<span class="text-outline-variant/80">|</span>
+<span class="font-mono-data-md text-[11px] text-on-surface-variant flex items-center gap-1">
+<span class="text-tertiary font-semibold">BKX: +0.44%</span>
+</span>
+</div>
+<!-- Headline -->
+<h1 class="font-display-hero text-display-hero text-on-surface font-extrabold tracking-tight">
+<span data-lang-ar="استثمار أذكى." data-lang-en="Smarter Investing.">Smarter Investing.</span><br/>
+<span class="text-transparent bg-clip-text bg-gradient-to-r from-primary-container via-primary to-secondary" data-lang-ar="مدعوم بالذكاء الاصطناعي." data-lang-en="Powered by AI.">Powered by AI.</span>
+</h1>
+<!-- Supporting text -->
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-xl leading-relaxed" data-lang-ar="كيه-فست يحوّل بيانات بورصة الكويت المعقدة إلى رؤى مالية واضحة ومباشرة، لمساعدة المستثمرين على فهم أداء الشركات المدرجة، وتقدير القيمة العادلة، وتقييم مخاطر المحفظة بدقة استثنائية." data-lang-en="K-Vest transforms Kuwait Stock Exchange data into clear financial insights, helping investors understand company performance, estimate fair value, and evaluate investment risk.">
+          K-Vest transforms Kuwait Stock Exchange data into clear financial insights, helping investors understand company performance, estimate fair value, and evaluate investment risk.
+        </p>
+<!-- CTA Cluster -->
+<div class="flex flex-wrap items-center gap-space-md pt-2">
+<a class="px-6 py-3.5 rounded-lg bg-gradient-to-r from-[#FF7138] to-[#FF925C] text-white font-headline-sm text-body-md font-bold transition-all transform hover:-translate-y-0.5 shadow-[0_0_24px_rgba(255,113,56,0.45)] hover:shadow-[0_0_32px_rgba(255,113,56,0.6)] flex items-center gap-2 group" data-path="platform" href="#">
+<span data-lang-ar="اكتشف منصة كيه-فست" data-lang-en="Discover K-Vest">Discover K-Vest</span>
+<span class="material-symbols-outlined text-[18px] group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</a>
+<a class="px-6 py-3.5 rounded-lg bg-surface-container-high/60 hover:bg-surface-container-highest border border-outline-variant/40 text-on-surface font-headline-sm text-body-md font-semibold transition-all backdrop-blur-sm flex items-center gap-2" href="#how-it-works">
+<span class="material-symbols-outlined text-[18px] text-secondary">tune</span>
+<span data-lang-ar="كيف يعمل النظام" data-lang-en="How It Works">How It Works</span>
+</a>
+</div>
+<!-- Trust Badges -->
+<div class="pt-6 grid grid-cols-3 gap-space-md border-t border-outline-variant/20 max-w-lg">
+<div>
+<div class="font-mono-data-lg text-mono-data-lg text-on-surface font-bold">160+</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant" data-lang-ar="شركة كويتية محللة" data-lang-en="Boursa Equities Analyzed">Boursa Equities Analyzed</div>
+</div>
+<div>
+<div class="font-mono-data-lg text-mono-data-lg text-primary font-bold">88.4%</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant" data-lang-ar="دقة النموذج التنبؤي" data-lang-en="AI Model Confidence">AI Model Confidence</div>
+</div>
+<div>
+<div class="font-mono-data-lg text-mono-data-lg text-tertiary font-bold">&lt; 120ms</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant" data-lang-ar="زمن المعالجة الفوري" data-lang-en="Data Pipeline Latency">Data Pipeline Latency</div>
+</div>
+</div>
+</div>
+<!-- Right Column: Interactive AI Terminal Glass Panel -->
+<div class="lg:col-span-6 relative">
+<div class="relative rounded-2xl bg-surface-container-low/95 border border-outline-variant/40 backdrop-blur-xl p-5 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.7)]">
+<!-- Terminal Top Controls & Tabs -->
+<div class="flex items-center justify-between pb-4 border-b border-outline-variant/20">
+<div class="flex items-center gap-2">
+<div class="flex items-center gap-1.5">
+<span class="w-3 h-3 rounded-full bg-error/70 inline-block"></span>
+<span class="w-3 h-3 rounded-full bg-primary-container/70 inline-block"></span>
+<span class="w-3 h-3 rounded-full bg-tertiary/70 inline-block"></span>
+</div>
+<span class="font-mono-data-md text-label-caps text-on-surface-variant uppercase px-2 py-0.5 rounded bg-surface-container ml-2">TERMINAL v2.4 PRO</span>
+</div>
+<!-- Ticker Tabs -->
+<div class="flex items-center gap-1 p-0.5 rounded-lg bg-surface-container-lowest border border-outline-variant/30 text-body-sm font-mono-data-md">
+<button class="px-3 py-1 rounded bg-secondary-container text-white font-semibold" type="button">NBK (101)</button>
+<button class="px-3 py-1 rounded text-on-surface-variant hover:text-on-surface transition-colors" type="button">KFH (108)</button>
+<button class="px-3 py-1 rounded text-on-surface-variant hover:text-on-surface transition-colors" type="button">ZAIN (605)</button>
+</div>
+</div>
+<!-- Stock Meta Header -->
+<div class="pt-4 flex flex-wrap items-baseline justify-between gap-2">
+<div>
+<div class="flex items-center gap-2">
+<h3 class="font-headline-md text-headline-md text-on-surface font-bold">National Bank of Kuwait</h3>
+<span class="px-2 py-0.5 rounded text-[11px] bg-tertiary/10 text-tertiary border border-tertiary/30 font-mono-data-md">PREMIER MARKET</span>
+</div>
+<p class="font-body-sm text-on-surface-variant">NBK.KW • Banking Sector • Market Cap 7.62B KWD</p>
+</div>
+<div class="text-end">
+<div class="font-mono-data-lg text-mono-data-lg font-bold text-on-surface">982 <span class="text-body-sm font-normal text-on-surface-variant">fils</span></div>
+<div class="font-mono-data-md text-body-sm text-tertiary font-semibold">+12 fils (+1.22%)</div>
+</div>
+</div>
+<!-- Glowing Interactive Chart SVG Area -->
+<div class="mt-4 p-4 rounded-xl bg-surface-container-lowest/80 border border-outline-variant/30 relative">
+<div class="flex items-center justify-between text-body-sm text-on-surface-variant pb-2">
+<span class="font-mono-data-md flex items-center gap-1.5 text-primary">
+<span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+                AI Trajectory Forecast (Q3/Q4 2025)
+              </span>
+<span class="font-mono-data-md text-[11px] text-on-surface-variant">CONFIDENCE INTERVAL: 88.4%</span>
+</div>
+<!-- SVG Vector Chart with Confidence Envelope -->
+<div class="h-44 w-full relative">
+<svg class="w-full h-full overflow-visible" preserveaspectratio="none" viewbox="0 0 500 180">
+<defs>
+<!-- Line Gradient -->
+<lineargradient id="chartStroke" x1="0%" x2="100%" y1="0%" y2="0%">
+<stop offset="0%" stop-color="#4F8CFF"></stop>
+<stop offset="60%" stop-color="#FF7138"></stop>
+<stop offset="100%" stop-color="#00E2A0"></stop>
+</lineargradient>
+<!-- Fill Gradient -->
+<lineargradient id="chartArea" x1="0%" x2="0%" y1="0%" y2="100%">
+<stop offset="0%" stop-color="#FF7138" stop-opacity="0.25"></stop>
+<stop offset="100%" stop-color="#FF7138" stop-opacity="0.0"></stop>
+</lineargradient>
+<!-- Forecast Corridor Gradient -->
+<lineargradient id="forecastBand" x1="0%" x2="100%" y1="0%" y2="0%">
+<stop offset="0%" stop-color="#4F8CFF" stop-opacity="0.05"></stop>
+<stop offset="100%" stop-color="#4F8CFF" stop-opacity="0.2"></stop>
+</lineargradient>
+</defs>
+<!-- Gridlines -->
+<line stroke="rgba(146, 157, 183, 0.08)" stroke-dasharray="3,3" x1="0" x2="500" y1="30" y2="30"></line>
+<line stroke="rgba(146, 157, 183, 0.08)" stroke-dasharray="3,3" x1="0" x2="500" y1="75" y2="75"></line>
+<line stroke="rgba(146, 157, 183, 0.08)" stroke-dasharray="3,3" x1="0" x2="500" y1="120" y2="120"></line>
+<line stroke="rgba(146, 157, 183, 0.08)" x1="0" x2="500" y1="165" y2="165"></line>
+<!-- AI Confidence Corridor (Polygons) -->
+<polygon fill="url(#forecastBand)" points="280,85 360,65 440,42 500,28 500,75 440,90 360,110 280,118"></polygon>
+<!-- Historic to AI Area -->
+<path d="M 0,145 Q 60,150 110,132 T 220,115 T 280,102 T 380,72 T 500,48 L 500,180 L 0,180 Z" fill="url(#chartArea)"></path>
+<!-- Main Value Path -->
+<path d="M 0,145 Q 60,150 110,132 T 220,115 T 280,102 T 380,72 T 500,48" fill="none" stroke="url(#chartStroke)" stroke-linecap="round" stroke-width="3"></path>
+<!-- Target Projection Node -->
+<circle class="animate-ping opacity-75" cx="500" cy="48" fill="#00E2A0" r="5"></circle>
+<circle cx="500" cy="48" fill="#00E2A0" r="4"></circle>
+<!-- Data Labels -->
+<text fill="#929DB7" font-family="JetBrains Mono" font-size="9" x="282" y="14">NOW: 982 fils</text>
+<line stroke="#FF7138" stroke-dasharray="2,2" stroke-width="1" x1="280" x2="280" y1="20" y2="170"></line>
+<text fill="#00E2A0" font-family="JetBrains Mono" font-size="10" font-weight="bold" x="400" y="22">AI TARGET: 1,140</text>
+</svg>
+</div>
+<!-- Terminal Footnote / Watermark -->
+<div class="flex items-center justify-between pt-2 border-t border-outline-variant/20 text-[10px] font-mono-data-md text-on-surface-variant">
+<span>SIMULATED MODEL DATA • BOURSA KUWAIT ANALYTICS</span>
+<span class="text-tertiary">EST. UPSIDE: +16.3%</span>
+</div>
+</div>
+<!-- Fair Value & Risk Sentinel Row -->
+<div class="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-space-sm">
+<!-- Card 1: Valuation Anchor -->
+<div class="p-3 rounded-xl bg-surface-container/60 border border-outline-variant/30">
+<div class="flex items-center justify-between text-body-sm">
+<span class="text-on-surface-variant font-mono-data-md" data-lang-ar="نموذج القيمة العادلة" data-lang-en="Fair Value Model">Fair Value Model</span>
+<span class="material-symbols-outlined text-primary text-[18px]">verified</span>
+</div>
+<div class="mt-1 flex items-baseline gap-2">
+<span class="font-mono-data-lg text-mono-data-lg font-bold text-on-surface">1,140 fils</span>
+<span class="text-tertiary font-mono-data-md text-body-sm font-semibold">+16.3%</span>
+</div>
+<div class="w-full bg-surface-container-high h-1.5 rounded-full mt-2 overflow-hidden">
+<div class="bg-gradient-to-r from-primary to-tertiary h-full rounded-full" style="width: 78%"></div>
+</div>
+<div class="flex justify-between text-[10px] text-on-surface-variant font-mono-data-md mt-1">
+<span>Current: 982</span>
+<span>Undervalued</span>
+</div>
+</div>
+<!-- Card 2: AI Risk Sentinel -->
+<div class="p-3 rounded-xl bg-surface-container/60 border border-outline-variant/30">
+<div class="flex items-center justify-between text-body-sm">
+<span class="text-on-surface-variant font-mono-data-md" data-lang-ar="حارس المخاطر الذكي" data-lang-en="AI Risk Sentinel">AI Risk Sentinel</span>
+<span class="material-symbols-outlined text-tertiary text-[18px]">shield</span>
+</div>
+<div class="mt-1 flex items-baseline gap-2">
+<span class="font-mono-data-lg text-mono-data-lg font-bold text-tertiary">Low-to-Mod</span>
+<span class="text-on-surface-variant font-mono-data-md text-body-sm">24 / 100</span>
+</div>
+<div class="w-full bg-surface-container-high h-1.5 rounded-full mt-2 overflow-hidden">
+<div class="bg-tertiary h-full rounded-full" style="width: 24%"></div>
+</div>
+<div class="flex justify-between text-[10px] text-on-surface-variant font-mono-data-md mt-1">
+<span>Solvency: AAA</span>
+<span>Oil Sensitivity: Low</span>
+</div>
+</div>
+</div>
+<!-- Dynamic AI Pulse Alert -->
+<div class="mt-3 p-3 rounded-xl bg-secondary-container/20 border border-secondary/30 flex items-start gap-2.5">
+<span class="material-symbols-outlined text-secondary text-[20px] shrink-0 mt-0.5">bolt</span>
+<p class="font-body-sm text-body-sm text-on-surface leading-tight" data-lang-ar="⚡ تنبيه ذكي: زخم أرباح الربع الثالث وتدفقات السيولة غير النفطية تشير إلى استمرار التراكم المؤسسي في أسهم السوق الأول." data-lang-en="⚡ AI Alert: Q3 earnings momentum and non-oil liquidity influx indicate sustained institutional accumulation across Premier Market tier.">
+              ⚡ AI Alert: Q3 earnings momentum and non-oil liquidity influx indicate sustained institutional accumulation across Premier Market tier.
+            </p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- PLATFORM CAPABILITIES (4 CARDS) -->
+<section class="w-full py-20 px-margin-desktop bg-surface-container-lowest/60 relative">
+<div class="max-w-7xl mx-auto flex flex-col gap-space-xl">
+<!-- Section Header -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-space-md">
+<div class="flex flex-col gap-space-xs text-start">
+<span class="font-label-caps text-label-caps uppercase tracking-wider text-primary font-bold" data-lang-ar="محركات المنصة الرئيسية" data-lang-en="CORE PLATFORM MODULES">CORE PLATFORM MODULES</span>
+<h2 class="font-headline-lg text-headline-lg text-on-surface font-extrabold" data-lang-ar="الذكاء الاستثماري، برؤية مستقبلية." data-lang-en="Investment Intelligence, Reimagined.">Investment Intelligence, Reimagined.</h2>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-md text-start" data-lang-ar="كل ما تحتاجه لفهم الشركات الكويتية، وتقييم الفرص الاستثمارية، واتخاذ قرارات مدعومة بنماذج التعلم الآلي والبيانات الموثقة." data-lang-en="Everything you need to understand Kuwaiti companies, evaluate opportunities, and execute decisions backed by empirical machine learning.">
+          Everything you need to understand Kuwaiti companies, evaluate opportunities, and execute decisions backed by empirical machine learning.
+        </p>
+</div>
+<!-- Grid of 4 Cards -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-space-lg">
+<!-- Card 1 -->
+<div class="p-6 rounded-2xl bg-surface-container/70 border border-outline-variant/30 hover:border-primary/50 transition-all duration-300 hover:-translate-y-1 group flex flex-col justify-between shadow-lg">
+<div>
+<div class="w-12 h-12 rounded-xl bg-primary-container/15 flex items-center justify-center text-primary mb-5 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-[28px]">query_stats</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold mb-2" data-lang-ar="التقييم بالذكاء الاصطناعي" data-lang-en="AI-Powered Valuation">AI-Powered Valuation</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed mb-6" data-lang-ar="تقدير القيمة العادلة للشركات باستخدام التدفقات النقدية المخصومة، والمضاعفات السوقية، وخوارزميات التنبؤ المالي." data-lang-en="Estimate company fair value using discounted cash flow, relative peer multiples, and multi-layered predictive neural heuristics.">
+              Estimate company fair value using discounted cash flow, relative peer multiples, and multi-layered predictive neural heuristics.
+            </p>
+</div>
+<!-- Micro metric visual -->
+<div class="pt-4 border-t border-outline-variant/20 flex items-center justify-between font-mono-data-md text-[11px]">
+<span class="text-on-surface-variant">DCF + Multiples</span>
+<span class="text-primary font-bold">128 Metrics</span>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="p-6 rounded-2xl bg-surface-container/70 border border-outline-variant/30 hover:border-secondary/50 transition-all duration-300 hover:-translate-y-1 group flex flex-col justify-between shadow-lg">
+<div>
+<div class="w-12 h-12 rounded-xl bg-secondary-container/20 flex items-center justify-center text-secondary mb-5 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-[28px]">radar</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold mb-2" data-lang-ar="استخبارات السوق الكويتي" data-lang-en="Market Intelligence">Market Intelligence</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed mb-6" data-lang-ar="متابعة دقيقة لاتجاهات السوق الأول والسوق الرئيسي، وتحركات السيولة المؤسسية، وتدفقات الصناديق الاستثمارية الأجنبية." data-lang-en="Gain real-time clarity across Boursa Kuwait Premier &amp; Main markets, institutional capital flow rotations, and foreign liquidity shifts.">
+              Gain real-time clarity across Boursa Kuwait Premier &amp; Main markets, institutional capital flow rotations, and foreign liquidity shifts.
+            </p>
+</div>
+<!-- Micro metric visual -->
+<div class="pt-4 border-t border-outline-variant/20 flex items-center justify-between font-mono-data-md text-[11px]">
+<span class="text-on-surface-variant">Liquidity Tracking</span>
+<span class="text-secondary font-bold">Premier &amp; Main</span>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="p-6 rounded-2xl bg-surface-container/70 border border-outline-variant/30 hover:border-tertiary/50 transition-all duration-300 hover:-translate-y-1 group flex flex-col justify-between shadow-lg">
+<div>
+<div class="w-12 h-12 rounded-xl bg-tertiary-container/20 flex items-center justify-center text-tertiary mb-5 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-[28px]">security</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold mb-2" data-lang-ar="تحليل المخاطر واختبارات الجهد" data-lang-en="Risk Analysis &amp; Stress Test">Risk Analysis &amp; Stress Test</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed mb-6" data-lang-ar="اختبار صلابة الميزانيات العمومية أمام استحقاقات الديون، وتغيرات الفائدة المصرفية، وحساسية أسعار النفط العالمية." data-lang-en="Stress-test balance sheets against debt maturity schedules, liquidity shortfalls, interest rate cycles, and global macro oil volatility.">
+              Stress-test balance sheets against debt maturity schedules, liquidity shortfalls, interest rate cycles, and global macro oil volatility.
+            </p>
+</div>
+<!-- Micro metric visual -->
+<div class="pt-4 border-t border-outline-variant/20 flex items-center justify-between font-mono-data-md text-[11px]">
+<span class="text-on-surface-variant">Macro Sensitivity</span>
+<span class="text-tertiary font-bold">Basel-Compliant</span>
+</div>
+</div>
+<!-- Card 4 -->
+<div class="p-6 rounded-2xl bg-surface-container/70 border border-outline-variant/30 hover:border-primary/50 transition-all duration-300 hover:-translate-y-1 group flex flex-col justify-between shadow-lg">
+<div>
+<div class="w-12 h-12 rounded-xl bg-surface-container-high flex items-center justify-center text-primary-fixed mb-5 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-[28px]">summarize</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold mb-2" data-lang-ar="رؤى ذكية مخصصة" data-lang-en="Personalized Insights">Personalized Insights</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed mb-6" data-lang-ar="تحويل الإفصاحات المالية المطولة إلى ملخصات تنفيذية مركزة تناسب أهدافك الاستثمارية وأفقك الزمني في السوق." data-lang-en="Convert multi-page audited financial disclosures into executive, actionable summaries engineered specifically for your investment profile.">
+              Convert multi-page audited financial disclosures into executive, actionable summaries engineered specifically for your investment profile.
+            </p>
+</div>
+<!-- Micro metric visual -->
+<div class="pt-4 border-t border-outline-variant/20 flex items-center justify-between font-mono-data-md text-[11px]">
+<span class="text-on-surface-variant">Bilingual Summary</span>
+<span class="text-primary-fixed font-bold">Instant Digest</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- HOW IT WORKS (3-STEP GUIDED PROTOCOL) -->
+<section class="w-full py-20 px-margin-desktop relative" id="how-it-works">
+<div class="max-w-7xl mx-auto flex flex-col gap-space-xl">
+<div class="text-center max-w-2xl mx-auto">
+<span class="font-label-caps text-label-caps uppercase tracking-wider text-primary font-bold" data-lang-ar="منهجية العمل والتحليل" data-lang-en="THE ANALYTICAL METHODOLOGY">THE ANALYTICAL METHODOLOGY</span>
+<h2 class="font-headline-lg text-headline-lg text-on-surface font-extrabold mt-1" data-lang-ar="كيف يقدم كيه-فست الوضوح المالي" data-lang-en="How K-Vest Delivers Clarity">How K-Vest Delivers Clarity</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-2" data-lang-ar="سلسلة تحليلية محكمة من 3 مراحل تحول الإفصاحات الخام إلى ثقة وقرارات استثمارية دقيقة." data-lang-en="A disciplined 3-stage intelligence sequence turning raw exchange filings into decisive portfolio confidence.">A disciplined 3-stage intelligence sequence turning raw exchange filings into decisive portfolio confidence.</p>
+</div>
+<!-- 3 Steps Connected -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-space-lg relative">
+<!-- Step 1 -->
+<div class="p-6 rounded-2xl bg-surface-container-low border border-outline-variant/30 relative flex flex-col">
+<div class="flex items-center justify-between mb-4">
+<span class="font-mono-data-lg text-headline-md font-bold text-primary">01</span>
+<span class="px-2.5 py-1 rounded-full text-[11px] font-mono-data-md bg-surface-container text-on-surface-variant uppercase">STAGE: INGESTION</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold mb-2" data-lang-ar="الاستكشاف والمسح الشامل" data-lang-en="Discover &amp; Screen">Discover &amp; Screen</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed" data-lang-ar="استكشف جميع الشركات المدرجة في بورصة الكويت، وخرائط السيولة، والبيانات المالية المدققة بأدوات تصفية بالغة الدقة." data-lang-en="Explore all listed Kuwaiti companies, liquidity heatmaps, audited statements, and historical price action with sovereign-grade data filters.">
+            Explore all listed Kuwaiti companies, liquidity heatmaps, audited statements, and historical price action with sovereign-grade data filters.
+          </p>
+<div class="mt-6 pt-4 border-t border-outline-variant/20 flex items-center gap-2 text-on-surface-variant font-mono-data-md text-[11px]">
+<span class="material-symbols-outlined text-[16px] text-primary">filter_alt</span>
+<span>Real-time Boursa Feeds</span>
+</div>
+</div>
+<!-- Step 2 -->
+<div class="p-6 rounded-2xl bg-surface-container-low border border-primary/40 relative flex flex-col shadow-[0_0_30px_rgba(255,113,56,0.15)]">
+<div class="flex items-center justify-between mb-4">
+<span class="font-mono-data-lg text-headline-md font-bold text-primary-container">02</span>
+<span class="px-2.5 py-1 rounded-full text-[11px] font-mono-data-md bg-primary-container/20 text-primary uppercase">STAGE: MODELING</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold mb-2" data-lang-ar="التحليل بالذكاء الاصطناعي" data-lang-en="Analyze with AI">Analyze with AI</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed" data-lang-ar="نماذج الذكاء الاصطناعي تحسب القيمة الجوهرية، وتربط تقلبات أسعار النفط وهوامش البنوك، وتتحقق من جودة الأرباح التشغيلية." data-lang-en="AI neural models calculate intrinsic valuation, correlate oil price shifts to local bank margins, and verify earnings quality metrics.">
+            AI neural models calculate intrinsic valuation, correlate oil price shifts to local bank margins, and verify earnings quality metrics.
+          </p>
+<div class="mt-6 pt-4 border-t border-outline-variant/20 flex items-center gap-2 text-primary font-mono-data-md text-[11px]">
+<span class="material-symbols-outlined text-[16px]">neurology</span>
+<span>Predictive Valuation Core</span>
+</div>
+</div>
+<!-- Step 3 -->
+<div class="p-6 rounded-2xl bg-surface-container-low border border-outline-variant/30 relative flex flex-col">
+<div class="flex items-center justify-between mb-4">
+<span class="font-mono-data-lg text-headline-md font-bold text-secondary">03</span>
+<span class="px-2.5 py-1 rounded-full text-[11px] font-mono-data-md bg-surface-container text-on-surface-variant uppercase">STAGE: EXECUTION</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold mb-2" data-lang-ar="الفهم واتخاذ القرار" data-lang-en="Understand &amp; Decide">Understand &amp; Decide</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed" data-lang-ar="احصل على بطاقات تقييم موضوعية وواضحة تحدد هوامش الأمان والمخاطر، مع ملخصات استثمارية باللغتين العربية والإنجليزية." data-lang-en="Receive objective, explainable valuation scorecards with clear upside boundaries, stress test results, and bilingual investor briefings.">
+            Receive objective, explainable valuation scorecards with clear upside boundaries, stress test results, and bilingual investor briefings.
+          </p>
+<div class="mt-6 pt-4 border-t border-outline-variant/20 flex items-center gap-2 text-on-surface-variant font-mono-data-md text-[11px]">
+<span class="material-symbols-outlined text-[16px] text-secondary">verified_user</span>
+<span>Zero Black-Box Transparency</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- AI INTELLIGENCE SHOWCASE (DEEP DIVE TELEMETRY) -->
+<section class="w-full py-20 px-margin-desktop bg-surface-container-lowest/80 border-y border-outline-variant/20">
+<div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-space-xl items-center">
+<!-- Left Narrative -->
+<div class="lg:col-span-5 flex flex-col gap-space-md text-start">
+<span class="font-label-caps text-label-caps uppercase tracking-wider text-secondary font-bold" data-lang-ar="معاينة التدقيق المؤسسي" data-lang-en="ENTERPRISE AUDIT PREVIEW">ENTERPRISE AUDIT PREVIEW</span>
+<h2 class="font-headline-lg text-headline-lg text-on-surface font-extrabold leading-tight" data-lang-ar="من البيانات المعقدة إلى قرارات واضحة ومدروسة." data-lang-en="From Complex Data to Clear Decisions.">
+          From Complex Data to Clear Decisions.
+        </h2>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed" data-lang-ar="لا حاجة لقراءة مئات الصفحات من التقارير المالية والإفصاحات يدوياً. يقوم كيه-فست باستخلاص الأرقام الجوهرية وتحليل الميزانيات بدقة متناهية ليقدم لك تقريراً موجزاً وموثوقاً." data-lang-en="No more reading 120-page quarterly PDF disclosures manually. K-Vest's machine learning engine condenses multi-year filings, board resolutions, and balance sheet notes into an intuitive institutional dossier.">
+          No more reading 120-page quarterly PDF disclosures manually. K-Vest's machine learning engine condenses multi-year filings, board resolutions, and balance sheet notes into an intuitive institutional dossier.
+        </p>
+<!-- Feature List -->
+<div class="flex flex-col gap-space-sm pt-2">
+<div class="flex items-center gap-2 text-body-md">
+<span class="material-symbols-outlined text-primary text-[20px]">check_circle</span>
+<span data-lang-ar="إجماع تقييمي ثلاثي النماذج للقيمة العادلة" data-lang-en="Three-stage multi-model valuation consensus">Three-stage multi-model valuation consensus</span>
+</div>
+<div class="flex items-center gap-2 text-body-md">
+<span class="material-symbols-outlined text-primary text-[20px]">check_circle</span>
+<span data-lang-ar="مقارنة فورية بمضاعفات الشركات المماثلة خليجياً" data-lang-en="Automated GCC peer multiple comparisons">Automated GCC peer multiple comparisons</span>
+</div>
+<div class="flex items-center gap-2 text-body-md">
+<span class="material-symbols-outlined text-primary text-[20px]">check_circle</span>
+<span data-lang-ar="خلاصة تنفيذية باللغتين العربية والإنجليزية في ثوانٍ" data-lang-en="Bilingual executive takeaway generated in seconds">Bilingual executive takeaway generated in seconds</span>
+</div>
+</div>
+<div class="pt-4">
+<a class="inline-flex items-center gap-2 font-mono-data-md text-body-md text-primary font-semibold hover:underline" data-path="platform" href="#">
+<span data-lang-ar="استعراض تقرير زين الكويت الكامل" data-lang-en="Explore Zain Kuwait Full AI Report">Explore Zain Kuwait Full AI Report</span>
+<span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</a>
+</div>
+</div>
+<!-- Right Interactive Deep Dossier Card -->
+<div class="lg:col-span-7">
+<div class="p-6 rounded-2xl bg-surface-container border border-outline-variant/40 shadow-2xl">
+<!-- Header Bar -->
+<div class="flex flex-wrap items-center justify-between pb-4 border-b border-outline-variant/30 gap-2">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-surface-container-high flex items-center justify-center font-bold text-secondary font-mono-data-lg">
+                Z
+              </div>
+<div>
+<div class="flex items-center gap-2">
+<h4 class="font-headline-sm text-headline-sm font-bold text-on-surface">Mobile Telecommunications (ZAIN)</h4>
+<span class="font-mono-data-md text-[10px] px-2 py-0.5 rounded bg-surface-container-high text-primary">TICKER: 605</span>
+</div>
+<p class="font-body-sm text-on-surface-variant font-mono-data-md">P/E: 12.8x • Dividend Yield: 6.8% • Premier Market</p>
+</div>
+</div>
+<div class="text-end">
+<span class="text-label-caps uppercase text-on-surface-variant block">AI Consensus Target</span>
+<span class="font-mono-data-lg text-mono-data-lg text-tertiary font-bold">590 fils</span>
+<span class="text-[11px] text-tertiary block font-mono-data-md">(+15.2% vs 512 fils)</span>
+</div>
+</div>
+<!-- Valuation Matrix Comparison -->
+<div class="mt-5 grid grid-cols-3 gap-space-sm text-center">
+<div class="p-3 rounded-lg bg-surface-container-low border border-outline-variant/20">
+<span class="text-[11px] text-on-surface-variant uppercase font-mono-data-md">DCF Model</span>
+<div class="font-mono-data-md text-body-lg font-bold text-on-surface mt-1">605 fils</div>
+<span class="text-[10px] text-tertiary font-mono-data-md">+18.1%</span>
+</div>
+<div class="p-3 rounded-lg bg-surface-container-low border border-outline-variant/20">
+<span class="text-[11px] text-on-surface-variant uppercase font-mono-data-md">Relative P/E</span>
+<div class="font-mono-data-md text-body-lg font-bold text-on-surface mt-1">575 fils</div>
+<span class="text-[10px] text-tertiary font-mono-data-md">+12.3%</span>
+</div>
+<div class="p-3 rounded-lg bg-surface-container-low border border-outline-variant/20">
+<span class="text-[11px] text-on-surface-variant uppercase font-mono-data-md">EV/EBITDA</span>
+<div class="font-mono-data-md text-body-lg font-bold text-on-surface mt-1">590 fils</div>
+<span class="text-[10px] text-tertiary font-mono-data-md">+15.2%</span>
+</div>
+</div>
+<!-- Radar Breakdown Gauges -->
+<div class="mt-5 space-y-3">
+<div>
+<div class="flex justify-between text-body-sm font-mono-data-md mb-1">
+<span class="text-on-surface">Corporate Governance &amp; Compliance</span>
+<span class="text-tertiary font-bold">94 / 100</span>
+</div>
+<div class="w-full h-2 rounded-full bg-surface-container-high overflow-hidden">
+<div class="h-full bg-tertiary rounded-full" style="width: 94%"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between text-body-sm font-mono-data-md mb-1">
+<span class="text-on-surface">Operating Cash Flow Predictability</span>
+<span class="text-secondary font-bold">88 / 100</span>
+</div>
+<div class="w-full h-2 rounded-full bg-surface-container-high overflow-hidden">
+<div class="h-full bg-secondary rounded-full" style="width: 88%"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between text-body-sm font-mono-data-md mb-1">
+<span class="text-on-surface">Debt Service &amp; Capital Expenditure Ratio</span>
+<span class="text-primary font-bold">76 / 100</span>
+</div>
+<div class="w-full h-2 rounded-full bg-surface-container-high overflow-hidden">
+<div class="h-full bg-primary rounded-full" style="width: 76%"></div>
+</div>
+</div>
+</div>
+<!-- AI Executive Digest -->
+<div class="mt-5 p-4 rounded-xl bg-surface-container-low/70 border border-outline-variant/30 text-start">
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-primary text-[18px]">auto_awesome</span>
+<span class="font-label-caps text-label-caps uppercase tracking-wider text-primary font-bold" data-lang-ar="الملخص التنفيذي الذكي" data-lang-en="AI EXECUTIVE SUMMARY">AI EXECUTIVE SUMMARY</span>
+</div>
+<ul class="text-body-sm text-on-surface-variant space-y-1.5 list-disc list-inside">
+<li data-lang-ar="توسع بنية شبكات الجيل الخامس الإقليمية يرفع هوامش الأرباح التشغيلية بنسبة 8.4%." data-lang-en="Regional 5G enterprise infrastructure expansion yielding +8.4% incremental recurring EBITDA margin.">Regional 5G enterprise infrastructure expansion yielding +8.4% incremental recurring EBITDA margin.</li>
+<li data-lang-ar="استقرار التوزيعات النقدية مدعوماً بحصة سوقية محلية قوية ومستدامة تقارب 42%." data-lang-en="High sustained dividend payout supported by stable domestic mobile market share (~42%).">High sustained dividend payout supported by stable domestic mobile market share (~42%).</li>
+<li data-lang-ar="تقلبات أسعار الصرف في العمليات الإقليمية تمثل عامل الخطر الرئيسي المحسوب في هامش الأمان." data-lang-en="Currency fluctuations across Sudan and regional operations remain primary risk factor factored into confidence band.">Currency fluctuations across Sudan and regional operations remain primary risk factor factored into confidence band.</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- MISSION & VISION (EDITORIAL SECTION) -->
+<section class="w-full py-20 px-margin-desktop relative">
+<!-- Center Radial Warmth -->
+<div class="absolute inset-x-1/3 top-1/2 -translate-y-1/2 w-80 h-80 rounded-full bg-primary/10 blur-[130px] pointer-events-none"></div>
+<div class="max-w-7xl mx-auto flex flex-col gap-space-xl relative z-10">
+<div class="text-center max-w-2xl mx-auto">
+<span class="font-label-caps text-label-caps uppercase tracking-wider text-primary font-bold" data-lang-ar="التزامنا المؤسسي" data-lang-en="FOUNDATIONAL COMMITMENT">FOUNDATIONAL COMMITMENT</span>
+<h2 class="font-headline-lg text-headline-lg text-on-surface font-extrabold mt-1" data-lang-ar="صُمم لمستقبل رأس المال في الكويت." data-lang-en="Engineered for Kuwait's Capital Future.">Engineered for Kuwait's Capital Future.</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-2" data-lang-ar="الارتقاء بالثقافة الاستثمارية، والشفافية المالية، وتمكين المستثمرين بأدوات ذكاء اصطناعي سيادية." data-lang-en="Advancing market literacy, fiduciary transparency, and sovereign intelligence capabilities.">Advancing market literacy, fiduciary transparency, and sovereign intelligence capabilities.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-space-lg">
+<!-- Mission Card -->
+<div class="p-8 rounded-2xl bg-surface-container/70 border border-outline-variant/30 flex flex-col justify-between shadow-xl relative overflow-hidden group">
+<div class="absolute -right-10 -bottom-10 w-44 h-44 rounded-full bg-primary-container/10 blur-3xl pointer-events-none"></div>
+<div>
+<div class="flex items-center justify-between mb-6">
+<span class="w-12 h-12 rounded-xl bg-primary-container/20 text-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-[28px]">rocket_launch</span>
+</span>
+<span class="font-label-caps text-label-caps text-primary tracking-widest uppercase font-bold" data-lang-ar="رسالتنا" data-lang-en="OUR MISSION">OUR MISSION</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface font-bold mb-4" data-lang-ar="تبسيط التقييم المالي المعقد" data-lang-en="Democratizing Deep Valuation">Democratizing Deep Valuation</h3>
+<p class="font-body-lg text-body-md text-on-surface-variant leading-relaxed text-start" data-lang-ar="يوفر كيه-فست منصة مدعومة بالذكاء الاصطناعي تبسط الاستثمار في سوق الأسهم الكويتي من خلال مسح الشركات المدرجة، وتحليل أدائها المالي، وتحديد الفرص الاستثمارية الواعدة. يساعد ذكاؤها المخصص المستثمرين على فهم البيانات المالية، وتقييم المخاطر، واتخاذ قرارات أكثر دقة وموضوعية." data-lang-en="K-Vest provides an AI-powered platform that simplifies investing in the Kuwaiti stock market by scanning listed companies, analyzing their financial performance, and identifying potential investment opportunities. Its personalized intelligence helps investors understand financial data, evaluate risk, and make more informed decisions.">
+              K-Vest provides an AI-powered platform that simplifies investing in the Kuwaiti stock market by scanning listed companies, analyzing their financial performance, and identifying potential investment opportunities. Its personalized intelligence helps investors understand financial data, evaluate risk, and make more informed decisions.
+            </p>
+</div>
+<div class="mt-8 pt-4 border-t border-outline-variant/20 flex items-center gap-2 text-primary font-mono-data-md text-body-sm">
+<span class="material-symbols-outlined text-[18px]">verified</span>
+<span data-lang-ar="نزاهة مهنية ودقة متناهية بلا تحيز." data-lang-en="Fiduciary rigor. Zero bias.">Fiduciary rigor. Zero bias.</span>
+</div>
+</div>
+<!-- Vision Card -->
+<div class="p-8 rounded-2xl bg-surface-container/70 border border-secondary/30 flex flex-col justify-between shadow-xl relative overflow-hidden group">
+<div class="absolute -right-10 -bottom-10 w-44 h-44 rounded-full bg-secondary-container/15 blur-3xl pointer-events-none"></div>
+<div>
+<div class="flex items-center justify-between mb-6">
+<span class="w-12 h-12 rounded-xl bg-secondary-container/20 text-secondary flex items-center justify-center">
+<span class="material-symbols-outlined text-[28px]">visibility</span>
+</span>
+<span class="font-label-caps text-label-caps text-secondary tracking-widest uppercase font-bold" data-lang-ar="رؤيتنا" data-lang-en="OUR VISION">OUR VISION</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface font-bold mb-4" data-lang-ar="مستقبل إدارة الثروات في الكويت" data-lang-en="The Future of Kuwait Wealth">The Future of Kuwait Wealth</h3>
+<p class="font-body-lg text-body-md text-on-surface-variant leading-relaxed text-start" data-lang-ar="أن نصبح المنصة الرائدة في الكويت للذكاء الاستثماري المدعوم بالذكاء الاصطناعي، لإحداث تحول نوعي في كيفية فهم الأفراد والمؤسسات لسوق الأسهم والاستثمار فيه. نسعى لجعل التحليل المالي أكثر وضوحاً وشفافية وتخصيصاً، مع تعزيز الوعي المالي وتمكين جيل أكثر وعياً من المستثمرين." data-lang-en="To become Kuwait's leading AI-powered investment intelligence platform, transforming how people understand and invest in the stock market. We aim to make financial analysis more accessible, transparent, and personalized while supporting financial awareness and empowering a more informed generation of investors.">
+              To become Kuwait's leading AI-powered investment intelligence platform, transforming how people understand and invest in the stock market. We aim to make financial analysis more accessible, transparent, and personalized while supporting financial awareness and empowering a more informed generation of investors.
+            </p>
+</div>
+<div class="mt-8 pt-4 border-t border-outline-variant/20 flex items-center gap-2 text-secondary font-mono-data-md text-body-sm">
+<span class="material-symbols-outlined text-[18px]">lightbulb</span>
+<span data-lang-ar="انسجاماً مع رؤية كويت جديدة 2035." data-lang-en="Aligning with Kuwait Vision 2035.">Aligning with Kuwait Vision 2035.</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- WHY K-VEST (TRUST ARCHITECTURE) -->
+<section class="w-full py-20 px-margin-desktop bg-surface-container-lowest/70 border-t border-outline-variant/20">
+<div class="max-w-7xl mx-auto flex flex-col gap-space-xl">
+<div class="text-center max-w-2xl mx-auto">
+<span class="font-label-caps text-label-caps uppercase tracking-wider text-primary font-bold" data-lang-ar="مزايا كيه-فست الفريدة" data-lang-en="THE K-VEST ADVANTAGE">THE K-VEST ADVANTAGE</span>
+<h2 class="font-headline-lg text-headline-lg text-on-surface font-extrabold mt-1" data-lang-ar="لماذا يثق المستثمرون في منصة كيه-فست" data-lang-en="Why Sovereign &amp; Individual Investors Trust K-Vest">Why Sovereign &amp; Individual Investors Trust K-Vest</h2>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-space-md">
+<div class="p-5 rounded-xl bg-surface-container/50 border border-outline-variant/30 text-start">
+<span class="material-symbols-outlined text-primary text-[28px] mb-3">account_balance</span>
+<h4 class="font-headline-sm text-headline-sm text-on-surface font-bold mb-1" data-lang-ar="مبني خصيصاً لبورصة الكويت" data-lang-en="Built Exclusively for Kuwait">Built Exclusively for Kuwait</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed" data-lang-ar="معاير بدقة وفقاً لتشريعات بورصة الكويت، وتوجيهات بنك الكويت المركزي، وسلوك السيولة المحلية." data-lang-en="Calibrated around Boursa Kuwait listing tiers, Central Bank of Kuwait (CBK) interest corridors, and regional liquidity patterns.">Calibrated around Boursa Kuwait listing tiers, Central Bank of Kuwait (CBK) interest corridors, and regional liquidity patterns.</p>
+</div>
+<div class="p-5 rounded-xl bg-surface-container/50 border border-outline-variant/30 text-start">
+<span class="material-symbols-outlined text-secondary text-[28px] mb-3">psychology</span>
+<h4 class="font-headline-sm text-headline-sm text-on-surface font-bold mb-1" data-lang-ar="نماذج ذكاء اصطناعي مؤسسية" data-lang-en="Institutional-Grade AI">Institutional-Grade AI</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed" data-lang-ar="مدعوم بخوارزميات تداول كمية ترشح الشائعات السوقية وتحسب القيمة الدفترية والأصول بدقة متناهية." data-lang-en="Powered by high-parameter quantitative architectures that filter market noise and calculate true underlying book value.">Powered by high-parameter quantitative architectures that filter market noise and calculate true underlying book value.</p>
+</div>
+<div class="p-5 rounded-xl bg-surface-container/50 border border-outline-variant/30 text-start">
+<span class="material-symbols-outlined text-tertiary text-[28px] mb-3">visibility</span>
+<h4 class="font-headline-sm text-headline-sm text-on-surface font-bold mb-1" data-lang-ar="شفافية مطلقة بدون تعقيد" data-lang-en="Zero Black-Box Transparency">Zero Black-Box Transparency</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed" data-lang-ar="كل رقم وكل تقييم مرتبط مباشرة ببند محاسبي في القوائم المدققة مع إيضاح كامل لخطوات التحليل." data-lang-en="Every estimate links back to source audited lines. Transparent calculation factors prevent unexplainable outputs.">Every estimate links back to source audited lines. Transparent calculation factors prevent unexplainable outputs.</p>
+</div>
+<div class="p-5 rounded-xl bg-surface-container/50 border border-outline-variant/30 text-start">
+<span class="material-symbols-outlined text-primary-container text-[28px] mb-3">phone_iphone</span>
+<h4 class="font-headline-sm text-headline-sm text-on-surface font-bold mb-1" data-lang-ar="مصمم للمستثمر العصري" data-lang-en="Engineered for Modern Flow">Engineered for Modern Flow</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed" data-lang-ar="تجربة مستخدم تفاعلية ثنائية اللغة، متوافقة وسريعة الاستجابة على الحواسب والهواتف الذكية على حد سواء." data-lang-en="Fluid bilingual accessibility, frictionless desktop-to-mobile responsiveness, and rapid real-time telemetry.">Fluid bilingual accessibility, frictionless desktop-to-mobile responsiveness, and rapid real-time telemetry.</p>
+</div>
+</div>
+<!-- Trust Assurance Box -->
+<div class="p-4 rounded-xl bg-surface-container-high/40 border border-outline-variant/20 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-start">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary text-[24px]">verified</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant" data-lang-ar="كيه-فست لا يقدم خدمات وساطة مالية لتنفيذ الصفقات. دورنا ينحصر في تقديم ذكاء مالي تحليلي محايد ونماذج تقييم مستقلة." data-lang-en="K-Vest does not provide execution brokerage or execute trades. Our sole mandate is objective financial intelligence and valuation modeling.">
+            K-Vest does not provide execution brokerage or execute trades. Our sole mandate is objective financial intelligence and valuation modeling.
+          </p>
+</div>
+<span class="font-mono-data-md text-[11px] text-on-surface px-3 py-1 rounded bg-surface-container shrink-0">CMA DISCLOSURE READY</span>
+</div>
+</div>
+</section>
+<!-- FINAL CALL TO ACTION -->
+<section class="w-full py-24 px-margin-desktop relative overflow-hidden">
+<!-- Concentrated glow in center -->
+<div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+<div class="w-[600px] h-[350px] bg-gradient-to-r from-primary-container/20 to-secondary-container/20 rounded-full blur-[140px]"></div>
+</div>
+<div class="max-w-4xl mx-auto rounded-3xl bg-gradient-to-b from-surface-container to-surface-container-lowest border border-primary/30 p-10 md:p-16 text-center relative z-10 shadow-[0_25px_60px_-15px_rgba(255,113,56,0.2)]">
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface-container-high border border-outline-variant/40 mb-6">
+<span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+<span class="font-mono-data-md text-label-caps text-primary uppercase" data-lang-ar="انضم إلى نخبة مستثمري بورصة الكويت" data-lang-en="JOIN BOURSA KUWAIT LEADERS">JOIN BOURSA KUWAIT LEADERS</span>
+</div>
+<h2 class="font-headline-lg text-display-hero text-on-surface font-extrabold tracking-tight" data-lang-ar="شاهد السوق من منظور جديد." data-lang-en="See the Market Differently.">
+        See the Market Differently.
+      </h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-xl mx-auto mt-4 leading-relaxed" data-lang-ar="اكتشف أسلوباً أكثر ذكاءً لفهم المشهد الاستثماري الكويتي. احصل على أدوات التقييم الذكية والتنبؤية اليوم." data-lang-en="Discover a smarter way to understand Kuwait's investment landscape. Access institution-grade predictive telemetry today.">
+        Discover a smarter way to understand Kuwait's investment landscape. Access institution-grade predictive telemetry today.
+      </p>
+<div class="mt-8 flex flex-wrap items-center justify-center gap-space-md">
+<a class="px-8 py-4 rounded-xl bg-gradient-to-r from-[#FF7138] to-[#FF925C] text-white font-headline-sm text-body-lg font-bold shadow-[0_0_30px_rgba(255,113,56,0.5)] hover:shadow-[0_0_40px_rgba(255,113,56,0.7)] transition-all transform hover:-translate-y-0.5 flex items-center gap-2" data-path="platform" href="#">
+<span data-lang-ar="ابدأ استكشاف المنصة الآن" data-lang-en="Explore K-Vest Platform">Explore K-Vest Platform</span>
+<span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+</a>
+<a class="px-8 py-4 rounded-xl bg-surface-container-high hover:bg-surface-bright border border-outline-variant/40 text-on-surface font-headline-sm text-body-lg font-semibold transition-all" href="#kvest-root">
+<span data-lang-ar="طلب عرض توضيحي خاص" data-lang-en="Request Private Demo">Request Private Demo</span>
+</a>
+</div>
+<div class="mt-8 pt-6 border-t border-outline-variant/20 flex flex-wrap items-center justify-center gap-6 text-on-surface-variant font-mono-data-md text-body-sm">
+<span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-[16px] text-tertiary">check</span> No credit card required</span>
+<span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-[16px] text-tertiary">check</span> Instant Premier Market coverage</span>
+<span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-[16px] text-tertiary">check</span> Fully bilingual EN/AR</span>
+</div>
+</div>
+</section>
+</div>
+<!-- INTERACTIVE BILINGUAL & TERMINAL SCRIPT -->
+<script>
+  (function () {
+    let currentLang = 'en';
+
+    function setLanguage(lang) {
+      currentLang = lang;
+      const root = document.getElementById('kvest-root');
+      const langLabel = document.getElementById('currentLangLabel');
+      const translatableElements = document.querySelectorAll('[data-lang-en]');
+
+      if (lang === 'ar') {
+        root.setAttribute('dir', 'rtl');
+        document.documentElement.setAttribute('lang', 'ar');
+        if (langLabel) langLabel.textContent = 'English';
+        translatableElements.forEach(el => {
+          const arText = el.getAttribute('data-lang-ar');
+          if (arText) el.innerHTML = arText;
+        });
+      } else {
+        root.setAttribute('dir', 'ltr');
+        document.documentElement.setAttribute('lang', 'en');
+        if (langLabel) langLabel.textContent = 'العربية';
+        translatableElements.forEach(el => {
+          const enText = el.getAttribute('data-lang-en');
+          if (enText) el.innerHTML = enText;
+        });
+      }
+    }
+
+    const toggleBtn = document.getElementById('langToggleBtn');
+    if (toggleBtn) {
+      toggleBtn.addEventListener('click', function () {
+        setLanguage(currentLang === 'en' ? 'ar' : 'en');
+      });
+    }
+
+    // Connect top header language button in shell if accessible
+    document.querySelectorAll('header button').forEach(btn => {
+      if (btn.textContent && btn.textContent.includes('العربية')) {
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          setLanguage(currentLang === 'en' ? 'ar' : 'en');
+        });
+      }
+    });
+  })();
+</script></main><footer class="w-full bg-surface-container-lowest border-t border-outline-variant/20 pt-space-xl pb-space-lg"><div class="w-full px-margin-desktop max-w-7xl mx-auto"><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-space-xl pb-space-xl border-b border-outline-variant/20"><div class="lg:col-span-2 flex flex-col gap-space-md"><div class="flex items-center gap-space-sm"><img alt="K-Vest Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1VyQLwnhYrQt7H_kbpwUZs6VsHJt9gNGu2dZ-A23f-7y3BcVQ18a-w1ruwE9C9zDNXfHDxJAW8PYYvMeNjzEzRwADw_OyktEdlWT3utbxNDMAz3ugJHUQH3yAcwczNmCIprm9uEIA9zKOoyO03AFOptV9nZraanjOscggqCwpBtCCpx3U8QdPUGF_0_ZOMEXuaBbO9BJZ1SG7uAKo3bd1bwAKKmbGSaPorG6TPbi3bfx6hjjNjY0cPcjyVv"/><span class="font-headline-sm text-headline-sm font-bold tracking-tight text-on-surface">K-VEST</span></div><p class="font-body-md text-body-md text-on-surface-variant max-w-sm">Sovereign-grade investment intelligence engineered for Boursa Kuwait. Merging predictive machine learning with fiduciarily rigorous financial telemetry.</p><div class="flex items-center gap-space-xs"><button class="flex items-center gap-1.5 px-3 py-1 rounded bg-surface-container-low border border-outline-variant/40 text-on-surface-variant hover:text-on-surface font-body-sm text-body-sm transition-colors" type="button"><span class="material-symbols-outlined text-[15px]">translate</span><span>English (US)</span></button><button class="flex items-center gap-1.5 px-3 py-1 rounded bg-surface-container-low border border-outline-variant/40 text-on-surface-variant hover:text-on-surface font-body-sm text-body-sm transition-colors" type="button"><span>العربية (الكويت)</span></button></div></div><div class="flex flex-col gap-space-sm"><span class="font-label-caps text-label-caps uppercase text-primary font-bold">Platform</span><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-on-surface transition-colors" data-path="platform" href="#">Premier Market Screener</a><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-on-surface transition-colors" data-path="platform" href="#">Order Book Telemetry</a><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-on-surface transition-colors" data-path="platform" href="#">Quantitative Signals</a><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-on-surface transition-colors" data-path="platform" href="#">Portfolio Optimizer</a></div><div class="flex flex-col gap-space-sm"><span class="font-label-caps text-label-caps uppercase text-primary font-bold">Intelligence</span><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-on-surface transition-colors" data-path="intelligence" href="#">Predictive Sentiment</a><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-on-surface transition-colors" data-path="intelligence" href="#">Macro GCC Reports</a><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-on-surface transition-colors" data-path="intelligence" href="#">Institutional Inflows</a><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-on-surface transition-colors" data-path="intelligence" href="#">Sector Correlation</a></div><div class="flex flex-col gap-space-sm"><span class="font-label-caps text-label-caps uppercase text-primary font-bold">Company</span><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-on-surface transition-colors" data-path="our-vision" href="#">Our Vision</a><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-on-surface transition-colors" data-path="why-k-vest" href="#">Why K-Vest</a><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-on-surface transition-colors" data-path="how-it-works" href="#">Methodology</a><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-on-surface transition-colors" data-path="home" href="#">Careers (Kuwait City)</a></div><div class="flex flex-col gap-space-sm"><span class="font-label-caps text-label-caps uppercase text-primary font-bold">Legal &amp; Compliance</span><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-on-surface transition-colors" href="#">CMA Kuwait Disclosure</a><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-on-surface transition-colors" href="#">Data Governance</a><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-on-surface transition-colors" href="#">Terms of Service</a><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-on-surface transition-colors" href="#">Privacy Framework</a></div></div><div class="pt-space-md flex flex-col gap-space-md"><div class="p-space-md rounded-lg bg-surface-container-low/60 border border-outline-variant/30"><p class="font-mono-data-md text-body-sm text-on-surface-variant leading-relaxed"><span class="text-primary font-semibold">Kuwait Financial Disclaimer:</span> K-Vest provides analytical intelligence for educational and informational purposes only. It does not constitute financial advice or a recommendation to buy or sell securities listed on Boursa Kuwait.</p></div><div class="flex flex-col md:flex-row items-center justify-between gap-space-sm text-on-surface-variant font-body-sm text-body-sm"><p>Copyright © 2025 K-Vest AI Technologies K.S.C. All rights reserved. Made for Kuwait Investors.</p><div class="flex items-center gap-space-md"><span class="font-mono-data-md text-body-sm text-outline">KWD / د.ك Real-Time Engine v2.4</span></div></div></div></div></footer></body></html>
