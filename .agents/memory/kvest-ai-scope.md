@@ -19,11 +19,11 @@ Keep the Get started screen minimal, without welcome prose or milestone cards.
 
 **How to apply:** do not reintroduce marketing copy or a journey overview on that screen.
 
-The entry flow is sign-in, then the minimal Start learning screen, then the guided journey. Do not show the old marketing homepage, guest-entry option, or account-ready interstitial.
+The entry flow is sign-in or an explicit Continue as guest choice, followed by the minimal Start learning screen and guided journey. Do not show the old marketing homepage or account-ready interstitial.
 
-**Why:** the user asked for a login page when users first enter the website and to “remove everything else leave the start learning part.”
+**Why:** the user wants users to sign in on arrival but later explicitly asked to retain the Continue as a guest option.
 
-**How to apply:** require an account for learning pages and learning APIs. Back-to-home navigation returns signed-in users to Start learning. Keep saved data intact rather than deleting it when simplifying the visible flow.
+**How to apply:** keep journey access behind either a Clerk account or an explicit browser guest choice; never treat a client-selected owner as identity. Keep guest and account progress separate, and do not delete guest data when simplifying the visible flow.
 
 The attached journey specification mentions MongoDB, but the project's actual `replit.md` specifies React/Vite, Express, PostgreSQL, and Drizzle. Follow `replit.md`; do not migrate storage or authentication as part of a screen-level feature.
 
