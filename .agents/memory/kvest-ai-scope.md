@@ -13,6 +13,12 @@ Use the user's dark financial-terminal reference as inspiration across the whole
 
 **How to apply:** use the same dark navy, orange-action, cyan-accent visual language for future screens. Treat the reference as visual inspiration, not permission to copy unsupported institutional claims or market data.
 
+Keep the Get started screen minimal, without welcome prose or milestone cards.
+
+**Why:** the user asked to “remove all the extra writing leave only the get started page.”
+
+**How to apply:** do not reintroduce marketing copy or a journey overview on that screen.
+
 Preserving the homepage design must not leave new journey features undiscoverable. Keep a visible homepage entry to the journey and present the relevant new screen, not only the unchanged welcome page.
 
 **Why:** the user reported “nothing changed” after the journey was implemented but the default homepage still lacked an entry and described completed features as planned.

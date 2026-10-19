@@ -93,6 +93,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   text-align: center;
 }
 
@@ -233,7 +234,7 @@
   flex-direction: column;
   align-items: center;
   gap: 13px;
-  margin-top: 30px;
+  margin-top: 0;
   animation: jwelcome-enter .65s cubic-bezier(.22, 1, .36, 1) .34s both;
 }
 
@@ -396,7 +397,7 @@
   }
 
   .jwelcome__action-area {
-    margin-top: 25px;
+    margin-top: 0;
   }
 
   .jwelcome__footer {
