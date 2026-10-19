@@ -1,0 +1,439 @@
+.jwelcome {
+  --jw-ink: #142a4a;
+  --jw-ink-soft: #52647d;
+  --jw-blue: #234c80;
+  --jw-blue-dark: #17375f;
+  --jw-line: #e2eaf2;
+  --jw-surface: #ffffff;
+  --jw-tint: #f3f7fb;
+  --jw-accent: #e8f0f9;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse at 50% 35%, rgba(234, 242, 250, .7), transparent 48%),
+    #fbfcfe;
+  color: var(--jw-ink);
+  font-family: 'DM Sans', sans-serif;
+  isolation: isolate;
+}
+
+.jwelcome *,
+.jwelcome *::before,
+.jwelcome *::after {
+  box-sizing: border-box;
+}
+
+.jwelcome a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.jwelcome__header {
+  width: min(100% - 48px, 1120px);
+  min-height: 88px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  animation: jwelcome-enter .55s cubic-bezier(.22, 1, .36, 1) both;
+}
+
+.jwelcome__brand {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 12px;
+}
+
+.jwelcome__logo {
+  display: block;
+  width: 120px;
+  height: 58px;
+  object-fit: contain;
+  object-position: left center;
+}
+
+.jwelcome__language {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.jwelcome__language-caption {
+  color: #718096;
+  font-size: 12px;
+}
+
+.jwelcome__language-button {
+  min-width: 70px;
+  min-height: 40px;
+  padding: 0 14px;
+  border: 1px solid var(--jw-line);
+  border-radius: 999px;
+  background: var(--jw-surface);
+  color: var(--jw-blue);
+  font: 700 13px 'DM Sans', sans-serif;
+  cursor: pointer;
+  transition: transform .18s ease, border-color .18s ease, background-color .18s ease;
+}
+
+.jwelcome__language-button:hover {
+  transform: translateY(-1px);
+  border-color: #b9cbe0;
+  background: #f6f9fc;
+}
+
+.jwelcome__main {
+  width: min(100% - 40px, 800px);
+  flex: 1;
+  margin: 0 auto;
+  padding: clamp(42px, 8vh, 92px) 0 52px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.jwelcome__intro {
+  width: min(100%, 700px);
+  animation: jwelcome-enter .65s cubic-bezier(.22, 1, .36, 1) .06s both;
+}
+
+.jwelcome__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: 22px;
+  color: #43648b;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: .01em;
+}
+
+.jwelcome__eyebrow-mark {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #e6a16e;
+  box-shadow: 0 0 0 5px rgba(230, 161, 110, .14);
+}
+
+.jwelcome__intro h1 {
+  max-width: 680px;
+  margin: 0 auto;
+  color: var(--jw-ink);
+  font: 800 clamp(36px, 6vw, 58px)/1.12 'Manrope', sans-serif;
+  letter-spacing: -.045em;
+  text-wrap: balance;
+}
+
+.jwelcome__description {
+  max-width: 555px;
+  margin: 20px auto 0;
+  color: var(--jw-ink-soft);
+  font-size: clamp(15px, 2vw, 17px);
+  line-height: 1.75;
+  text-wrap: pretty;
+}
+
+.jwelcome__path {
+  width: 100%;
+  margin-top: clamp(42px, 7vh, 68px);
+  padding: 26px;
+  border: 1px solid rgba(218, 228, 239, .9);
+  border-radius: 24px;
+  background: rgba(255, 255, 255, .88);
+  box-shadow: 0 18px 55px rgba(36, 66, 101, .065);
+  text-align: start;
+  animation: jwelcome-enter .65s cubic-bezier(.22, 1, .36, 1) .14s both;
+}
+
+.jwelcome__path-heading {
+  margin: 2px 4px 18px;
+}
+
+.jwelcome__path-overline {
+  color: #7a8da5;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+.jwelcome__path-heading h2 {
+  margin: 5px 0 0;
+  color: var(--jw-ink);
+  font: 700 20px/1.35 'Manrope', sans-serif;
+  letter-spacing: -.02em;
+}
+
+.jwelcome__steps {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.jwelcome__step {
+  min-width: 0;
+  min-height: 158px;
+  padding: 15px 14px 16px;
+  position: relative;
+  border: 1px solid #e8eef5;
+  border-radius: 16px;
+  background: #fbfcfe;
+  animation: jwelcome-enter .55s cubic-bezier(.22, 1, .36, 1) both;
+}
+
+.jwelcome__step:nth-child(1) { animation-delay: .2s; }
+.jwelcome__step:nth-child(2) { animation-delay: .26s; }
+.jwelcome__step:nth-child(3) { animation-delay: .32s; }
+.jwelcome__step:nth-child(4) { animation-delay: .38s; }
+
+.jwelcome__step-number {
+  position: absolute;
+  inset-block-start: 14px;
+  inset-inline-end: 14px;
+  color: #9aabc0;
+  font: 600 10px 'JetBrains Mono', monospace;
+  letter-spacing: .04em;
+}
+
+.jwelcome__step-icon {
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  margin-bottom: 15px;
+  border-radius: 12px;
+  background: var(--jw-accent);
+  color: var(--jw-blue);
+}
+
+.jwelcome__step-copy h3 {
+  margin: 0 0 6px;
+  color: var(--jw-ink);
+  font: 700 15px/1.3 'Manrope', sans-serif;
+}
+
+.jwelcome__step-copy p {
+  margin: 0;
+  color: #65768d;
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.jwelcome__action-area {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 13px;
+  margin-top: 30px;
+  animation: jwelcome-enter .65s cubic-bezier(.22, 1, .36, 1) .34s both;
+}
+
+.jwelcome__cta {
+  min-width: min(100%, 236px);
+  min-height: 56px;
+  padding: 0 23px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  border: 0;
+  border-radius: 15px;
+  background: var(--jw-blue);
+  color: #fff !important;
+  font-size: 16px;
+  font-weight: 700;
+  box-shadow: 0 9px 20px rgba(35, 76, 128, .18);
+  transition: transform .18s ease, background-color .18s ease, box-shadow .18s ease;
+}
+
+.jwelcome__cta:hover {
+  transform: translateY(-2px);
+  background: var(--jw-blue-dark);
+  box-shadow: 0 12px 24px rgba(35, 76, 128, .22);
+}
+
+.jwelcome__cta:active,
+.jwelcome__language-button:active {
+  transform: translateY(1px) scale(.99);
+}
+
+.jwelcome__cta-arrow {
+  transition: transform .2s ease;
+}
+
+.jwelcome:not(.jwelcome--rtl) .jwelcome__cta:hover .jwelcome__cta-arrow {
+  transform: translateX(3px);
+}
+
+.jwelcome--rtl .jwelcome__cta-arrow {
+  transform: rotate(180deg);
+}
+
+.jwelcome--rtl .jwelcome__cta:hover .jwelcome__cta-arrow {
+  transform: rotate(180deg) translateX(3px);
+}
+
+.jwelcome__gentle-note {
+  color: #7a899d;
+  font-size: 12px;
+}
+
+.jwelcome__footer {
+  width: min(100% - 48px, 1120px);
+  min-height: 74px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  border-top: 1px solid rgba(222, 230, 239, .8);
+  color: #7b899b;
+  font-size: 12px;
+}
+
+.jwelcome__footer p {
+  margin: 0;
+}
+
+.jwelcome__footer-mark {
+  width: 20px;
+  height: 20px;
+  display: grid;
+  place-items: center;
+  border: 1px solid #dbe4ee;
+  border-radius: 7px;
+  color: #526c8b;
+  font: 700 10px 'Manrope', sans-serif;
+}
+
+.jwelcome:focus-visible a,
+.jwelcome:focus-visible button,
+.jwelcome a:focus-visible,
+.jwelcome button:focus-visible {
+  outline: 3px solid #8fb4dc;
+  outline-offset: 4px;
+}
+
+.jwelcome--rtl {
+  font-family: 'DM Sans', sans-serif;
+}
+
+.jwelcome--rtl .jwelcome__logo {
+  object-position: right center;
+}
+
+.jwelcome--rtl .jwelcome__intro h1,
+.jwelcome--rtl .jwelcome__path-heading h2,
+.jwelcome--rtl .jwelcome__step-copy h3 {
+  font-family: 'DM Sans', sans-serif;
+  letter-spacing: 0;
+}
+
+@keyframes jwelcome-enter {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 680px) {
+  .jwelcome__header {
+    width: calc(100% - 36px);
+    min-height: 76px;
+  }
+
+  .jwelcome__logo {
+    width: 103px;
+    height: 52px;
+  }
+
+  .jwelcome__language-caption {
+    display: none;
+  }
+
+  .jwelcome__main {
+    width: calc(100% - 36px);
+    padding-top: 42px;
+    padding-bottom: 40px;
+  }
+
+  .jwelcome__intro h1 {
+    max-width: 560px;
+    font-size: clamp(35px, 9vw, 48px);
+  }
+
+  .jwelcome__description {
+    max-width: 440px;
+    margin-top: 16px;
+    font-size: 15px;
+  }
+
+  .jwelcome__path {
+    margin-top: 35px;
+    padding: 21px 18px 18px;
+    border-radius: 21px;
+  }
+
+  .jwelcome__steps {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 9px;
+  }
+
+  .jwelcome__step {
+    min-height: 145px;
+    padding: 13px 12px;
+  }
+
+  .jwelcome__step-copy p {
+    font-size: 12px;
+  }
+
+  .jwelcome__action-area {
+    margin-top: 25px;
+  }
+
+  .jwelcome__footer {
+    width: calc(100% - 36px);
+    min-height: 66px;
+  }
+}
+
+@media (max-width: 360px) {
+  .jwelcome__main {
+    width: calc(100% - 28px);
+  }
+
+  .jwelcome__path {
+    padding-inline: 13px;
+  }
+
+  .jwelcome__step {
+    padding-inline: 10px;
+  }
+
+  .jwelcome__step-copy h3 {
+    font-size: 14px;
+  }
+
+  .jwelcome__step-copy p {
+    font-size: 11px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .jwelcome *,
+  .jwelcome *::before,
+  .jwelcome *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: .01ms !important;
+  }
+}

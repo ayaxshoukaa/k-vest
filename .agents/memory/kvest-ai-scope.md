@@ -7,11 +7,11 @@ K-vest AI is a beginner-friendly guided journey for investing education in Kuwai
 
 Build one screen or feature at a time, explain each change briefly, and stop for the user to test before moving to the next. Do not implement the whole journey in one pass.
 
-Preserve the current K-vest AI visual design when implementing features; do not restyle existing pages unless the user explicitly asks.
+Keep the existing home and sign-in designs unchanged; use the new mostly-white, deep-blue visual direction only on newly added journey screens.
 
-**Why:** the user asked to keep the website's existing design unchanged.
+**Why:** the user confirmed the new style should apply to journey screens only.
 
-**How to apply:** reuse the existing colors, typography, and components. Keep feature work scoped to the requested screen or interaction.
+**How to apply:** do not restyle existing pages while building the journey; apply the new visual direction to each new screen.
 
 The attached journey specification mentions MongoDB, but the project's actual `replit.md` specifies React/Vite, Express, PostgreSQL, and Drizzle. Follow `replit.md`; do not migrate storage or authentication as part of a screen-level feature.
 

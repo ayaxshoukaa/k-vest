@@ -22,6 +22,7 @@ import Home from '@/pages/home';
 import ScannerPage from '@/pages/scanner';
 import StockDetailPage from '@/pages/stock-detail';
 import WatchlistPage from '@/pages/watchlist';
+import JourneyWelcomePage from '@/pages/journey-welcome';
 import NotFound from '@/pages/not-found';
 
 const queryClient = new QueryClient();
@@ -145,7 +146,7 @@ function SignInPage() {
         routing="path"
         path={`${basePath}/sign-in`}
         signUpUrl={`${basePath}/sign-up`}
-        fallbackRedirectUrl={`${basePath}/user-portal`}
+        fallbackRedirectUrl={`${basePath}/journey/welcome`}
       />
     </AuthPage>
   );
@@ -158,7 +159,7 @@ function SignUpPage() {
         routing="path"
         path={`${basePath}/sign-up`}
         signInUrl={`${basePath}/sign-in`}
-        fallbackRedirectUrl={`${basePath}/user-portal`}
+        fallbackRedirectUrl={`${basePath}/journey/welcome`}
       />
     </AuthPage>
   );
@@ -266,6 +267,7 @@ function ClerkRoutes() {
       <RoutedErrorBoundary>
         <Switch>
           <Route path="/" component={HomeRedirect} />
+          <Route path="/journey/welcome" component={JourneyWelcomePage} />
           <Route path="/scanner" component={ScannerPage} />
           <Route path="/stocks/:symbol" component={StockDetailPage} />
           <Route path="/watchlist" component={WatchlistPage} />

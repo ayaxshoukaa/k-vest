@@ -196,7 +196,7 @@ export function AuthPage({ mode, children }: AuthPageProps) {
           {children}
           {mode === 'sign-in' && (
             <div className="kv-auth__guest-action">
-              <Link href="/" data-testid="link-continue-as-guest">Continue as guest</Link>
+              <Link href="/journey/welcome" data-testid="link-continue-as-guest">Continue as guest</Link>
             </div>
           )}
           <p className="kv-auth__footer-note">
