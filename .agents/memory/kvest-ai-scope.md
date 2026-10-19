@@ -25,6 +25,12 @@ The entry flow is sign-in or an explicit Continue as guest choice, followed by t
 
 **How to apply:** keep journey access behind either a Clerk account or an explicit browser guest choice; never treat a client-selected owner as identity. Keep guest and account progress separate, and do not delete guest data when simplifying the visible flow.
 
+Company analysis and saved AI research use the user's Gemini API key directly on the backend; do not route them through Replit-managed Anthropic.
+
+**Why:** the user chose Gemini API access for K-vest AI research.
+
+**How to apply:** read the key only from Replit Secrets on the API server, never expose it to the Vite client or logs, and preserve explicit stale/sample-data disclosures in AI answers.
+
 The attached journey specification mentions MongoDB, but the project's actual `replit.md` specifies React/Vite, Express, PostgreSQL, and Drizzle. Follow `replit.md`; do not migrate storage or authentication as part of a screen-level feature.
 
 **Why:** the user asked to follow the project's `replit.md` stack, which differs from the MongoDB note in the pasted feature specification.

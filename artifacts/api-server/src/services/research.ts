@@ -1,5 +1,5 @@
-import { anthropic } from "@workspace/integrations-anthropic-ai";
 import type { MarketStockDetailResponse } from "@workspace/api-zod";
+import { GEMINI_MODEL, getGeminiClient } from "./gemini";
 import { JourneyError } from "./journey";
 
 const requestWindows = new Map<string, { count: number; expiresAt: number }>();
@@ -82,17 +82,15 @@ export async function analyzeCompany(
   question: string,
   language: "en" | "ar",
 ): Promise<string> {
-  const response = await anthropic.messages.create({
-    model: "claude-sonnet-4-6",
-    max_tokens: 8192,
-    system: researchSystemPrompt(context, language),
-    messages: [{ role: "user", content: question }],
+  const response = await getGeminiClient().models.generateContent({
+    model: GEMINI_MODEL,
+    contents: question,
+    config: {
+      maxOutputTokens: 8192,
+      systemInstruction: researchSystemPrompt(context, language),
+    },
   });
-  const text = response.content
-    .filter((block) => block.type === "text")
-    .map((block) => block.text)
-    .join("\n")
-    .trim();
+  const text = response.text?.trim() ?? "";
   if (!text) {
     throw new JourneyError("The AI returned no analysis. Please try again.", 502);
   }

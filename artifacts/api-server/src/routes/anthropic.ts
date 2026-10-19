@@ -5,11 +5,11 @@ import {
   SendAnthropicMessageBody,
 } from "@workspace/api-zod";
 import { conversations, db, messages } from "@workspace/db";
-import { anthropic } from "@workspace/integrations-anthropic-ai";
 import { and, asc, desc, eq } from "drizzle-orm";
 import { Router, type IRouter, type Request } from "express";
 import { getCompanyResearchContext, JourneyError, markResearchComplete } from "../services/journey";
 import { checkResearchLimit, researchSystemPrompt } from "../services/research";
+import { GEMINI_MODEL, getGeminiClient } from "../services/gemini";
 import { sameOriginLearningApi } from "../middlewares/journeyOwner";
 
 const router: IRouter = Router();
@@ -119,22 +119,32 @@ router.post("/anthropic/conversations/:id/messages", async (req, res, next) => {
     res.setHeader("Cache-Control", "no-cache, no-transform");
     res.setHeader("X-Accel-Buffering", "no");
     res.flushHeaders();
-    const stream = anthropic.messages.stream({
-      model: "claude-sonnet-4-6",
-      max_tokens: 8192,
-      system: researchSystemPrompt(context, parsed.data.language),
-      messages: [
-        ...previous.map((message) => ({ role: message.role as "user" | "assistant", content: message.content })),
-        { role: "user", content: parsed.data.content },
+    const abortController = new AbortController();
+    res.on("close", () => {
+      if (!res.writableEnded) abortController.abort();
+    });
+    const stream = await getGeminiClient().models.generateContentStream({
+      model: GEMINI_MODEL,
+      config: {
+        abortSignal: abortController.signal,
+        maxOutputTokens: 8192,
+        systemInstruction: researchSystemPrompt(context, parsed.data.language),
+      },
+      contents: [
+        ...previous.map((message) => ({
+          role: message.role === "assistant" ? "model" : "user",
+          parts: [{ text: message.content }],
+        })),
+        { role: "user", parts: [{ text: parsed.data.content }] },
       ],
     });
     let text = "";
-    res.on("close", () => { if (!res.writableEnded) stream.abort(); });
     try {
-      for await (const event of stream) {
-        if (event.type === "content_block_delta" && event.delta.type === "text_delta") {
-          text += event.delta.text;
-          res.write(`data: ${JSON.stringify({ content: event.delta.text })}\n\n`);
+      for await (const chunk of stream) {
+        const content = chunk.text ?? "";
+        if (content) {
+          text += content;
+          res.write(`data: ${JSON.stringify({ content })}\n\n`);
         }
       }
       if (!text.trim()) throw new Error("AI returned an empty response.");
