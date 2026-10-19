@@ -1,27 +1,20 @@
 import { useEffect, useRef, type ReactNode } from 'react';
 import { QueryClient, QueryClientProvider, useQueryClient } from '@tanstack/react-query';
 import {
-  ClerkLoaded,
-  ClerkLoading,
   ClerkProvider,
-  Show,
   SignIn,
   SignUp,
   useClerk,
-  useUser,
 } from '@clerk/react';
 import { publishableKeyFromHost } from '@clerk/react/internal';
 import { shadcn } from '@clerk/themes';
-import { Link, Redirect, Route, Switch, useLocation, Router as WouterRouter } from 'wouter';
+import { Redirect, Route, Switch, useLocation, Router as WouterRouter } from 'wouter';
 import { ErrorBoundary } from '@/components/error-boundary';
-import { AuthPage } from '@/components/auth-page';
-import { BrandMark } from '@/components/brand-mark';
+import { AuthEntry } from '@/components/auth-entry';
+import { AuthGate } from '@/components/auth-gate';
+import { GuestAccessProvider } from '@/components/guest-access';
 import { Toaster } from '@/components/ui/toaster';
 import { TooltipProvider } from '@/components/ui/tooltip';
-import Home from '@/pages/home';
-import ScannerPage from '@/pages/scanner';
-import StockDetailPage from '@/pages/stock-detail';
-import WatchlistPage from '@/pages/watchlist';
 import JourneyWelcomePage from '@/pages/journey-welcome';
 import JourneyScanPage from '@/pages/journey-scan';
 import JourneyResearchPage from '@/pages/journey-research';
@@ -128,118 +121,34 @@ function RoutedErrorBoundary({ children }: { children: ReactNode }) {
 }
 
 function HomeRedirect() {
-  return (
-    <>
-      <ClerkLoaded>
-        <Show when="signed-in">
-          <Redirect to="/user-portal" />
-        </Show>
-        <Show when="signed-out">
-          <Home />
-        </Show>
-      </ClerkLoaded>
-      <ClerkLoading>
-        <Home />
-      </ClerkLoading>
-    </>
-  );
+  return <Redirect to="/journey/welcome" />;
 }
 
 function SignInPage() {
   return (
-    <AuthPage mode="sign-in">
+    <AuthEntry mode="sign-in">
       <SignIn
         routing="path"
         path={`${basePath}/sign-in`}
         signUpUrl={`${basePath}/sign-up`}
         fallbackRedirectUrl={`${basePath}/journey/welcome`}
+        forceRedirectUrl={`${basePath}/journey/welcome`}
       />
-    </AuthPage>
+    </AuthEntry>
   );
 }
 
 function SignUpPage() {
   return (
-    <AuthPage mode="sign-up">
+    <AuthEntry mode="sign-up">
       <SignUp
         routing="path"
         path={`${basePath}/sign-up`}
         signInUrl={`${basePath}/sign-in`}
         fallbackRedirectUrl={`${basePath}/journey/welcome`}
+        forceRedirectUrl={`${basePath}/journey/welcome`}
       />
-    </AuthPage>
-  );
-}
-
-function SignedInPortal() {
-  const { isLoaded, user } = useUser();
-  const { signOut } = useClerk();
-
-  if (!isLoaded) {
-    return <main className="kv-auth__main" aria-live="polite">Loading your account…</main>;
-  }
-
-  if (!user) {
-    return <Redirect to="/" />;
-  }
-
-  const email = user.primaryEmailAddress?.emailAddress ?? 'Your account';
-
-  return (
-    <div className="kv-auth" data-testid="page-account">
-      <header className="kv-auth__header">
-        <Link href="/" className="kv-auth__brand" aria-label="K-vest AI home" data-testid="link-account-home">
-          <BrandMark className="kv-auth__mark" />
-        </Link>
-        <button
-          className="kv-auth__home-link"
-          type="button"
-          onClick={() => signOut({ redirectUrl: basePath || '/' })}
-          data-testid="button-sign-out"
-        >
-          Sign out
-        </button>
-      </header>
-      <main className="kv-auth__main" style={{ gridTemplateColumns: 'minmax(0, 1fr)' }}>
-        <section className="kv-auth__story" aria-labelledby="account-title">
-          <div className="kv-auth__eyebrow">
-            <span className="kv-auth__eyebrow-mark" aria-hidden="true" />
-            Account ready
-          </div>
-          <h1 className="kv-auth__title" id="account-title">
-            Welcome{user.firstName ? `, ${user.firstName}` : ''}<span className="kv-auth__title-accent">.</span>
-          </h1>
-          <p className="kv-auth__intro" data-testid="text-account-email">{email}</p>
-          <p className="kv-auth__gentle-note">
-            Your guided learning journey is ready. Continue from where you left off.
-          </p>
-          <Link href="/journey/welcome" className="kv-auth__home-link" data-testid="link-account-journey">
-            Continue your journey
-          </Link>
-          <Link href="/" className="kv-auth__home-link" data-testid="link-account-return-home">
-            Return to the home page
-          </Link>
-        </section>
-      </main>
-    </div>
-  );
-}
-
-function UserPortal() {
-  return (
-    <>
-      <ClerkLoaded>
-        <Show when="signed-in">
-          <SignedInPortal />
-        </Show>
-        <Show when="signed-out">
-          <Redirect to="/" />
-        </Show>
-      </ClerkLoaded>
-      <ClerkLoading>
-        <main className="kv-auth__main" aria-live="polite">Loading your account…</main>
-      </ClerkLoading>
-    </>
+    </AuthEntry>
   );
 }
 
@@ -256,8 +165,8 @@ function ClerkRoutes() {
       localization={{
         signIn: {
           start: {
-            title: 'Welcome back',
-            subtitle: 'Sign in to continue learning with K-vest AI',
+            title: 'Sign in',
+            subtitle: '',
             actionText: 'New to K-vest AI?',
             actionLink: 'Create account',
           },
@@ -265,15 +174,17 @@ function ClerkRoutes() {
         signUp: {
           start: {
             title: 'Create your account',
-            subtitle: 'Start your K-vest AI learning journey',
+            subtitle: '',
           },
         },
       }}
       routerPush={(to) => setLocation(stripBase(to))}
       routerReplace={(to) => setLocation(stripBase(to), { replace: true })}
     >
+      <GuestAccessProvider>
       <ClerkQueryClientCacheInvalidator />
       <RoutedErrorBoundary>
+        <AuthGate>
         <Switch>
           <Route path="/" component={HomeRedirect} />
           <Route path="/journey/welcome" component={JourneyWelcomePage} />
@@ -286,15 +197,17 @@ function ClerkRoutes() {
           <Route path="/journey/roi-intro" component={RoiIntroPage} />
           <Route path="/journey/roi" component={JourneyRoiPage} />
           <Route path="/journey/finish" component={JourneyFinishPage} />
-          <Route path="/scanner" component={ScannerPage} />
-          <Route path="/stocks/:symbol" component={StockDetailPage} />
-          <Route path="/watchlist" component={WatchlistPage} />
+          <Route path="/scanner" component={HomeRedirect} />
+          <Route path="/stocks/:symbol" component={HomeRedirect} />
+          <Route path="/watchlist" component={HomeRedirect} />
           <Route path="/sign-in/*?" component={SignInPage} />
           <Route path="/sign-up/*?" component={SignUpPage} />
-          <Route path="/user-portal" component={UserPortal} />
+          <Route path="/user-portal" component={HomeRedirect} />
           <Route component={NotFound} />
         </Switch>
+        </AuthGate>
       </RoutedErrorBoundary>
+      </GuestAccessProvider>
     </ClerkProvider>
   );
 }

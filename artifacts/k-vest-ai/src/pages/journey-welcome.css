@@ -61,6 +61,14 @@
   gap: 10px;
 }
 
+.jwelcome__header-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
 .jwelcome__language-caption {
   color: #8b94b0;
   font-size: 12px;

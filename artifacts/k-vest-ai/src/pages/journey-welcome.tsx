@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
+import { useAuth, useClerk } from '@clerk/react';
 import { ArrowRight } from 'lucide-react';
 import { Link, useLocation } from 'wouter';
 import { useQueryClient } from '@tanstack/react-query';
 import { getGetJourneyStateQueryKey, useStartJourney } from '@workspace/api-client-react';
 import { stepPath } from '@/lib/journey';
 import { BrandMark } from '@/components/brand-mark';
-import { JourneyHomeLink } from '@/components/journey/home-link';
+import { useGuestAccess } from '@/components/guest-access';
 import './journey-welcome.css';
 
 type Language = 'en' | 'ar';
@@ -16,18 +17,23 @@ const copy = {
   en: {
     languageLabel: 'Choose language',
     switchLabel: 'العربية',
-    action: 'Get started',
+    action: 'Start learning',
     footer: 'For education only. Not financial advice.',
   },
   ar: {
     languageLabel: 'اختر اللغة',
     switchLabel: 'English',
-    action: 'ابدأ الآن',
+    action: 'ابدأ التعلّم',
     footer: 'للتثقيف فقط. لا يُعد نصيحة مالية.',
   },
 } as const;
 
 export default function JourneyWelcomePage() {
+  const { signOut } = useClerk();
+  const { isSignedIn } = useAuth();
+  const { leaveGuest } = useGuestAccess();
+  const [signingOut, setSigningOut] = useState(false);
+  const [signOutError, setSignOutError] = useState(false);
   const queryClient = useQueryClient();
   const [, setLocation] = useLocation();
   const start = useStartJourney({
@@ -48,6 +54,17 @@ export default function JourneyWelcomePage() {
   const isArabic = language === 'ar';
   const text = copy[language];
 
+  const leaveAccount = async () => {
+    setSigningOut(true);
+    setSignOutError(false);
+    try {
+      await signOut({ redirectUrl: `${import.meta.env.BASE_URL}sign-in` });
+    } catch {
+      setSigningOut(false);
+      setSignOutError(true);
+    }
+  };
+
   useEffect(() => {
     try {
       window.localStorage.setItem(languageStorageKey, language);
@@ -62,7 +79,8 @@ export default function JourneyWelcomePage() {
         <Link href="/" className="jwelcome__brand" aria-label={isArabic ? 'العودة إلى الصفحة الرئيسية' : 'K-vest home'} data-testid="link-journey-home">
           <BrandMark className="jwelcome__logo" />
         </Link>
-        <div className="jwelcome__language" role="group" aria-label={text.languageLabel} data-testid="control-language">
+        <div className="jwelcome__header-actions">
+          <div className="jwelcome__language" role="group" aria-label={text.languageLabel} data-testid="control-language">
           <button
             className="jwelcome__language-button"
             type="button"
@@ -72,9 +90,21 @@ export default function JourneyWelcomePage() {
           >
             {text.switchLabel}
           </button>
+          </div>
+          {isSignedIn ? (
+            <button type="button" className="jwelcome__language-button" disabled={signingOut} onClick={() => void leaveAccount()} data-testid="button-sign-out">
+              {signingOut ? (isArabic ? 'جارٍ الخروج…' : 'Signing out…') : (isArabic ? 'تسجيل الخروج' : 'Sign out')}
+            </button>
+          ) : (
+            <button type="button" className="jwelcome__language-button" onClick={() => {
+              leaveGuest();
+              setLocation('/sign-in');
+            }} data-testid="button-guest-sign-in">
+              {isArabic ? 'تسجيل الدخول' : 'Sign in'}
+            </button>
+          )}
         </div>
       </header>
-      <JourneyHomeLink isAr={isArabic} />
 
       <main className="jwelcome__main" aria-label={text.action}>
         <div className="jwelcome__action-area">
@@ -83,6 +113,7 @@ export default function JourneyWelcomePage() {
             <ArrowRight size={19} aria-hidden="true" className="jwelcome__cta-arrow" />
           </button>
           {start.isError && <span role="alert" data-testid="text-journey-start-error">{isArabic ? 'تعذّر بدء الرحلة. حاول مجددًا.' : 'Could not start the journey. Please try again.'}</span>}
+          {signOutError && <span role="alert" data-testid="text-sign-out-error">{isArabic ? 'تعذّر تسجيل الخروج. حاول مجددًا.' : 'Could not sign out. Please try again.'}</span>}
         </div>
       </main>
 

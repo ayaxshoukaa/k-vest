@@ -81,6 +81,7 @@ paths:
     get:
       operationId: getJourneyState
       tags: [journey]
+      security: [{ ClerkSession: [] }, {}]
       summary: Get account or browser-guest journey progress and demo portfolio
       responses:
         "200":
@@ -93,6 +94,7 @@ paths:
     post:
       operationId: startJourney
       tags: [journey]
+      security: [{ ClerkSession: [] }, {}]
       summary: Start or resume the guided journey
       responses:
         "200":
@@ -105,6 +107,7 @@ paths:
     put:
       operationId: saveJourneyWatchlist
       tags: [journey]
+      security: [{ ClerkSession: [] }, {}]
       summary: Save the user's Phase 1 company selections
       requestBody:
         required: true
@@ -123,6 +126,7 @@ paths:
     post:
       operationId: advanceJourney
       tags: [journey]
+      security: [{ ClerkSession: [] }, {}]
       summary: Advance one step after validating phase requirements
       requestBody:
         required: true
@@ -143,6 +147,7 @@ paths:
     post:
       operationId: skipJourneyPractice
       tags: [journey]
+      security: [{ ClerkSession: [] }, {}]
       summary: Skip the optional practice trade and continue to ROI
       requestBody:
         required: true
@@ -161,6 +166,7 @@ paths:
     post:
       operationId: createJourneyTrade
       tags: [journey]
+      security: [{ ClerkSession: [] }, {}]
       summary: Record a simulated stock trade at the latest available quote
       requestBody:
         required: true
@@ -181,6 +187,7 @@ paths:
     post:
       operationId: resetJourneyWallet
       tags: [journey]
+      security: [{ ClerkSession: [] }, {}]
       summary: Reset the practice wallet to 1,000 KD
       responses:
         "200":
@@ -193,6 +200,7 @@ paths:
     post:
       operationId: calculateJourneyRoi
       tags: [journey]
+      security: [{ ClerkSession: [] }, {}]
       summary: Calculate and save the user's ROI scenario
       requestBody:
         required: true
@@ -211,6 +219,7 @@ paths:
     post:
       operationId: resetJourney
       tags: [journey]
+      security: [{ ClerkSession: [] }, {}]
       summary: Reset all journey progress and the practice wallet
       responses:
         "200":
@@ -223,6 +232,7 @@ paths:
     post:
       operationId: analyzeJourneyCompany
       tags: [journey]
+      security: [{ ClerkSession: [] }, {}]
       summary: Ask the AI research assistant about a Kuwait-listed company
       requestBody:
         required: true
@@ -344,6 +354,11 @@ paths:
         "404":
           description: Conversation not found
 components:
+  securitySchemes:
+    ClerkSession:
+      type: apiKey
+      in: cookie
+      name: __session
   parameters:
     ConversationId:
       name: id

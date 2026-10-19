@@ -25,7 +25,7 @@ export const sameOriginLearningApi: RequestHandler = (req, res, next) => {
   next();
 };
 
-/** Guests get an unguessable, signed, HTTP-only browser identity, never a client-selected user ID. */
+/** Use the Clerk account or an unguessable, signed browser identity, never a client-selected owner. */
 export const resolveJourneyOwner: RequestHandler = (req, res, next) => {
   const accountId = getAuth(req).userId;
   if (accountId) {

@@ -19,11 +19,11 @@ Keep the Get started screen minimal, without welcome prose or milestone cards.
 
 **How to apply:** do not reintroduce marketing copy or a journey overview on that screen.
 
-Preserving the homepage design must not leave new journey features undiscoverable. Keep a visible homepage entry to the journey and present the relevant new screen, not only the unchanged welcome page.
+The entry flow is sign-in, then the minimal Start learning screen, then the guided journey. Do not show the old marketing homepage, guest-entry option, or account-ready interstitial.
 
-**Why:** the user reported “nothing changed” after the journey was implemented but the default homepage still lacked an entry and described completed features as planned.
+**Why:** the user asked for a login page when users first enter the website and to “remove everything else leave the start learning part.”
 
-**How to apply:** preserve existing styling and calculator access while wiring new journey navigation and keeping availability text accurate.
+**How to apply:** require an account for learning pages and learning APIs. Back-to-home navigation returns signed-in users to Start learning. Keep saved data intact rather than deleting it when simplifying the visible flow.
 
 The attached journey specification mentions MongoDB, but the project's actual `replit.md` specifies React/Vite, Express, PostgreSQL, and Drizzle. Follow `replit.md`; do not migrate storage or authentication as part of a screen-level feature.
 
