@@ -6,6 +6,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { getGetJourneyStateQueryKey, useStartJourney } from '@workspace/api-client-react';
 import { stepPath } from '@/lib/journey';
 import { BrandMark } from '@/components/brand-mark';
+import { JourneyHomeLink } from '@/components/journey/home-link';
 import './journey-welcome.css';
 
 type Language = 'en' | 'ar';
@@ -96,6 +97,7 @@ export default function JourneyWelcomePage() {
           </button>
         </div>
       </header>
+      <JourneyHomeLink isAr={isArabic} />
 
       <main className="jwelcome__main">
         <section className="jwelcome__intro" aria-labelledby="journey-welcome-title">

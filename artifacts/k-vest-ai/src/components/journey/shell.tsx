@@ -11,6 +11,7 @@ import {
   type JourneyStep,
 } from '@workspace/api-client-react';
 import { BrandMark } from '@/components/brand-mark';
+import { JourneyHomeLink } from './home-link';
 import {
   DATA_NOTE_AR, DATA_NOTE_EN, DISCLAIMER_AR, DISCLAIMER_EN,
   errMsg, phaseOf, stepIndex, stepOrder, stepPath, useJourneyLanguage,
@@ -132,6 +133,7 @@ export function JourneyShell({ step, children }: { step: JourneyStep; children: 
           {tr('العربية', 'English')}
         </button>
       </header>
+      <JourneyHomeLink isAr={isAr} />
       <p className="jx-saved" data-testid="text-save-location">{isSignedIn ? tr('Progress is saved to your account.', 'يُحفظ تقدّمك في حسابك.') : tr('Progress is saved in this browser.', 'يُحفظ تقدّمك في هذا المتصفح.')}</p>
       <main className="jx-main" ref={mainRef} tabIndex={-1}>{body}</main>
       <footer className="jx-footer" data-testid="footer-journey-disclaimer">

@@ -1,0 +1,34 @@
+.journey-home-nav {
+  width: min(100% - 32px, 1120px);
+  margin: 0 auto;
+  padding-block: 8px;
+}
+
+.journey-home-nav .journey-home-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 8px 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(34, 211, 238, .06);
+  color: #dde1fb;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.journey-home-nav .journey-home-link:hover {
+  border-color: #22d3ee;
+  background: rgba(34, 211, 238, .12);
+}
+
+.journey-home-nav .journey-home-link:focus-visible {
+  outline: 2px solid #22d3ee;
+  outline-offset: 3px;
+}
+
+[dir="rtl"] .journey-home-link svg {
+  transform: scaleX(-1);
+}
