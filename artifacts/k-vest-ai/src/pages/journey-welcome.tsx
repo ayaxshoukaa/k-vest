@@ -1,7 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useUser } from '@clerk/react';
 import { ArrowRight, BookOpen, ChartNoAxesCombined, Search, ShieldCheck } from 'lucide-react';
-import { Link } from 'wouter';
+import { Link, useLocation } from 'wouter';
+import { useQueryClient } from '@tanstack/react-query';
+import { getGetJourneyStateQueryKey, useStartJourney } from '@workspace/api-client-react';
+import { stepPath } from '@/lib/journey';
 import { BrandMark } from '@/components/brand-mark';
 import './journey-welcome.css';
 
@@ -46,6 +49,16 @@ const copy = {
 
 export default function JourneyWelcomePage() {
   const { user } = useUser();
+  const queryClient = useQueryClient();
+  const [, setLocation] = useLocation();
+  const start = useStartJourney({
+    mutation: {
+      onSuccess: (res) => {
+        queryClient.setQueryData(getGetJourneyStateQueryKey(), res);
+        setLocation(stepPath(res.currentStep));
+      },
+    },
+  });
   const [language, setLanguage] = useState<Language>(() => {
     try {
       return window.localStorage.getItem(languageStorageKey) === 'ar' ? 'ar' : 'en';
@@ -117,10 +130,11 @@ export default function JourneyWelcomePage() {
         </section>
 
         <div className="jwelcome__action-area">
-          <Link href="/scanner" className="jwelcome__cta" data-testid="link-journey-get-started">
-            <span>{text.action}</span>
+          <button type="button" className="jwelcome__cta" disabled={start.isPending} onClick={() => start.mutate()} data-testid="link-journey-get-started">
+            <span>{start.isPending ? (isArabic ? 'جارٍ البدء…' : 'Starting…') : text.action}</span>
             <ArrowRight size={19} aria-hidden="true" className="jwelcome__cta-arrow" />
-          </Link>
+          </button>
+          {start.isError && <span role="alert" data-testid="text-journey-start-error">{isArabic ? 'تعذّر بدء الرحلة. حاول مجددًا.' : 'Could not start the journey. Please try again.'}</span>}
           <span className="jwelcome__gentle-note" data-testid="text-journey-gentle-note">
             {isArabic ? 'ابدأ بالاستكشاف، وتعلّم على مهل.' : 'Start by exploring. There is no rush.'}
           </span>

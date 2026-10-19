@@ -23,6 +23,12 @@ import ScannerPage from '@/pages/scanner';
 import StockDetailPage from '@/pages/stock-detail';
 import WatchlistPage from '@/pages/watchlist';
 import JourneyWelcomePage from '@/pages/journey-welcome';
+import JourneyScanPage from '@/pages/journey-scan';
+import JourneyResearchPage from '@/pages/journey-research';
+import JourneyPracticePage from '@/pages/journey-practice';
+import JourneyRoiPage from '@/pages/journey-roi';
+import JourneyFinishPage from '@/pages/journey-finish';
+import { ScanIntroPage, ResearchIntroPage, PracticeIntroPage, RoiIntroPage } from '@/pages/journey-intro';
 import NotFound from '@/pages/not-found';
 
 const queryClient = new QueryClient();
@@ -205,8 +211,11 @@ function SignedInPortal() {
           </h1>
           <p className="kv-auth__intro" data-testid="text-account-email">{email}</p>
           <p className="kv-auth__gentle-note">
-            K-vest AI is being built step by step. The calculator is available now; market research features are still planned.
+            Your guided learning journey is ready. Continue from where you left off.
           </p>
+          <Link href="/journey/welcome" className="kv-auth__home-link" data-testid="link-account-journey">
+            Continue your journey
+          </Link>
           <Link href="/" className="kv-auth__home-link" data-testid="link-account-return-home">
             Return to the home page
           </Link>
@@ -268,6 +277,15 @@ function ClerkRoutes() {
         <Switch>
           <Route path="/" component={HomeRedirect} />
           <Route path="/journey/welcome" component={JourneyWelcomePage} />
+          <Route path="/journey/scan-intro" component={ScanIntroPage} />
+          <Route path="/journey/scan" component={JourneyScanPage} />
+          <Route path="/journey/research-intro" component={ResearchIntroPage} />
+          <Route path="/journey/research" component={JourneyResearchPage} />
+          <Route path="/journey/practice-intro" component={PracticeIntroPage} />
+          <Route path="/journey/practice" component={JourneyPracticePage} />
+          <Route path="/journey/roi-intro" component={RoiIntroPage} />
+          <Route path="/journey/roi" component={JourneyRoiPage} />
+          <Route path="/journey/finish" component={JourneyFinishPage} />
           <Route path="/scanner" component={ScannerPage} />
           <Route path="/stocks/:symbol" component={StockDetailPage} />
           <Route path="/watchlist" component={WatchlistPage} />

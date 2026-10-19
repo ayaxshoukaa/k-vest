@@ -1,5 +1,6 @@
 import express, { type Express } from "express";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 import { clerkMiddleware } from "@clerk/express";
 import { publishableKeyFromHost } from "@clerk/shared/keys";
 import pinoHttp from "pino-http";
@@ -39,6 +40,10 @@ app.use(CLERK_PROXY_PATH, clerkProxyMiddleware());
 app.use(cors({ credentials: true, origin: true }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+if (!process.env.SESSION_SECRET) {
+  throw new Error("SESSION_SECRET is required for private guest learning sessions.");
+}
+app.use(cookieParser(process.env.SESSION_SECRET));
 
 app.use(
   clerkMiddleware((req) => ({

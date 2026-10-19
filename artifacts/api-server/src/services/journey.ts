@@ -1,8 +1,7 @@
-import { and, asc, eq } from "drizzle-orm";
+import { and, asc, eq, gte } from "drizzle-orm";
 import {
   demoTradesTable,
   journeyProgressTable,
-  type DemoTrade as DbDemoTrade,
   type JourneyProgress,
 } from "@workspace/db";
 import type {
@@ -14,6 +13,7 @@ import type {
 } from "@workspace/api-zod";
 import { db } from "@workspace/db";
 import { getMarketScanner, getMarketStock } from "./market-scanner";
+import { calculateLedger as calculateAccount, calculateRoiScenario, roundKwd, roundPercent } from "./journey-calculations";
 
 export const JOURNEY_STEPS: JourneyStep[] = [
   "scan-intro",
@@ -40,14 +40,6 @@ export class JourneyError extends Error {
   }
 }
 
-function roundKwd(value: number): number {
-  return Math.round((value + Number.EPSILON) * 1000) / 1000;
-}
-
-function roundPercent(value: number): number {
-  return Math.round((value + Number.EPSILON) * 100) / 100;
-}
-
 function getStepIndex(step: string): number {
   return JOURNEY_STEPS.indexOf(step as JourneyStep);
 }
@@ -66,44 +58,6 @@ export async function ensureJourneyProgress(userId: string): Promise<JourneyProg
   return progress;
 }
 
-function calculateAccount(trades: DbDemoTrade[]) {
-  let cashKwd = 1000;
-  const positions = new Map<
-    string,
-    { quantity: number; costBasisKwd: number }
-  >();
-
-  for (const trade of trades) {
-    const quantity = trade.quantity;
-    const notionalKwd = Number(trade.notionalKwd);
-    const position = positions.get(trade.symbol) ?? {
-      quantity: 0,
-      costBasisKwd: 0,
-    };
-
-    if (trade.side === "buy") {
-      cashKwd -= notionalKwd;
-      position.quantity += quantity;
-      position.costBasisKwd += notionalKwd;
-      positions.set(trade.symbol, position);
-      continue;
-    }
-
-    const averageCostKwd =
-      position.quantity > 0 ? position.costBasisKwd / position.quantity : 0;
-    cashKwd += notionalKwd;
-    position.quantity -= quantity;
-    position.costBasisKwd -= averageCostKwd * quantity;
-    if (position.quantity <= 0) {
-      positions.delete(trade.symbol);
-    } else {
-      positions.set(trade.symbol, position);
-    }
-  }
-
-  return { cashKwd: roundKwd(cashKwd), positions };
-}
-
 async function buildJourneyState(
   userId: string,
   progress?: JourneyProgress,
@@ -115,7 +69,7 @@ async function buildJourneyState(
     .where(eq(demoTradesTable.userId, userId))
     .orderBy(asc(demoTradesTable.createdAt), asc(demoTradesTable.id));
   const { cashKwd, positions } = calculateAccount(trades);
-  const symbols = [...positions.keys()];
+  const symbols = [...new Set([...positions.keys(), ...trades.map((trade) => trade.symbol)])];
   const market = symbols.length > 0 ? await getMarketScanner() : null;
   const stockBySymbol = new Map(
     (market?.stocks ?? []).map((stock) => [stock.symbol, stock]),
@@ -126,7 +80,7 @@ async function buildJourneyState(
 
   for (const [symbol, position] of positions) {
     const stock = stockBySymbol.get(symbol);
-    const currentPriceKwd = stock?.currentPriceKwd ?? null;
+    const currentPriceKwd = stock?.priceKwd ?? null;
     const costBasisKwd = roundKwd(position.costBasisKwd);
     const averageCostKwd =
       position.quantity > 0 ? roundKwd(position.costBasisKwd / position.quantity) : 0;
@@ -163,24 +117,23 @@ async function buildJourneyState(
   const profitLossKwd =
     portfolioValueKwd === null ? null : roundKwd(portfolioValueKwd - 1000);
 
-  const responseTrades: DemoTrade[] = await Promise.all(
-    trades.map(async (trade) => {
-      const stock = await getMarketStock(trade.symbol);
+  const responseTrades: DemoTrade[] =
+    trades.map((trade) => {
+      const stock = stockBySymbol.get(trade.symbol);
       return {
         id: trade.id,
         symbol: trade.symbol,
-        companyName: stock.stock?.companyName ?? trade.symbol,
+        companyName: stock?.companyName ?? trade.symbol,
         side: trade.side as "buy" | "sell",
         quantity: trade.quantity,
         priceKwd: Number(trade.priceKwd),
         notionalKwd: Number(trade.notionalKwd),
-        createdAt: trade.createdAt.toISOString(),
-        marketTime: trade.marketTime?.toISOString() ?? null,
+        createdAt: trade.createdAt,
+        marketTime: trade.marketTime ?? null,
         sample: trade.sample,
         stale: trade.stale,
       };
-    }),
-  );
+    });
 
   return {
     currentStep: JOURNEY_STEPS[getStepIndex(savedProgress.currentStep)] ?? "scan-intro",
@@ -301,7 +254,7 @@ export async function placeDemoTrade(
   }
 
   const stock = await getMarketStock(input.symbol);
-  const currentPriceKwd = stock.stock?.currentPriceKwd;
+  const currentPriceKwd = stock?.stock.priceKwd;
   if (!currentPriceKwd || currentPriceKwd <= 0) {
     throw new JourneyError("A usable quote is not available for this company.", 409);
   }
@@ -316,6 +269,9 @@ export async function placeDemoTrade(
       .limit(1);
     if (!lockedProgress) {
       throw new JourneyError("Start the journey before placing a practice trade.");
+    }
+    if (lockedProgress.furthestStep < 5) {
+      throw new JourneyError("Reach the practice phase before trading.");
     }
 
     const userTrades = await tx
@@ -343,9 +299,9 @@ export async function placeDemoTrade(
       quantity: input.quantity,
       priceKwd: currentPriceKwd.toFixed(3),
       notionalKwd: notionalKwd.toFixed(3),
-      marketTime: stock.stock?.lastUpdatedAt ? new Date(stock.stock.lastUpdatedAt) : null,
-      sample: stock.sample,
-      stale: stock.stale,
+      marketTime: stock?.stock.marketTime ?? null,
+      sample: stock?.stock.sample ?? true,
+      stale: stock?.stock.stale ?? true,
     });
   });
 
@@ -361,12 +317,17 @@ export async function resetPracticeWallet(
   }
 
   await db.transaction(async (tx) => {
+    const [locked] = await tx.select().from(journeyProgressTable)
+      .where(eq(journeyProgressTable.userId, userId)).for("update").limit(1);
+    if (!locked || locked.furthestStep < 5) {
+      throw new JourneyError("Reach the practice phase before resetting the wallet.");
+    }
     await tx.delete(demoTradesTable).where(eq(demoTradesTable.userId, userId));
     await tx
       .update(journeyProgressTable)
       .set({
         currentStep: "practice",
-        furthestStep: Math.min(progress.furthestStep, 5),
+        furthestStep: 5,
         practiceSkipped: false,
         roiResult: null,
       })
@@ -391,35 +352,13 @@ export async function saveRoiResult(
     throw new JourneyError("Reach the ROI calculator phase before calculating.");
   }
 
-  const annualDividendKwd = input.annualDividendKwd ?? 0;
-  const shares = input.budgetKwd / input.buyPriceKwd;
-  const dividendTotalKwd = shares * annualDividendKwd * input.yearsHeld;
-  const finalValueKwd = shares * input.targetPriceKwd + dividendTotalKwd;
-  const profitLossKwd = finalValueKwd - input.budgetKwd;
-  const roiPercent = (profitLossKwd / input.budgetKwd) * 100;
-  const annualizedReturnPercent =
-    finalValueKwd <= 0
-      ? -100
-      : (Math.pow(finalValueKwd / input.budgetKwd, 1 / input.yearsHeld) - 1) * 100;
-  const priceMovePercent =
-    Math.abs((input.targetPriceKwd - input.buyPriceKwd) / input.buyPriceKwd) * 100;
-  const riskLabel = priceMovePercent <= 5 ? "Low" : priceMovePercent <= 20 ? "Medium" : "High";
-  const result: JourneyRoiResult = {
-    symbol: input.symbol,
-    budgetKwd: roundKwd(input.budgetKwd),
-    buyPriceKwd: roundKwd(input.buyPriceKwd),
-    targetPriceKwd: roundKwd(input.targetPriceKwd),
-    annualDividendKwd: roundKwd(annualDividendKwd),
-    yearsHeld: input.yearsHeld,
-    shares: roundKwd(shares),
-    dividendTotalKwd: roundKwd(dividendTotalKwd),
-    finalValueKwd: roundKwd(finalValueKwd),
-    profitLossKwd: roundKwd(profitLossKwd),
-    roiPercent: roundPercent(roiPercent),
-    annualizedReturnPercent: roundPercent(annualizedReturnPercent),
-    riskLabel,
-    createdAt: new Date().toISOString(),
-  };
+  let result: JourneyRoiResult;
+  try {
+    result = { ...calculateRoiScenario(input), createdAt: new Date() };
+  } catch (error) {
+    if (error instanceof RangeError) throw new JourneyError(error.message, 400);
+    throw error;
+  }
 
   await db
     .update(journeyProgressTable)
@@ -433,6 +372,8 @@ export async function resetJourney(
 ): Promise<JourneyStateResponse> {
   await ensureJourneyProgress(userId);
   await db.transaction(async (tx) => {
+    await tx.select().from(journeyProgressTable)
+      .where(eq(journeyProgressTable.userId, userId)).for("update");
     await tx.delete(demoTradesTable).where(eq(demoTradesTable.userId, userId));
     await tx
       .update(journeyProgressTable)
@@ -460,36 +401,16 @@ export async function markResearchComplete(userId: string | undefined): Promise<
       and(
         eq(journeyProgressTable.userId, userId),
         // Only mark the phase complete if the user has reached it.
-        eq(journeyProgressTable.furthestStep, 3),
+        gte(journeyProgressTable.furthestStep, 3),
       ),
     );
 }
 
 export async function getCompanyResearchContext(symbol: string) {
   const result = await getMarketStock(symbol);
-  if (!result.stock) {
+  if (!result?.stock) {
     throw new JourneyError("Company is not available in the market scanner.", 404);
   }
   return result;
 }
 
-export async function getUserConversationOwner(
-  userId: string,
-  conversationId: number,
-) {
-  const { conversations } = await import("@workspace/db");
-  const [conversation] = await db
-    .select()
-    .from(conversations)
-    .where(and(eq(conversations.id, conversationId), eq(conversations.userId, userId)))
-    .limit(1);
-  return conversation;
-}
-
-export async function listUserDemoTrades(userId: string) {
-  return db
-    .select()
-    .from(demoTradesTable)
-    .where(eq(demoTradesTable.userId, userId))
-    .orderBy(asc(demoTradesTable.createdAt), asc(demoTradesTable.id));
-}

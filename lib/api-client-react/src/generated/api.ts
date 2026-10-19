@@ -385,7 +385,7 @@ export const getGetJourneyStateUrl = () => {
 }
 
 /**
- * @summary Get the signed-in user's journey progress and demo portfolio
+ * @summary Get account or browser-guest journey progress and demo portfolio
  */
 export const getJourneyState = async ( options?: Parameters<typeof customFetch>[1]): Promise<JourneyStateResponse> => {
 
@@ -409,7 +409,7 @@ export const getGetJourneyStateQueryKey = () => {
     }
 
 
-export const getGetJourneyStateQueryOptions = <TData = Awaited<ReturnType<typeof getJourneyState>>, TError = ErrorType<void>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getJourneyState>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+export const getGetJourneyStateQueryOptions = <TData = Awaited<ReturnType<typeof getJourneyState>>, TError = ErrorType<unknown>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getJourneyState>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
 ) => {
 
 const {query: queryOptions, request: requestOptions} = options ?? {};
@@ -428,14 +428,14 @@ const {query: queryOptions, request: requestOptions} = options ?? {};
 }
 
 export type GetJourneyStateQueryResult = NonNullable<Awaited<ReturnType<typeof getJourneyState>>>
-export type GetJourneyStateQueryError = ErrorType<void>
+export type GetJourneyStateQueryError = ErrorType<unknown>
 
 
 /**
- * @summary Get the signed-in user's journey progress and demo portfolio
+ * @summary Get account or browser-guest journey progress and demo portfolio
  */
 
-export function useGetJourneyState<TData = Awaited<ReturnType<typeof getJourneyState>>, TError = ErrorType<void>>(
+export function useGetJourneyState<TData = Awaited<ReturnType<typeof getJourneyState>>, TError = ErrorType<unknown>>(
   options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getJourneyState>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
 
  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {

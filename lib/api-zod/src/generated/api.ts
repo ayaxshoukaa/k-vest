@@ -108,7 +108,7 @@ export const GetMarketStockResponse = zod.object({
 
 
 /**
- * @summary Get the signed-in user's journey progress and demo portfolio
+ * @summary Get account or browser-guest journey progress and demo portfolio
  */
 export const getJourneyStateResponseFurthestStepMin = 0;
 export const getJourneyStateResponseFurthestStepMax = 8;
@@ -239,12 +239,13 @@ export const StartJourneyResponse = zod.object({
  * @summary Save the user's Phase 1 company selections
  */
 export const saveJourneyWatchlistBodySymbolsItemRegExp = new RegExp('^[A-Z0-9]{1,12}$');
+export const saveJourneyWatchlistBodySymbolsMin = 0;
 export const saveJourneyWatchlistBodySymbolsMax = 20;
 
 
 
 export const SaveJourneyWatchlistBody = zod.object({
-  "symbols": zod.array(zod.string().regex(saveJourneyWatchlistBodySymbolsItemRegExp)).min(1).max(saveJourneyWatchlistBodySymbolsMax)
+  "symbols": zod.array(zod.string().regex(saveJourneyWatchlistBodySymbolsItemRegExp)).min(saveJourneyWatchlistBodySymbolsMin).max(saveJourneyWatchlistBodySymbolsMax)
 })
 
 export const saveJourneyWatchlistResponseFurthestStepMin = 0;

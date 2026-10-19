@@ -24,3 +24,9 @@ For the private educational class demo, keep the homepage quote preview on Yahoo
 **Why:** the user clarified this is a private class demonstration and chose Oanor quotes plus Yahoo Finance history for the scanner, with a future move to licensed data through Boursa Kuwait.
 
 **How to apply:** keep Oanor credentials and Yahoo requests server-side. Yahoo returns Kuwait prices in KWF (fils); normalize by 1,000 to KWD. Distinguish live, stale, and sample data; disclose source, delay, and educational purpose. Preserve last-good values if refreshes fail and use a licensed vendor before public or commercial use.
+
+The ROI calculator's Low / Medium / High label describes the size of the user's assumed target-price move, not the actual investment risk of a company.
+
+**Why:** quote and price-history data alone are insufficient to assess company risk; an educational scenario must not imply a verified risk assessment or personal recommendation.
+
+**How to apply:** label this as a target-move heuristic and explain the limitation wherever it appears. Do not turn the label into a buy/sell recommendation.

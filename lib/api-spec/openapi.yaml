@@ -81,7 +81,7 @@ paths:
     get:
       operationId: getJourneyState
       tags: [journey]
-      summary: Get the signed-in user's journey progress and demo portfolio
+      summary: Get account or browser-guest journey progress and demo portfolio
       responses:
         "200":
           description: Journey state
@@ -89,8 +89,6 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/JourneyStateResponse"
-        "401":
-          description: Sign-in required
   /journey/start:
     post:
       operationId: startJourney
@@ -678,7 +676,7 @@ components:
       properties:
         symbols:
           type: array
-          minItems: 1
+          minItems: 0
           maxItems: 20
           items:
             type: string

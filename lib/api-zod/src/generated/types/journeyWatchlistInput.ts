@@ -8,7 +8,7 @@
 
 export interface JourneyWatchlistInput {
   /**
-     * @minItems 1
+     * @minItems 0
      * @maxItems 20
      * @items.pattern ^[A-Z0-9]{1,12}$
      */
