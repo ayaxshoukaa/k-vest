@@ -7,11 +7,11 @@ K-vest AI is a beginner-friendly guided journey for investing education in Kuwai
 
 Build one screen or feature at a time, explain each change briefly, and stop for the user to test before moving to the next. Do not implement the whole journey in one pass.
 
-Keep the existing home and sign-in designs unchanged; use the new mostly-white, deep-blue visual direction only on newly added journey screens.
+Use the user's dark financial-terminal reference as inspiration across the whole website, including the startup, home, sign-in, and journey screens. Keep those screens visually consistent rather than maintaining a separate white-and-blue journey theme.
 
-**Why:** the user confirmed the new style should apply to journey screens only.
+**Why:** the user explicitly asked to make the startup match the rest of the website, then requested the attached reference as inspiration “across my website,” superseding the earlier journey-only design restriction.
 
-**How to apply:** do not restyle existing pages while building the journey; apply the new visual direction to each new screen.
+**How to apply:** use the same dark navy, orange-action, cyan-accent visual language for future screens. Treat the reference as visual inspiration, not permission to copy unsupported institutional claims or market data.
 
 Preserving the homepage design must not leave new journey features undiscoverable. Keep a visible homepage entry to the journey and present the relevant new screen, not only the unchanged welcome page.
 

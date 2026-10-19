@@ -122,8 +122,8 @@ export default function Home() {
               <h1>Learn to invest in Kuwait.<br /><span className="kv-grad">One clear step at a time.</span></h1>
               <p className="kv-lead">K-vest AI is a learning-focused research companion for first-time investors in Kuwait. Explore delayed company data and try a KWD scenario calculator built for learning.</p>
               <div className="kv-ctas">
-                <Link href="/journey/welcome" className="kv-btn sec" data-testid="button-hero-journey"><span>Start learning</span><ArrowRight size={18} /></Link>
-                <a href="#calculator" className="kv-btn" data-testid="button-hero-calculator"><span>Try the calculator</span><ArrowRight size={18} /></a>
+                <Link href="/journey/welcome" className="kv-btn" data-testid="button-hero-journey"><span>Start learning</span><ArrowRight size={18} /></Link>
+                <a href="#calculator" className="kv-btn sec" data-testid="button-hero-calculator"><span>Try the calculator</span><ArrowRight size={18} /></a>
                 <a href="#how-it-works" className="kv-btn sec" data-testid="button-hero-how"><Calculator size={18} /><span>How it works</span></a>
               </div>
               <div className="kv-badges">
