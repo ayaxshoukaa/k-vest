@@ -12,6 +12,10 @@ tags:
     description: Health operations
   - name: market
     description: Educational Kuwait market data
+  - name: journey
+    description: Guided investing education journey and practice portfolio
+  - name: anthropic
+    description: AI company research chat
 paths:
   /healthz:
     get:
@@ -73,7 +77,282 @@ paths:
           description: Invalid stock symbol
         "404":
           description: Stock symbol is not in the scanner universe
+  /journey/state:
+    get:
+      operationId: getJourneyState
+      tags: [journey]
+      summary: Get the signed-in user's journey progress and demo portfolio
+      responses:
+        "200":
+          description: Journey state
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JourneyStateResponse"
+        "401":
+          description: Sign-in required
+  /journey/start:
+    post:
+      operationId: startJourney
+      tags: [journey]
+      summary: Start or resume the guided journey
+      responses:
+        "200":
+          description: Journey state
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JourneyStateResponse"
+  /journey/watchlist:
+    put:
+      operationId: saveJourneyWatchlist
+      tags: [journey]
+      summary: Save the user's Phase 1 company selections
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/JourneyWatchlistInput"
+      responses:
+        "200":
+          description: Updated journey state
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JourneyStateResponse"
+  /journey/advance:
+    post:
+      operationId: advanceJourney
+      tags: [journey]
+      summary: Advance one step after validating phase requirements
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AdvanceJourneyInput"
+      responses:
+        "200":
+          description: Updated journey state
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JourneyStateResponse"
+        "409":
+          description: Phase requirement is not complete
+  /journey/practice/skip:
+    post:
+      operationId: skipJourneyPractice
+      tags: [journey]
+      summary: Skip the optional practice trade and continue to ROI
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PracticeSkipInput"
+      responses:
+        "200":
+          description: Updated journey state
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JourneyStateResponse"
+  /journey/trades:
+    post:
+      operationId: createJourneyTrade
+      tags: [journey]
+      summary: Record a simulated stock trade at the latest available quote
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DemoTradeInput"
+      responses:
+        "201":
+          description: Trade recorded and portfolio recalculated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JourneyStateResponse"
+        "409":
+          description: Insufficient demo cash or shares
+  /journey/wallet/reset:
+    post:
+      operationId: resetJourneyWallet
+      tags: [journey]
+      summary: Reset the practice wallet to 1,000 KD
+      responses:
+        "200":
+          description: Updated journey state
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JourneyStateResponse"
+  /journey/calculator:
+    post:
+      operationId: calculateJourneyRoi
+      tags: [journey]
+      summary: Calculate and save the user's ROI scenario
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/JourneyCalculatorInput"
+      responses:
+        "200":
+          description: Updated journey state with ROI result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JourneyStateResponse"
+  /journey/reset:
+    post:
+      operationId: resetJourney
+      tags: [journey]
+      summary: Reset all journey progress and the practice wallet
+      responses:
+        "200":
+          description: Fresh journey state
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JourneyStateResponse"
+  /journey/research:
+    post:
+      operationId: analyzeJourneyCompany
+      tags: [journey]
+      summary: Ask the AI research assistant about a Kuwait-listed company
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/JourneyResearchInput"
+      responses:
+        "200":
+          description: Educational company analysis
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JourneyResearchResponse"
+        "429":
+          description: AI research request limit reached
+  /anthropic/conversations:
+    get:
+      operationId: listAnthropicConversations
+      tags: [anthropic]
+      summary: List the signed-in user's research conversations
+      parameters:
+        - name: symbol
+          in: query
+          required: false
+          schema:
+            type: string
+            pattern: "^[A-Z0-9]{1,12}$"
+      responses:
+        "200":
+          description: User's conversations
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/AnthropicConversation"
+    post:
+      operationId: createAnthropicConversation
+      tags: [anthropic]
+      summary: Create or return a research conversation for a company
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AnthropicConversationInput"
+      responses:
+        "201":
+          description: Research conversation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AnthropicConversation"
+  /anthropic/conversations/{id}:
+    get:
+      operationId: getAnthropicConversation
+      tags: [anthropic]
+      summary: Get a conversation and its messages
+      parameters:
+        - $ref: "#/components/parameters/ConversationId"
+      responses:
+        "200":
+          description: Conversation with messages
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AnthropicConversationWithMessages"
+        "404":
+          description: Conversation not found
+    delete:
+      operationId: deleteAnthropicConversation
+      tags: [anthropic]
+      summary: Delete a conversation owned by the signed-in user
+      parameters:
+        - $ref: "#/components/parameters/ConversationId"
+      responses:
+        "204":
+          description: Conversation deleted
+        "404":
+          description: Conversation not found
+  /anthropic/conversations/{id}/messages:
+    get:
+      operationId: listAnthropicMessages
+      tags: [anthropic]
+      summary: List messages in a user's conversation
+      parameters:
+        - $ref: "#/components/parameters/ConversationId"
+      responses:
+        "200":
+          description: Conversation messages
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/AnthropicMessage"
+        "404":
+          description: Conversation not found
+    post:
+      operationId: sendAnthropicMessage
+      tags: [anthropic]
+      summary: Send a message and receive a streamed AI response
+      parameters:
+        - $ref: "#/components/parameters/ConversationId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AnthropicMessageInput"
+      responses:
+        "200":
+          description: Server-sent stream of response text chunks
+          content:
+            text/event-stream:
+              schema:
+                type: string
+        "404":
+          description: Conversation not found
 components:
+  parameters:
+    ConversationId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: integer
   schemas:
     HealthStatus:
       type: object
@@ -253,4 +532,310 @@ components:
         - lastUpdatedAt
         - warning
         - stock
+    JourneyStep:
+      type: string
+      enum:
+        - scan-intro
+        - scan
+        - research-intro
+        - research
+        - practice-intro
+        - practice
+        - roi-intro
+        - roi
+        - finish
+    DemoTrade:
+      type: object
+      properties:
+        id:
+          type: integer
+        symbol:
+          type: string
+        companyName:
+          type: string
+        side:
+          type: string
+          enum: [buy, sell]
+        quantity:
+          type: integer
+        priceKwd:
+          type: number
+        notionalKwd:
+          type: number
+        createdAt:
+          type: string
+          format: date-time
+        marketTime:
+          type: ["string", "null"]
+          format: date-time
+        sample:
+          type: boolean
+        stale:
+          type: boolean
+      required: [id, symbol, companyName, side, quantity, priceKwd, notionalKwd, createdAt, marketTime, sample, stale]
+    DemoHolding:
+      type: object
+      properties:
+        symbol:
+          type: string
+        companyName:
+          type: string
+        quantity:
+          type: integer
+        averageCostKwd:
+          type: number
+        costBasisKwd:
+          type: number
+        currentPriceKwd:
+          type: ["number", "null"]
+        marketValueKwd:
+          type: ["number", "null"]
+        profitLossKwd:
+          type: ["number", "null"]
+        sample:
+          type: boolean
+        stale:
+          type: boolean
+      required: [symbol, companyName, quantity, averageCostKwd, costBasisKwd, currentPriceKwd, marketValueKwd, profitLossKwd, sample, stale]
+    JourneyRoiResult:
+      type: object
+      properties:
+        symbol:
+          type: string
+        budgetKwd:
+          type: number
+        buyPriceKwd:
+          type: number
+        targetPriceKwd:
+          type: number
+        annualDividendKwd:
+          type: number
+        yearsHeld:
+          type: number
+        shares:
+          type: number
+        dividendTotalKwd:
+          type: number
+        finalValueKwd:
+          type: number
+        profitLossKwd:
+          type: number
+        roiPercent:
+          type: number
+        annualizedReturnPercent:
+          type: number
+        riskLabel:
+          type: string
+          enum: [Low, Medium, High]
+        createdAt:
+          type: string
+          format: date-time
+      required: [symbol, budgetKwd, buyPriceKwd, targetPriceKwd, annualDividendKwd, yearsHeld, shares, dividendTotalKwd, finalValueKwd, profitLossKwd, roiPercent, annualizedReturnPercent, riskLabel, createdAt]
+    JourneyStateResponse:
+      type: object
+      properties:
+        currentStep:
+          $ref: "#/components/schemas/JourneyStep"
+        furthestStep:
+          type: integer
+          minimum: 0
+          maximum: 8
+        watchlistSymbols:
+          type: array
+          items:
+            type: string
+        researchCompleted:
+          type: boolean
+        practiceSkipped:
+          type: boolean
+        trades:
+          type: array
+          items:
+            $ref: "#/components/schemas/DemoTrade"
+        holdings:
+          type: array
+          items:
+            $ref: "#/components/schemas/DemoHolding"
+        cashKwd:
+          type: number
+        marketValueKwd:
+          type: ["number", "null"]
+        portfolioValueKwd:
+          type: ["number", "null"]
+        profitLossKwd:
+          type: ["number", "null"]
+        roiPercent:
+          type: ["number", "null"]
+        roiResult:
+          oneOf:
+            - $ref: "#/components/schemas/JourneyRoiResult"
+            - type: "null"
+        marketDataNote:
+          type: string
+      required: [currentStep, furthestStep, watchlistSymbols, researchCompleted, practiceSkipped, trades, holdings, cashKwd, marketValueKwd, portfolioValueKwd, profitLossKwd, roiPercent, roiResult, marketDataNote]
+    JourneyWatchlistInput:
+      type: object
+      properties:
+        symbols:
+          type: array
+          minItems: 1
+          maxItems: 20
+          items:
+            type: string
+            pattern: "^[A-Z0-9]{1,12}$"
+      required: [symbols]
+    AdvanceJourneyInput:
+      type: object
+      properties:
+        fromStep:
+          $ref: "#/components/schemas/JourneyStep"
+        nextStep:
+          $ref: "#/components/schemas/JourneyStep"
+      required: [fromStep, nextStep]
+    PracticeSkipInput:
+      type: object
+      properties: {}
+    DemoTradeInput:
+      type: object
+      properties:
+        symbol:
+          type: string
+          pattern: "^[A-Z0-9]{1,12}$"
+        side:
+          type: string
+          enum: [buy, sell]
+        quantity:
+          type: integer
+          minimum: 1
+          maximum: 1000000
+      required: [symbol, side, quantity]
+    JourneyCalculatorInput:
+      type: object
+      properties:
+        symbol:
+          type: string
+          pattern: "^[A-Z0-9]{1,12}$"
+        budgetKwd:
+          type: number
+          exclusiveMinimum: 0
+          maximum: 100000000
+        buyPriceKwd:
+          type: number
+          exclusiveMinimum: 0
+          maximum: 1000000
+        targetPriceKwd:
+          type: number
+          minimum: 0
+          maximum: 1000000
+        annualDividendKwd:
+          type: number
+          minimum: 0
+          maximum: 1000000
+          default: 0
+        yearsHeld:
+          type: number
+          exclusiveMinimum: 0
+          maximum: 100
+      required: [symbol, budgetKwd, buyPriceKwd, targetPriceKwd, yearsHeld]
+    JourneyResearchInput:
+      type: object
+      properties:
+        symbol:
+          type: string
+          pattern: "^[A-Z0-9]{1,12}$"
+        question:
+          type: string
+          minLength: 1
+          maxLength: 600
+        language:
+          type: string
+          enum: [en, ar]
+      required: [symbol, question, language]
+    JourneyResearchResponse:
+      type: object
+      properties:
+        symbol:
+          type: string
+        companyName:
+          type: string
+        analysisText:
+          type: string
+        refreshStatus:
+          type: string
+          enum: [fresh, stale, sample, unavailable]
+        warning:
+          type: ["string", "null"]
+        sample:
+          type: boolean
+        stale:
+          type: boolean
+      required: [symbol, companyName, analysisText, refreshStatus, warning, sample, stale]
+    AnthropicConversation:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        symbol:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+      required: [id, title, symbol, createdAt]
+    AnthropicMessage:
+      type: object
+      properties:
+        id:
+          type: integer
+        conversationId:
+          type: integer
+        role:
+          type: string
+          enum: [user, assistant]
+        content:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+      required: [id, conversationId, role, content, createdAt]
+    AnthropicConversationInput:
+      type: object
+      properties:
+        title:
+          type: string
+          minLength: 1
+          maxLength: 120
+        symbol:
+          type: string
+          pattern: "^[A-Z0-9]{1,12}$"
+      required: [title, symbol]
+    AnthropicMessageInput:
+      type: object
+      properties:
+        content:
+          type: string
+          minLength: 1
+          maxLength: 600
+        language:
+          type: string
+          enum: [en, ar]
+      required: [content, language]
+    AnthropicConversationWithMessages:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        symbol:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        messages:
+          type: array
+          items:
+            $ref: "#/components/schemas/AnthropicMessage"
+      required: [id, title, symbol, createdAt, messages]
 

@@ -6,24 +6,42 @@
  * OpenAPI spec version: 0.1.0
  */
 import {
+  useMutation,
   useQuery
 } from '@tanstack/react-query';
 import type {
+  MutationFunction,
   QueryFunction,
   QueryKey,
+  UseMutationOptions,
+  UseMutationResult,
   UseQueryOptions,
   UseQueryResult
 } from '@tanstack/react-query';
 
 import type {
+  AdvanceJourneyInput,
+  AnthropicConversation,
+  AnthropicConversationInput,
+  AnthropicConversationWithMessages,
+  AnthropicMessage,
+  AnthropicMessageInput,
+  DemoTradeInput,
   HealthStatus,
+  JourneyCalculatorInput,
+  JourneyResearchInput,
+  JourneyResearchResponse,
+  JourneyStateResponse,
+  JourneyWatchlistInput,
+  ListAnthropicConversationsParams,
   MarketQuotesResponse,
   MarketScannerResponse,
-  MarketStockDetailResponse
+  MarketStockDetailResponse,
+  PracticeSkipInput
 } from './api.schemas';
 
 import { customFetch } from '../custom-fetch';
-import type { ErrorType } from '../custom-fetch';
+import type { ErrorType , BodyType } from '../custom-fetch';
 
 type AwaitedInput<T> = PromiseLike<T> | T;
 
@@ -357,4 +375,1320 @@ export function useGetMarketStock<TData = Awaited<ReturnType<typeof getMarketSto
 
 
 
+
+export const getGetJourneyStateUrl = () => {
+
+
+
+
+  return `/api/journey/state`
+}
+
+/**
+ * @summary Get the signed-in user's journey progress and demo portfolio
+ */
+export const getJourneyState = async ( options?: Parameters<typeof customFetch>[1]): Promise<JourneyStateResponse> => {
+
+  return customFetch<JourneyStateResponse>(getGetJourneyStateUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetJourneyStateQueryKey = () => {
+    return [
+    `/api/journey/state`
+    ] as const;
+    }
+
+
+export const getGetJourneyStateQueryOptions = <TData = Awaited<ReturnType<typeof getJourneyState>>, TError = ErrorType<void>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getJourneyState>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetJourneyStateQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getJourneyState>>> = ({ signal }) => getJourneyState({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getJourneyState>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetJourneyStateQueryResult = NonNullable<Awaited<ReturnType<typeof getJourneyState>>>
+export type GetJourneyStateQueryError = ErrorType<void>
+
+
+/**
+ * @summary Get the signed-in user's journey progress and demo portfolio
+ */
+
+export function useGetJourneyState<TData = Awaited<ReturnType<typeof getJourneyState>>, TError = ErrorType<void>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getJourneyState>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetJourneyStateQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getStartJourneyUrl = () => {
+
+
+
+
+  return `/api/journey/start`
+}
+
+/**
+ * @summary Start or resume the guided journey
+ */
+export const startJourney = async ( options?: Parameters<typeof customFetch>[1]): Promise<JourneyStateResponse> => {
+
+  return customFetch<JourneyStateResponse>(getStartJourneyUrl(),
+  {
+    ...options,
+    method: 'POST'
+
+
+  }
+);}
+
+
+
+
+
+export const getStartJourneyMutationKey = () => ['startJourney'] as const;
+
+export const getStartJourneyMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof startJourney>>, TError,void, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof startJourney>>, TError,void, TContext> => {
+
+const mutationKey = getStartJourneyMutationKey();
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof startJourney>>, void> = () => {
+
+
+          return  startJourney(requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type StartJourneyMutationResult = NonNullable<Awaited<ReturnType<typeof startJourney>>>
+
+    export type StartJourneyMutationError = ErrorType<unknown>
+
+
+    /**
+ * @summary Start or resume the guided journey
+ */
+export const useStartJourney = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof startJourney>>, TError,void, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof startJourney>>,
+        TError,
+        void,
+        TContext
+      > => {
+      return useMutation(getStartJourneyMutationOptions(options));
+    }
+
+export const getSaveJourneyWatchlistUrl = () => {
+
+
+
+
+  return `/api/journey/watchlist`
+}
+
+/**
+ * @summary Save the user's Phase 1 company selections
+ */
+export const saveJourneyWatchlist = async (journeyWatchlistInput: JourneyWatchlistInput, options?: Parameters<typeof customFetch>[1]): Promise<JourneyStateResponse> => {
+
+    const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Symbol.iterator in h) {
+      return Object.fromEntries(
+        Array.from(h as Iterable<Iterable<string>>, (entry) => Array.from(entry) as [string, string]),
+      );
+    }
+    const headers: Record<string, string | readonly string[]> = {};
+    for (const [name, value] of Object.entries<string | readonly string[] | undefined>(h)) {
+      if (value !== undefined) headers[name] = value;
+    }
+    return headers;
+  };
+return customFetch<JourneyStateResponse>(getSaveJourneyWatchlistUrl(),
+  {
+    ...options,
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+    body: JSON.stringify(journeyWatchlistInput)
+  }
+);}
+
+
+
+
+
+export const getSaveJourneyWatchlistMutationKey = () => ['saveJourneyWatchlist'] as const;
+
+export const getSaveJourneyWatchlistMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof saveJourneyWatchlist>>, TError,SaveJourneyWatchlistMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof saveJourneyWatchlist>>, TError,SaveJourneyWatchlistMutationVariables, TContext> => {
+
+const mutationKey = getSaveJourneyWatchlistMutationKey();
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof saveJourneyWatchlist>>, SaveJourneyWatchlistMutationVariables> = (props) => {
+          const {data} = props ?? {};
+
+          return  saveJourneyWatchlist(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type SaveJourneyWatchlistMutationResult = NonNullable<Awaited<ReturnType<typeof saveJourneyWatchlist>>>
+    export type SaveJourneyWatchlistMutationBody = BodyType<JourneyWatchlistInput>
+    export type SaveJourneyWatchlistMutationError = ErrorType<unknown>
+    export type SaveJourneyWatchlistMutationVariables = {data: BodyType<JourneyWatchlistInput>}
+
+    /**
+ * @summary Save the user's Phase 1 company selections
+ */
+export const useSaveJourneyWatchlist = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof saveJourneyWatchlist>>, TError,SaveJourneyWatchlistMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof saveJourneyWatchlist>>,
+        TError,
+        SaveJourneyWatchlistMutationVariables,
+        TContext
+      > => {
+      return useMutation(getSaveJourneyWatchlistMutationOptions(options));
+    }
+
+export const getAdvanceJourneyUrl = () => {
+
+
+
+
+  return `/api/journey/advance`
+}
+
+/**
+ * @summary Advance one step after validating phase requirements
+ */
+export const advanceJourney = async (advanceJourneyInput: AdvanceJourneyInput, options?: Parameters<typeof customFetch>[1]): Promise<JourneyStateResponse> => {
+
+    const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Symbol.iterator in h) {
+      return Object.fromEntries(
+        Array.from(h as Iterable<Iterable<string>>, (entry) => Array.from(entry) as [string, string]),
+      );
+    }
+    const headers: Record<string, string | readonly string[]> = {};
+    for (const [name, value] of Object.entries<string | readonly string[] | undefined>(h)) {
+      if (value !== undefined) headers[name] = value;
+    }
+    return headers;
+  };
+return customFetch<JourneyStateResponse>(getAdvanceJourneyUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+    body: JSON.stringify(advanceJourneyInput)
+  }
+);}
+
+
+
+
+
+export const getAdvanceJourneyMutationKey = () => ['advanceJourney'] as const;
+
+export const getAdvanceJourneyMutationOptions = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof advanceJourney>>, TError,AdvanceJourneyMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof advanceJourney>>, TError,AdvanceJourneyMutationVariables, TContext> => {
+
+const mutationKey = getAdvanceJourneyMutationKey();
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof advanceJourney>>, AdvanceJourneyMutationVariables> = (props) => {
+          const {data} = props ?? {};
+
+          return  advanceJourney(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type AdvanceJourneyMutationResult = NonNullable<Awaited<ReturnType<typeof advanceJourney>>>
+    export type AdvanceJourneyMutationBody = BodyType<AdvanceJourneyInput>
+    export type AdvanceJourneyMutationError = ErrorType<void>
+    export type AdvanceJourneyMutationVariables = {data: BodyType<AdvanceJourneyInput>}
+
+    /**
+ * @summary Advance one step after validating phase requirements
+ */
+export const useAdvanceJourney = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof advanceJourney>>, TError,AdvanceJourneyMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof advanceJourney>>,
+        TError,
+        AdvanceJourneyMutationVariables,
+        TContext
+      > => {
+      return useMutation(getAdvanceJourneyMutationOptions(options));
+    }
+
+export const getSkipJourneyPracticeUrl = () => {
+
+
+
+
+  return `/api/journey/practice/skip`
+}
+
+/**
+ * @summary Skip the optional practice trade and continue to ROI
+ */
+export const skipJourneyPractice = async (practiceSkipInput: PracticeSkipInput, options?: Parameters<typeof customFetch>[1]): Promise<JourneyStateResponse> => {
+
+    const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Symbol.iterator in h) {
+      return Object.fromEntries(
+        Array.from(h as Iterable<Iterable<string>>, (entry) => Array.from(entry) as [string, string]),
+      );
+    }
+    const headers: Record<string, string | readonly string[]> = {};
+    for (const [name, value] of Object.entries<string | readonly string[] | undefined>(h)) {
+      if (value !== undefined) headers[name] = value;
+    }
+    return headers;
+  };
+return customFetch<JourneyStateResponse>(getSkipJourneyPracticeUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+    body: JSON.stringify(practiceSkipInput)
+  }
+);}
+
+
+
+
+
+export const getSkipJourneyPracticeMutationKey = () => ['skipJourneyPractice'] as const;
+
+export const getSkipJourneyPracticeMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof skipJourneyPractice>>, TError,SkipJourneyPracticeMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof skipJourneyPractice>>, TError,SkipJourneyPracticeMutationVariables, TContext> => {
+
+const mutationKey = getSkipJourneyPracticeMutationKey();
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof skipJourneyPractice>>, SkipJourneyPracticeMutationVariables> = (props) => {
+          const {data} = props ?? {};
+
+          return  skipJourneyPractice(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type SkipJourneyPracticeMutationResult = NonNullable<Awaited<ReturnType<typeof skipJourneyPractice>>>
+    export type SkipJourneyPracticeMutationBody = BodyType<PracticeSkipInput>
+    export type SkipJourneyPracticeMutationError = ErrorType<unknown>
+    export type SkipJourneyPracticeMutationVariables = {data: BodyType<PracticeSkipInput>}
+
+    /**
+ * @summary Skip the optional practice trade and continue to ROI
+ */
+export const useSkipJourneyPractice = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof skipJourneyPractice>>, TError,SkipJourneyPracticeMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof skipJourneyPractice>>,
+        TError,
+        SkipJourneyPracticeMutationVariables,
+        TContext
+      > => {
+      return useMutation(getSkipJourneyPracticeMutationOptions(options));
+    }
+
+export const getCreateJourneyTradeUrl = () => {
+
+
+
+
+  return `/api/journey/trades`
+}
+
+/**
+ * @summary Record a simulated stock trade at the latest available quote
+ */
+export const createJourneyTrade = async (demoTradeInput: DemoTradeInput, options?: Parameters<typeof customFetch>[1]): Promise<JourneyStateResponse> => {
+
+    const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Symbol.iterator in h) {
+      return Object.fromEntries(
+        Array.from(h as Iterable<Iterable<string>>, (entry) => Array.from(entry) as [string, string]),
+      );
+    }
+    const headers: Record<string, string | readonly string[]> = {};
+    for (const [name, value] of Object.entries<string | readonly string[] | undefined>(h)) {
+      if (value !== undefined) headers[name] = value;
+    }
+    return headers;
+  };
+return customFetch<JourneyStateResponse>(getCreateJourneyTradeUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+    body: JSON.stringify(demoTradeInput)
+  }
+);}
+
+
+
+
+
+export const getCreateJourneyTradeMutationKey = () => ['createJourneyTrade'] as const;
+
+export const getCreateJourneyTradeMutationOptions = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createJourneyTrade>>, TError,CreateJourneyTradeMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof createJourneyTrade>>, TError,CreateJourneyTradeMutationVariables, TContext> => {
+
+const mutationKey = getCreateJourneyTradeMutationKey();
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createJourneyTrade>>, CreateJourneyTradeMutationVariables> = (props) => {
+          const {data} = props ?? {};
+
+          return  createJourneyTrade(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreateJourneyTradeMutationResult = NonNullable<Awaited<ReturnType<typeof createJourneyTrade>>>
+    export type CreateJourneyTradeMutationBody = BodyType<DemoTradeInput>
+    export type CreateJourneyTradeMutationError = ErrorType<void>
+    export type CreateJourneyTradeMutationVariables = {data: BodyType<DemoTradeInput>}
+
+    /**
+ * @summary Record a simulated stock trade at the latest available quote
+ */
+export const useCreateJourneyTrade = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createJourneyTrade>>, TError,CreateJourneyTradeMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof createJourneyTrade>>,
+        TError,
+        CreateJourneyTradeMutationVariables,
+        TContext
+      > => {
+      return useMutation(getCreateJourneyTradeMutationOptions(options));
+    }
+
+export const getResetJourneyWalletUrl = () => {
+
+
+
+
+  return `/api/journey/wallet/reset`
+}
+
+/**
+ * @summary Reset the practice wallet to 1,000 KD
+ */
+export const resetJourneyWallet = async ( options?: Parameters<typeof customFetch>[1]): Promise<JourneyStateResponse> => {
+
+  return customFetch<JourneyStateResponse>(getResetJourneyWalletUrl(),
+  {
+    ...options,
+    method: 'POST'
+
+
+  }
+);}
+
+
+
+
+
+export const getResetJourneyWalletMutationKey = () => ['resetJourneyWallet'] as const;
+
+export const getResetJourneyWalletMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof resetJourneyWallet>>, TError,void, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof resetJourneyWallet>>, TError,void, TContext> => {
+
+const mutationKey = getResetJourneyWalletMutationKey();
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof resetJourneyWallet>>, void> = () => {
+
+
+          return  resetJourneyWallet(requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type ResetJourneyWalletMutationResult = NonNullable<Awaited<ReturnType<typeof resetJourneyWallet>>>
+
+    export type ResetJourneyWalletMutationError = ErrorType<unknown>
+
+
+    /**
+ * @summary Reset the practice wallet to 1,000 KD
+ */
+export const useResetJourneyWallet = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof resetJourneyWallet>>, TError,void, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof resetJourneyWallet>>,
+        TError,
+        void,
+        TContext
+      > => {
+      return useMutation(getResetJourneyWalletMutationOptions(options));
+    }
+
+export const getCalculateJourneyRoiUrl = () => {
+
+
+
+
+  return `/api/journey/calculator`
+}
+
+/**
+ * @summary Calculate and save the user's ROI scenario
+ */
+export const calculateJourneyRoi = async (journeyCalculatorInput: JourneyCalculatorInput, options?: Parameters<typeof customFetch>[1]): Promise<JourneyStateResponse> => {
+
+    const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Symbol.iterator in h) {
+      return Object.fromEntries(
+        Array.from(h as Iterable<Iterable<string>>, (entry) => Array.from(entry) as [string, string]),
+      );
+    }
+    const headers: Record<string, string | readonly string[]> = {};
+    for (const [name, value] of Object.entries<string | readonly string[] | undefined>(h)) {
+      if (value !== undefined) headers[name] = value;
+    }
+    return headers;
+  };
+return customFetch<JourneyStateResponse>(getCalculateJourneyRoiUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+    body: JSON.stringify(journeyCalculatorInput)
+  }
+);}
+
+
+
+
+
+export const getCalculateJourneyRoiMutationKey = () => ['calculateJourneyRoi'] as const;
+
+export const getCalculateJourneyRoiMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof calculateJourneyRoi>>, TError,CalculateJourneyRoiMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof calculateJourneyRoi>>, TError,CalculateJourneyRoiMutationVariables, TContext> => {
+
+const mutationKey = getCalculateJourneyRoiMutationKey();
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof calculateJourneyRoi>>, CalculateJourneyRoiMutationVariables> = (props) => {
+          const {data} = props ?? {};
+
+          return  calculateJourneyRoi(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CalculateJourneyRoiMutationResult = NonNullable<Awaited<ReturnType<typeof calculateJourneyRoi>>>
+    export type CalculateJourneyRoiMutationBody = BodyType<JourneyCalculatorInput>
+    export type CalculateJourneyRoiMutationError = ErrorType<unknown>
+    export type CalculateJourneyRoiMutationVariables = {data: BodyType<JourneyCalculatorInput>}
+
+    /**
+ * @summary Calculate and save the user's ROI scenario
+ */
+export const useCalculateJourneyRoi = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof calculateJourneyRoi>>, TError,CalculateJourneyRoiMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof calculateJourneyRoi>>,
+        TError,
+        CalculateJourneyRoiMutationVariables,
+        TContext
+      > => {
+      return useMutation(getCalculateJourneyRoiMutationOptions(options));
+    }
+
+export const getResetJourneyUrl = () => {
+
+
+
+
+  return `/api/journey/reset`
+}
+
+/**
+ * @summary Reset all journey progress and the practice wallet
+ */
+export const resetJourney = async ( options?: Parameters<typeof customFetch>[1]): Promise<JourneyStateResponse> => {
+
+  return customFetch<JourneyStateResponse>(getResetJourneyUrl(),
+  {
+    ...options,
+    method: 'POST'
+
+
+  }
+);}
+
+
+
+
+
+export const getResetJourneyMutationKey = () => ['resetJourney'] as const;
+
+export const getResetJourneyMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof resetJourney>>, TError,void, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof resetJourney>>, TError,void, TContext> => {
+
+const mutationKey = getResetJourneyMutationKey();
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof resetJourney>>, void> = () => {
+
+
+          return  resetJourney(requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type ResetJourneyMutationResult = NonNullable<Awaited<ReturnType<typeof resetJourney>>>
+
+    export type ResetJourneyMutationError = ErrorType<unknown>
+
+
+    /**
+ * @summary Reset all journey progress and the practice wallet
+ */
+export const useResetJourney = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof resetJourney>>, TError,void, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof resetJourney>>,
+        TError,
+        void,
+        TContext
+      > => {
+      return useMutation(getResetJourneyMutationOptions(options));
+    }
+
+export const getAnalyzeJourneyCompanyUrl = () => {
+
+
+
+
+  return `/api/journey/research`
+}
+
+/**
+ * @summary Ask the AI research assistant about a Kuwait-listed company
+ */
+export const analyzeJourneyCompany = async (journeyResearchInput: JourneyResearchInput, options?: Parameters<typeof customFetch>[1]): Promise<JourneyResearchResponse> => {
+
+    const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Symbol.iterator in h) {
+      return Object.fromEntries(
+        Array.from(h as Iterable<Iterable<string>>, (entry) => Array.from(entry) as [string, string]),
+      );
+    }
+    const headers: Record<string, string | readonly string[]> = {};
+    for (const [name, value] of Object.entries<string | readonly string[] | undefined>(h)) {
+      if (value !== undefined) headers[name] = value;
+    }
+    return headers;
+  };
+return customFetch<JourneyResearchResponse>(getAnalyzeJourneyCompanyUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+    body: JSON.stringify(journeyResearchInput)
+  }
+);}
+
+
+
+
+
+export const getAnalyzeJourneyCompanyMutationKey = () => ['analyzeJourneyCompany'] as const;
+
+export const getAnalyzeJourneyCompanyMutationOptions = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof analyzeJourneyCompany>>, TError,AnalyzeJourneyCompanyMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof analyzeJourneyCompany>>, TError,AnalyzeJourneyCompanyMutationVariables, TContext> => {
+
+const mutationKey = getAnalyzeJourneyCompanyMutationKey();
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof analyzeJourneyCompany>>, AnalyzeJourneyCompanyMutationVariables> = (props) => {
+          const {data} = props ?? {};
+
+          return  analyzeJourneyCompany(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type AnalyzeJourneyCompanyMutationResult = NonNullable<Awaited<ReturnType<typeof analyzeJourneyCompany>>>
+    export type AnalyzeJourneyCompanyMutationBody = BodyType<JourneyResearchInput>
+    export type AnalyzeJourneyCompanyMutationError = ErrorType<void>
+    export type AnalyzeJourneyCompanyMutationVariables = {data: BodyType<JourneyResearchInput>}
+
+    /**
+ * @summary Ask the AI research assistant about a Kuwait-listed company
+ */
+export const useAnalyzeJourneyCompany = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof analyzeJourneyCompany>>, TError,AnalyzeJourneyCompanyMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof analyzeJourneyCompany>>,
+        TError,
+        AnalyzeJourneyCompanyMutationVariables,
+        TContext
+      > => {
+      return useMutation(getAnalyzeJourneyCompanyMutationOptions(options));
+    }
+
+export const getListAnthropicConversationsUrl = (params?: ListAnthropicConversationsParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/anthropic/conversations?${stringifiedParams}` : `/api/anthropic/conversations`
+}
+
+/**
+ * @summary List the signed-in user's research conversations
+ */
+export const listAnthropicConversations = async (params?: ListAnthropicConversationsParams, options?: Parameters<typeof customFetch>[1]): Promise<AnthropicConversation[]> => {
+
+  return customFetch<AnthropicConversation[]>(getListAnthropicConversationsUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListAnthropicConversationsQueryKey = (params?: ListAnthropicConversationsParams,) => {
+    return [
+    `/api/anthropic/conversations`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getListAnthropicConversationsQueryOptions = <TData = Awaited<ReturnType<typeof listAnthropicConversations>>, TError = ErrorType<unknown>>(params?: ListAnthropicConversationsParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listAnthropicConversations>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListAnthropicConversationsQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listAnthropicConversations>>> = ({ signal }) => listAnthropicConversations(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listAnthropicConversations>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListAnthropicConversationsQueryResult = NonNullable<Awaited<ReturnType<typeof listAnthropicConversations>>>
+export type ListAnthropicConversationsQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary List the signed-in user's research conversations
+ */
+
+export function useListAnthropicConversations<TData = Awaited<ReturnType<typeof listAnthropicConversations>>, TError = ErrorType<unknown>>(
+ params?: ListAnthropicConversationsParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listAnthropicConversations>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListAnthropicConversationsQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getCreateAnthropicConversationUrl = () => {
+
+
+
+
+  return `/api/anthropic/conversations`
+}
+
+/**
+ * @summary Create or return a research conversation for a company
+ */
+export const createAnthropicConversation = async (anthropicConversationInput: AnthropicConversationInput, options?: Parameters<typeof customFetch>[1]): Promise<AnthropicConversation> => {
+
+    const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Symbol.iterator in h) {
+      return Object.fromEntries(
+        Array.from(h as Iterable<Iterable<string>>, (entry) => Array.from(entry) as [string, string]),
+      );
+    }
+    const headers: Record<string, string | readonly string[]> = {};
+    for (const [name, value] of Object.entries<string | readonly string[] | undefined>(h)) {
+      if (value !== undefined) headers[name] = value;
+    }
+    return headers;
+  };
+return customFetch<AnthropicConversation>(getCreateAnthropicConversationUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+    body: JSON.stringify(anthropicConversationInput)
+  }
+);}
+
+
+
+
+
+export const getCreateAnthropicConversationMutationKey = () => ['createAnthropicConversation'] as const;
+
+export const getCreateAnthropicConversationMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createAnthropicConversation>>, TError,CreateAnthropicConversationMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof createAnthropicConversation>>, TError,CreateAnthropicConversationMutationVariables, TContext> => {
+
+const mutationKey = getCreateAnthropicConversationMutationKey();
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createAnthropicConversation>>, CreateAnthropicConversationMutationVariables> = (props) => {
+          const {data} = props ?? {};
+
+          return  createAnthropicConversation(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreateAnthropicConversationMutationResult = NonNullable<Awaited<ReturnType<typeof createAnthropicConversation>>>
+    export type CreateAnthropicConversationMutationBody = BodyType<AnthropicConversationInput>
+    export type CreateAnthropicConversationMutationError = ErrorType<unknown>
+    export type CreateAnthropicConversationMutationVariables = {data: BodyType<AnthropicConversationInput>}
+
+    /**
+ * @summary Create or return a research conversation for a company
+ */
+export const useCreateAnthropicConversation = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createAnthropicConversation>>, TError,CreateAnthropicConversationMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof createAnthropicConversation>>,
+        TError,
+        CreateAnthropicConversationMutationVariables,
+        TContext
+      > => {
+      return useMutation(getCreateAnthropicConversationMutationOptions(options));
+    }
+
+export const getGetAnthropicConversationUrl = (id: number,) => {
+
+
+
+
+  return `/api/anthropic/conversations/${id}`
+}
+
+/**
+ * @summary Get a conversation and its messages
+ */
+export const getAnthropicConversation = async (id: number, options?: Parameters<typeof customFetch>[1]): Promise<AnthropicConversationWithMessages> => {
+
+  return customFetch<AnthropicConversationWithMessages>(getGetAnthropicConversationUrl(id),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetAnthropicConversationQueryKey = (id: number,) => {
+    return [
+    `/api/anthropic/conversations/${id}`
+    ] as const;
+    }
+
+
+export const getGetAnthropicConversationQueryOptions = <TData = Awaited<ReturnType<typeof getAnthropicConversation>>, TError = ErrorType<void>>(id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getAnthropicConversation>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetAnthropicConversationQueryKey(id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getAnthropicConversation>>> = ({ signal }) => getAnthropicConversation(id, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: id !== null && id !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getAnthropicConversation>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetAnthropicConversationQueryResult = NonNullable<Awaited<ReturnType<typeof getAnthropicConversation>>>
+export type GetAnthropicConversationQueryError = ErrorType<void>
+
+
+/**
+ * @summary Get a conversation and its messages
+ */
+
+export function useGetAnthropicConversation<TData = Awaited<ReturnType<typeof getAnthropicConversation>>, TError = ErrorType<void>>(
+ id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getAnthropicConversation>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetAnthropicConversationQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getDeleteAnthropicConversationUrl = (id: number,) => {
+
+
+
+
+  return `/api/anthropic/conversations/${id}`
+}
+
+/**
+ * @summary Delete a conversation owned by the signed-in user
+ */
+export const deleteAnthropicConversation = async (id: number, options?: Parameters<typeof customFetch>[1]): Promise<void> => {
+
+  return customFetch<void>(getDeleteAnthropicConversationUrl(id),
+  {
+    ...options,
+    method: 'DELETE'
+
+
+  }
+);}
+
+
+
+
+
+export const getDeleteAnthropicConversationMutationKey = () => ['deleteAnthropicConversation'] as const;
+
+export const getDeleteAnthropicConversationMutationOptions = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteAnthropicConversation>>, TError,DeleteAnthropicConversationMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof deleteAnthropicConversation>>, TError,DeleteAnthropicConversationMutationVariables, TContext> => {
+
+const mutationKey = getDeleteAnthropicConversationMutationKey();
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteAnthropicConversation>>, DeleteAnthropicConversationMutationVariables> = (props) => {
+          const {id} = props ?? {};
+
+          return  deleteAnthropicConversation(id,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type DeleteAnthropicConversationMutationResult = NonNullable<Awaited<ReturnType<typeof deleteAnthropicConversation>>>
+
+    export type DeleteAnthropicConversationMutationError = ErrorType<void>
+    export type DeleteAnthropicConversationMutationVariables = {id: number}
+
+    /**
+ * @summary Delete a conversation owned by the signed-in user
+ */
+export const useDeleteAnthropicConversation = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteAnthropicConversation>>, TError,DeleteAnthropicConversationMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof deleteAnthropicConversation>>,
+        TError,
+        DeleteAnthropicConversationMutationVariables,
+        TContext
+      > => {
+      return useMutation(getDeleteAnthropicConversationMutationOptions(options));
+    }
+
+export const getListAnthropicMessagesUrl = (id: number,) => {
+
+
+
+
+  return `/api/anthropic/conversations/${id}/messages`
+}
+
+/**
+ * @summary List messages in a user's conversation
+ */
+export const listAnthropicMessages = async (id: number, options?: Parameters<typeof customFetch>[1]): Promise<AnthropicMessage[]> => {
+
+  return customFetch<AnthropicMessage[]>(getListAnthropicMessagesUrl(id),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListAnthropicMessagesQueryKey = (id: number,) => {
+    return [
+    `/api/anthropic/conversations/${id}/messages`
+    ] as const;
+    }
+
+
+export const getListAnthropicMessagesQueryOptions = <TData = Awaited<ReturnType<typeof listAnthropicMessages>>, TError = ErrorType<void>>(id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listAnthropicMessages>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListAnthropicMessagesQueryKey(id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listAnthropicMessages>>> = ({ signal }) => listAnthropicMessages(id, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: id !== null && id !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listAnthropicMessages>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListAnthropicMessagesQueryResult = NonNullable<Awaited<ReturnType<typeof listAnthropicMessages>>>
+export type ListAnthropicMessagesQueryError = ErrorType<void>
+
+
+/**
+ * @summary List messages in a user's conversation
+ */
+
+export function useListAnthropicMessages<TData = Awaited<ReturnType<typeof listAnthropicMessages>>, TError = ErrorType<void>>(
+ id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listAnthropicMessages>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListAnthropicMessagesQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getSendAnthropicMessageUrl = (id: number,) => {
+
+
+
+
+  return `/api/anthropic/conversations/${id}/messages`
+}
+
+/**
+ * @summary Send a message and receive a streamed AI response
+ */
+export const sendAnthropicMessage = async (id: number,
+    anthropicMessageInput: AnthropicMessageInput, options?: Parameters<typeof customFetch>[1]): Promise<string> => {
+
+    const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Symbol.iterator in h) {
+      return Object.fromEntries(
+        Array.from(h as Iterable<Iterable<string>>, (entry) => Array.from(entry) as [string, string]),
+      );
+    }
+    const headers: Record<string, string | readonly string[]> = {};
+    for (const [name, value] of Object.entries<string | readonly string[] | undefined>(h)) {
+      if (value !== undefined) headers[name] = value;
+    }
+    return headers;
+  };
+return customFetch<string>(getSendAnthropicMessageUrl(id),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+    body: JSON.stringify(anthropicMessageInput)
+  }
+);}
+
+
+
+
+
+export const getSendAnthropicMessageMutationKey = () => ['sendAnthropicMessage'] as const;
+
+export const getSendAnthropicMessageMutationOptions = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof sendAnthropicMessage>>, TError,SendAnthropicMessageMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof sendAnthropicMessage>>, TError,SendAnthropicMessageMutationVariables, TContext> => {
+
+const mutationKey = getSendAnthropicMessageMutationKey();
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof sendAnthropicMessage>>, SendAnthropicMessageMutationVariables> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  sendAnthropicMessage(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type SendAnthropicMessageMutationResult = NonNullable<Awaited<ReturnType<typeof sendAnthropicMessage>>>
+    export type SendAnthropicMessageMutationBody = BodyType<AnthropicMessageInput>
+    export type SendAnthropicMessageMutationError = ErrorType<void>
+    export type SendAnthropicMessageMutationVariables = {id: number;data: BodyType<AnthropicMessageInput>}
+
+    /**
+ * @summary Send a message and receive a streamed AI response
+ */
+export const useSendAnthropicMessage = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof sendAnthropicMessage>>, TError,SendAnthropicMessageMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof sendAnthropicMessage>>,
+        TError,
+        SendAnthropicMessageMutationVariables,
+        TContext
+      > => {
+      return useMutation(getSendAnthropicMessageMutationOptions(options));
+    }
 

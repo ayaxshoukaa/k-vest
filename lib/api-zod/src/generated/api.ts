@@ -107,3 +107,769 @@ export const GetMarketStockResponse = zod.object({
 })
 
 
+/**
+ * @summary Get the signed-in user's journey progress and demo portfolio
+ */
+export const getJourneyStateResponseFurthestStepMin = 0;
+export const getJourneyStateResponseFurthestStepMax = 8;
+
+
+
+export const GetJourneyStateResponse = zod.object({
+  "currentStep": zod.enum(['scan-intro', 'scan', 'research-intro', 'research', 'practice-intro', 'practice', 'roi-intro', 'roi', 'finish']),
+  "furthestStep": zod.number().int().min(getJourneyStateResponseFurthestStepMin).max(getJourneyStateResponseFurthestStepMax),
+  "watchlistSymbols": zod.array(zod.string()),
+  "researchCompleted": zod.boolean(),
+  "practiceSkipped": zod.boolean(),
+  "trades": zod.array(zod.object({
+  "id": zod.number().int(),
+  "symbol": zod.string(),
+  "companyName": zod.string(),
+  "side": zod.enum(['buy', 'sell']),
+  "quantity": zod.number().int(),
+  "priceKwd": zod.number(),
+  "notionalKwd": zod.number(),
+  "createdAt": zod.coerce.date(),
+  "marketTime": zod.coerce.date().nullable(),
+  "sample": zod.boolean(),
+  "stale": zod.boolean()
+})),
+  "holdings": zod.array(zod.object({
+  "symbol": zod.string(),
+  "companyName": zod.string(),
+  "quantity": zod.number().int(),
+  "averageCostKwd": zod.number(),
+  "costBasisKwd": zod.number(),
+  "currentPriceKwd": zod.number().nullable(),
+  "marketValueKwd": zod.number().nullable(),
+  "profitLossKwd": zod.number().nullable(),
+  "sample": zod.boolean(),
+  "stale": zod.boolean()
+})),
+  "cashKwd": zod.number(),
+  "marketValueKwd": zod.number().nullable(),
+  "portfolioValueKwd": zod.number().nullable(),
+  "profitLossKwd": zod.number().nullable(),
+  "roiPercent": zod.number().nullable(),
+  "roiResult": zod.union([zod.object({
+  "symbol": zod.string(),
+  "budgetKwd": zod.number(),
+  "buyPriceKwd": zod.number(),
+  "targetPriceKwd": zod.number(),
+  "annualDividendKwd": zod.number(),
+  "yearsHeld": zod.number(),
+  "shares": zod.number(),
+  "dividendTotalKwd": zod.number(),
+  "finalValueKwd": zod.number(),
+  "profitLossKwd": zod.number(),
+  "roiPercent": zod.number(),
+  "annualizedReturnPercent": zod.number(),
+  "riskLabel": zod.enum(['Low', 'Medium', 'High']),
+  "createdAt": zod.coerce.date()
+}),zod.null()]),
+  "marketDataNote": zod.string()
+})
+
+
+/**
+ * @summary Start or resume the guided journey
+ */
+export const startJourneyResponseFurthestStepMin = 0;
+export const startJourneyResponseFurthestStepMax = 8;
+
+
+
+export const StartJourneyResponse = zod.object({
+  "currentStep": zod.enum(['scan-intro', 'scan', 'research-intro', 'research', 'practice-intro', 'practice', 'roi-intro', 'roi', 'finish']),
+  "furthestStep": zod.number().int().min(startJourneyResponseFurthestStepMin).max(startJourneyResponseFurthestStepMax),
+  "watchlistSymbols": zod.array(zod.string()),
+  "researchCompleted": zod.boolean(),
+  "practiceSkipped": zod.boolean(),
+  "trades": zod.array(zod.object({
+  "id": zod.number().int(),
+  "symbol": zod.string(),
+  "companyName": zod.string(),
+  "side": zod.enum(['buy', 'sell']),
+  "quantity": zod.number().int(),
+  "priceKwd": zod.number(),
+  "notionalKwd": zod.number(),
+  "createdAt": zod.coerce.date(),
+  "marketTime": zod.coerce.date().nullable(),
+  "sample": zod.boolean(),
+  "stale": zod.boolean()
+})),
+  "holdings": zod.array(zod.object({
+  "symbol": zod.string(),
+  "companyName": zod.string(),
+  "quantity": zod.number().int(),
+  "averageCostKwd": zod.number(),
+  "costBasisKwd": zod.number(),
+  "currentPriceKwd": zod.number().nullable(),
+  "marketValueKwd": zod.number().nullable(),
+  "profitLossKwd": zod.number().nullable(),
+  "sample": zod.boolean(),
+  "stale": zod.boolean()
+})),
+  "cashKwd": zod.number(),
+  "marketValueKwd": zod.number().nullable(),
+  "portfolioValueKwd": zod.number().nullable(),
+  "profitLossKwd": zod.number().nullable(),
+  "roiPercent": zod.number().nullable(),
+  "roiResult": zod.union([zod.object({
+  "symbol": zod.string(),
+  "budgetKwd": zod.number(),
+  "buyPriceKwd": zod.number(),
+  "targetPriceKwd": zod.number(),
+  "annualDividendKwd": zod.number(),
+  "yearsHeld": zod.number(),
+  "shares": zod.number(),
+  "dividendTotalKwd": zod.number(),
+  "finalValueKwd": zod.number(),
+  "profitLossKwd": zod.number(),
+  "roiPercent": zod.number(),
+  "annualizedReturnPercent": zod.number(),
+  "riskLabel": zod.enum(['Low', 'Medium', 'High']),
+  "createdAt": zod.coerce.date()
+}),zod.null()]),
+  "marketDataNote": zod.string()
+})
+
+
+/**
+ * @summary Save the user's Phase 1 company selections
+ */
+export const saveJourneyWatchlistBodySymbolsItemRegExp = new RegExp('^[A-Z0-9]{1,12}$');
+export const saveJourneyWatchlistBodySymbolsMax = 20;
+
+
+
+export const SaveJourneyWatchlistBody = zod.object({
+  "symbols": zod.array(zod.string().regex(saveJourneyWatchlistBodySymbolsItemRegExp)).min(1).max(saveJourneyWatchlistBodySymbolsMax)
+})
+
+export const saveJourneyWatchlistResponseFurthestStepMin = 0;
+export const saveJourneyWatchlistResponseFurthestStepMax = 8;
+
+
+
+export const SaveJourneyWatchlistResponse = zod.object({
+  "currentStep": zod.enum(['scan-intro', 'scan', 'research-intro', 'research', 'practice-intro', 'practice', 'roi-intro', 'roi', 'finish']),
+  "furthestStep": zod.number().int().min(saveJourneyWatchlistResponseFurthestStepMin).max(saveJourneyWatchlistResponseFurthestStepMax),
+  "watchlistSymbols": zod.array(zod.string()),
+  "researchCompleted": zod.boolean(),
+  "practiceSkipped": zod.boolean(),
+  "trades": zod.array(zod.object({
+  "id": zod.number().int(),
+  "symbol": zod.string(),
+  "companyName": zod.string(),
+  "side": zod.enum(['buy', 'sell']),
+  "quantity": zod.number().int(),
+  "priceKwd": zod.number(),
+  "notionalKwd": zod.number(),
+  "createdAt": zod.coerce.date(),
+  "marketTime": zod.coerce.date().nullable(),
+  "sample": zod.boolean(),
+  "stale": zod.boolean()
+})),
+  "holdings": zod.array(zod.object({
+  "symbol": zod.string(),
+  "companyName": zod.string(),
+  "quantity": zod.number().int(),
+  "averageCostKwd": zod.number(),
+  "costBasisKwd": zod.number(),
+  "currentPriceKwd": zod.number().nullable(),
+  "marketValueKwd": zod.number().nullable(),
+  "profitLossKwd": zod.number().nullable(),
+  "sample": zod.boolean(),
+  "stale": zod.boolean()
+})),
+  "cashKwd": zod.number(),
+  "marketValueKwd": zod.number().nullable(),
+  "portfolioValueKwd": zod.number().nullable(),
+  "profitLossKwd": zod.number().nullable(),
+  "roiPercent": zod.number().nullable(),
+  "roiResult": zod.union([zod.object({
+  "symbol": zod.string(),
+  "budgetKwd": zod.number(),
+  "buyPriceKwd": zod.number(),
+  "targetPriceKwd": zod.number(),
+  "annualDividendKwd": zod.number(),
+  "yearsHeld": zod.number(),
+  "shares": zod.number(),
+  "dividendTotalKwd": zod.number(),
+  "finalValueKwd": zod.number(),
+  "profitLossKwd": zod.number(),
+  "roiPercent": zod.number(),
+  "annualizedReturnPercent": zod.number(),
+  "riskLabel": zod.enum(['Low', 'Medium', 'High']),
+  "createdAt": zod.coerce.date()
+}),zod.null()]),
+  "marketDataNote": zod.string()
+})
+
+
+/**
+ * @summary Advance one step after validating phase requirements
+ */
+export const AdvanceJourneyBody = zod.object({
+  "fromStep": zod.enum(['scan-intro', 'scan', 'research-intro', 'research', 'practice-intro', 'practice', 'roi-intro', 'roi', 'finish']),
+  "nextStep": zod.enum(['scan-intro', 'scan', 'research-intro', 'research', 'practice-intro', 'practice', 'roi-intro', 'roi', 'finish'])
+})
+
+export const advanceJourneyResponseFurthestStepMin = 0;
+export const advanceJourneyResponseFurthestStepMax = 8;
+
+
+
+export const AdvanceJourneyResponse = zod.object({
+  "currentStep": zod.enum(['scan-intro', 'scan', 'research-intro', 'research', 'practice-intro', 'practice', 'roi-intro', 'roi', 'finish']),
+  "furthestStep": zod.number().int().min(advanceJourneyResponseFurthestStepMin).max(advanceJourneyResponseFurthestStepMax),
+  "watchlistSymbols": zod.array(zod.string()),
+  "researchCompleted": zod.boolean(),
+  "practiceSkipped": zod.boolean(),
+  "trades": zod.array(zod.object({
+  "id": zod.number().int(),
+  "symbol": zod.string(),
+  "companyName": zod.string(),
+  "side": zod.enum(['buy', 'sell']),
+  "quantity": zod.number().int(),
+  "priceKwd": zod.number(),
+  "notionalKwd": zod.number(),
+  "createdAt": zod.coerce.date(),
+  "marketTime": zod.coerce.date().nullable(),
+  "sample": zod.boolean(),
+  "stale": zod.boolean()
+})),
+  "holdings": zod.array(zod.object({
+  "symbol": zod.string(),
+  "companyName": zod.string(),
+  "quantity": zod.number().int(),
+  "averageCostKwd": zod.number(),
+  "costBasisKwd": zod.number(),
+  "currentPriceKwd": zod.number().nullable(),
+  "marketValueKwd": zod.number().nullable(),
+  "profitLossKwd": zod.number().nullable(),
+  "sample": zod.boolean(),
+  "stale": zod.boolean()
+})),
+  "cashKwd": zod.number(),
+  "marketValueKwd": zod.number().nullable(),
+  "portfolioValueKwd": zod.number().nullable(),
+  "profitLossKwd": zod.number().nullable(),
+  "roiPercent": zod.number().nullable(),
+  "roiResult": zod.union([zod.object({
+  "symbol": zod.string(),
+  "budgetKwd": zod.number(),
+  "buyPriceKwd": zod.number(),
+  "targetPriceKwd": zod.number(),
+  "annualDividendKwd": zod.number(),
+  "yearsHeld": zod.number(),
+  "shares": zod.number(),
+  "dividendTotalKwd": zod.number(),
+  "finalValueKwd": zod.number(),
+  "profitLossKwd": zod.number(),
+  "roiPercent": zod.number(),
+  "annualizedReturnPercent": zod.number(),
+  "riskLabel": zod.enum(['Low', 'Medium', 'High']),
+  "createdAt": zod.coerce.date()
+}),zod.null()]),
+  "marketDataNote": zod.string()
+})
+
+
+/**
+ * @summary Skip the optional practice trade and continue to ROI
+ */
+export const SkipJourneyPracticeBody = zod.object({
+
+}).passthrough()
+
+export const skipJourneyPracticeResponseFurthestStepMin = 0;
+export const skipJourneyPracticeResponseFurthestStepMax = 8;
+
+
+
+export const SkipJourneyPracticeResponse = zod.object({
+  "currentStep": zod.enum(['scan-intro', 'scan', 'research-intro', 'research', 'practice-intro', 'practice', 'roi-intro', 'roi', 'finish']),
+  "furthestStep": zod.number().int().min(skipJourneyPracticeResponseFurthestStepMin).max(skipJourneyPracticeResponseFurthestStepMax),
+  "watchlistSymbols": zod.array(zod.string()),
+  "researchCompleted": zod.boolean(),
+  "practiceSkipped": zod.boolean(),
+  "trades": zod.array(zod.object({
+  "id": zod.number().int(),
+  "symbol": zod.string(),
+  "companyName": zod.string(),
+  "side": zod.enum(['buy', 'sell']),
+  "quantity": zod.number().int(),
+  "priceKwd": zod.number(),
+  "notionalKwd": zod.number(),
+  "createdAt": zod.coerce.date(),
+  "marketTime": zod.coerce.date().nullable(),
+  "sample": zod.boolean(),
+  "stale": zod.boolean()
+})),
+  "holdings": zod.array(zod.object({
+  "symbol": zod.string(),
+  "companyName": zod.string(),
+  "quantity": zod.number().int(),
+  "averageCostKwd": zod.number(),
+  "costBasisKwd": zod.number(),
+  "currentPriceKwd": zod.number().nullable(),
+  "marketValueKwd": zod.number().nullable(),
+  "profitLossKwd": zod.number().nullable(),
+  "sample": zod.boolean(),
+  "stale": zod.boolean()
+})),
+  "cashKwd": zod.number(),
+  "marketValueKwd": zod.number().nullable(),
+  "portfolioValueKwd": zod.number().nullable(),
+  "profitLossKwd": zod.number().nullable(),
+  "roiPercent": zod.number().nullable(),
+  "roiResult": zod.union([zod.object({
+  "symbol": zod.string(),
+  "budgetKwd": zod.number(),
+  "buyPriceKwd": zod.number(),
+  "targetPriceKwd": zod.number(),
+  "annualDividendKwd": zod.number(),
+  "yearsHeld": zod.number(),
+  "shares": zod.number(),
+  "dividendTotalKwd": zod.number(),
+  "finalValueKwd": zod.number(),
+  "profitLossKwd": zod.number(),
+  "roiPercent": zod.number(),
+  "annualizedReturnPercent": zod.number(),
+  "riskLabel": zod.enum(['Low', 'Medium', 'High']),
+  "createdAt": zod.coerce.date()
+}),zod.null()]),
+  "marketDataNote": zod.string()
+})
+
+
+/**
+ * @summary Record a simulated stock trade at the latest available quote
+ */
+export const createJourneyTradeBodySymbolRegExp = new RegExp('^[A-Z0-9]{1,12}$');
+export const createJourneyTradeBodyQuantityMax = 1000000;
+
+
+
+export const CreateJourneyTradeBody = zod.object({
+  "symbol": zod.string().regex(createJourneyTradeBodySymbolRegExp),
+  "side": zod.enum(['buy', 'sell']),
+  "quantity": zod.number().int().min(1).max(createJourneyTradeBodyQuantityMax)
+})
+
+export const createJourneyTradeResponseFurthestStepMin = 0;
+export const createJourneyTradeResponseFurthestStepMax = 8;
+
+
+
+export const CreateJourneyTradeResponse = zod.object({
+  "currentStep": zod.enum(['scan-intro', 'scan', 'research-intro', 'research', 'practice-intro', 'practice', 'roi-intro', 'roi', 'finish']),
+  "furthestStep": zod.number().int().min(createJourneyTradeResponseFurthestStepMin).max(createJourneyTradeResponseFurthestStepMax),
+  "watchlistSymbols": zod.array(zod.string()),
+  "researchCompleted": zod.boolean(),
+  "practiceSkipped": zod.boolean(),
+  "trades": zod.array(zod.object({
+  "id": zod.number().int(),
+  "symbol": zod.string(),
+  "companyName": zod.string(),
+  "side": zod.enum(['buy', 'sell']),
+  "quantity": zod.number().int(),
+  "priceKwd": zod.number(),
+  "notionalKwd": zod.number(),
+  "createdAt": zod.coerce.date(),
+  "marketTime": zod.coerce.date().nullable(),
+  "sample": zod.boolean(),
+  "stale": zod.boolean()
+})),
+  "holdings": zod.array(zod.object({
+  "symbol": zod.string(),
+  "companyName": zod.string(),
+  "quantity": zod.number().int(),
+  "averageCostKwd": zod.number(),
+  "costBasisKwd": zod.number(),
+  "currentPriceKwd": zod.number().nullable(),
+  "marketValueKwd": zod.number().nullable(),
+  "profitLossKwd": zod.number().nullable(),
+  "sample": zod.boolean(),
+  "stale": zod.boolean()
+})),
+  "cashKwd": zod.number(),
+  "marketValueKwd": zod.number().nullable(),
+  "portfolioValueKwd": zod.number().nullable(),
+  "profitLossKwd": zod.number().nullable(),
+  "roiPercent": zod.number().nullable(),
+  "roiResult": zod.union([zod.object({
+  "symbol": zod.string(),
+  "budgetKwd": zod.number(),
+  "buyPriceKwd": zod.number(),
+  "targetPriceKwd": zod.number(),
+  "annualDividendKwd": zod.number(),
+  "yearsHeld": zod.number(),
+  "shares": zod.number(),
+  "dividendTotalKwd": zod.number(),
+  "finalValueKwd": zod.number(),
+  "profitLossKwd": zod.number(),
+  "roiPercent": zod.number(),
+  "annualizedReturnPercent": zod.number(),
+  "riskLabel": zod.enum(['Low', 'Medium', 'High']),
+  "createdAt": zod.coerce.date()
+}),zod.null()]),
+  "marketDataNote": zod.string()
+})
+
+
+/**
+ * @summary Reset the practice wallet to 1,000 KD
+ */
+export const resetJourneyWalletResponseFurthestStepMin = 0;
+export const resetJourneyWalletResponseFurthestStepMax = 8;
+
+
+
+export const ResetJourneyWalletResponse = zod.object({
+  "currentStep": zod.enum(['scan-intro', 'scan', 'research-intro', 'research', 'practice-intro', 'practice', 'roi-intro', 'roi', 'finish']),
+  "furthestStep": zod.number().int().min(resetJourneyWalletResponseFurthestStepMin).max(resetJourneyWalletResponseFurthestStepMax),
+  "watchlistSymbols": zod.array(zod.string()),
+  "researchCompleted": zod.boolean(),
+  "practiceSkipped": zod.boolean(),
+  "trades": zod.array(zod.object({
+  "id": zod.number().int(),
+  "symbol": zod.string(),
+  "companyName": zod.string(),
+  "side": zod.enum(['buy', 'sell']),
+  "quantity": zod.number().int(),
+  "priceKwd": zod.number(),
+  "notionalKwd": zod.number(),
+  "createdAt": zod.coerce.date(),
+  "marketTime": zod.coerce.date().nullable(),
+  "sample": zod.boolean(),
+  "stale": zod.boolean()
+})),
+  "holdings": zod.array(zod.object({
+  "symbol": zod.string(),
+  "companyName": zod.string(),
+  "quantity": zod.number().int(),
+  "averageCostKwd": zod.number(),
+  "costBasisKwd": zod.number(),
+  "currentPriceKwd": zod.number().nullable(),
+  "marketValueKwd": zod.number().nullable(),
+  "profitLossKwd": zod.number().nullable(),
+  "sample": zod.boolean(),
+  "stale": zod.boolean()
+})),
+  "cashKwd": zod.number(),
+  "marketValueKwd": zod.number().nullable(),
+  "portfolioValueKwd": zod.number().nullable(),
+  "profitLossKwd": zod.number().nullable(),
+  "roiPercent": zod.number().nullable(),
+  "roiResult": zod.union([zod.object({
+  "symbol": zod.string(),
+  "budgetKwd": zod.number(),
+  "buyPriceKwd": zod.number(),
+  "targetPriceKwd": zod.number(),
+  "annualDividendKwd": zod.number(),
+  "yearsHeld": zod.number(),
+  "shares": zod.number(),
+  "dividendTotalKwd": zod.number(),
+  "finalValueKwd": zod.number(),
+  "profitLossKwd": zod.number(),
+  "roiPercent": zod.number(),
+  "annualizedReturnPercent": zod.number(),
+  "riskLabel": zod.enum(['Low', 'Medium', 'High']),
+  "createdAt": zod.coerce.date()
+}),zod.null()]),
+  "marketDataNote": zod.string()
+})
+
+
+/**
+ * @summary Calculate and save the user's ROI scenario
+ */
+export const calculateJourneyRoiBodySymbolRegExp = new RegExp('^[A-Z0-9]{1,12}$');
+export const calculateJourneyRoiBodyBudgetKwdExclusiveMin = 0;
+export const calculateJourneyRoiBodyBudgetKwdMax = 100000000;
+
+export const calculateJourneyRoiBodyBuyPriceKwdExclusiveMin = 0;
+export const calculateJourneyRoiBodyBuyPriceKwdMax = 1000000;
+
+export const calculateJourneyRoiBodyTargetPriceKwdMin = 0;
+export const calculateJourneyRoiBodyTargetPriceKwdMax = 1000000;
+
+export const calculateJourneyRoiBodyAnnualDividendKwdDefault = 0;
+export const calculateJourneyRoiBodyAnnualDividendKwdMin = 0;
+export const calculateJourneyRoiBodyAnnualDividendKwdMax = 1000000;
+
+export const calculateJourneyRoiBodyYearsHeldExclusiveMin = 0;
+export const calculateJourneyRoiBodyYearsHeldMax = 100;
+
+
+
+export const CalculateJourneyRoiBody = zod.object({
+  "symbol": zod.string().regex(calculateJourneyRoiBodySymbolRegExp),
+  "budgetKwd": zod.number().gt(calculateJourneyRoiBodyBudgetKwdExclusiveMin).max(calculateJourneyRoiBodyBudgetKwdMax),
+  "buyPriceKwd": zod.number().gt(calculateJourneyRoiBodyBuyPriceKwdExclusiveMin).max(calculateJourneyRoiBodyBuyPriceKwdMax),
+  "targetPriceKwd": zod.number().min(calculateJourneyRoiBodyTargetPriceKwdMin).max(calculateJourneyRoiBodyTargetPriceKwdMax),
+  "annualDividendKwd": zod.number().min(calculateJourneyRoiBodyAnnualDividendKwdMin).max(calculateJourneyRoiBodyAnnualDividendKwdMax).default(calculateJourneyRoiBodyAnnualDividendKwdDefault),
+  "yearsHeld": zod.number().gt(calculateJourneyRoiBodyYearsHeldExclusiveMin).max(calculateJourneyRoiBodyYearsHeldMax)
+})
+
+export const calculateJourneyRoiResponseFurthestStepMin = 0;
+export const calculateJourneyRoiResponseFurthestStepMax = 8;
+
+
+
+export const CalculateJourneyRoiResponse = zod.object({
+  "currentStep": zod.enum(['scan-intro', 'scan', 'research-intro', 'research', 'practice-intro', 'practice', 'roi-intro', 'roi', 'finish']),
+  "furthestStep": zod.number().int().min(calculateJourneyRoiResponseFurthestStepMin).max(calculateJourneyRoiResponseFurthestStepMax),
+  "watchlistSymbols": zod.array(zod.string()),
+  "researchCompleted": zod.boolean(),
+  "practiceSkipped": zod.boolean(),
+  "trades": zod.array(zod.object({
+  "id": zod.number().int(),
+  "symbol": zod.string(),
+  "companyName": zod.string(),
+  "side": zod.enum(['buy', 'sell']),
+  "quantity": zod.number().int(),
+  "priceKwd": zod.number(),
+  "notionalKwd": zod.number(),
+  "createdAt": zod.coerce.date(),
+  "marketTime": zod.coerce.date().nullable(),
+  "sample": zod.boolean(),
+  "stale": zod.boolean()
+})),
+  "holdings": zod.array(zod.object({
+  "symbol": zod.string(),
+  "companyName": zod.string(),
+  "quantity": zod.number().int(),
+  "averageCostKwd": zod.number(),
+  "costBasisKwd": zod.number(),
+  "currentPriceKwd": zod.number().nullable(),
+  "marketValueKwd": zod.number().nullable(),
+  "profitLossKwd": zod.number().nullable(),
+  "sample": zod.boolean(),
+  "stale": zod.boolean()
+})),
+  "cashKwd": zod.number(),
+  "marketValueKwd": zod.number().nullable(),
+  "portfolioValueKwd": zod.number().nullable(),
+  "profitLossKwd": zod.number().nullable(),
+  "roiPercent": zod.number().nullable(),
+  "roiResult": zod.union([zod.object({
+  "symbol": zod.string(),
+  "budgetKwd": zod.number(),
+  "buyPriceKwd": zod.number(),
+  "targetPriceKwd": zod.number(),
+  "annualDividendKwd": zod.number(),
+  "yearsHeld": zod.number(),
+  "shares": zod.number(),
+  "dividendTotalKwd": zod.number(),
+  "finalValueKwd": zod.number(),
+  "profitLossKwd": zod.number(),
+  "roiPercent": zod.number(),
+  "annualizedReturnPercent": zod.number(),
+  "riskLabel": zod.enum(['Low', 'Medium', 'High']),
+  "createdAt": zod.coerce.date()
+}),zod.null()]),
+  "marketDataNote": zod.string()
+})
+
+
+/**
+ * @summary Reset all journey progress and the practice wallet
+ */
+export const resetJourneyResponseFurthestStepMin = 0;
+export const resetJourneyResponseFurthestStepMax = 8;
+
+
+
+export const ResetJourneyResponse = zod.object({
+  "currentStep": zod.enum(['scan-intro', 'scan', 'research-intro', 'research', 'practice-intro', 'practice', 'roi-intro', 'roi', 'finish']),
+  "furthestStep": zod.number().int().min(resetJourneyResponseFurthestStepMin).max(resetJourneyResponseFurthestStepMax),
+  "watchlistSymbols": zod.array(zod.string()),
+  "researchCompleted": zod.boolean(),
+  "practiceSkipped": zod.boolean(),
+  "trades": zod.array(zod.object({
+  "id": zod.number().int(),
+  "symbol": zod.string(),
+  "companyName": zod.string(),
+  "side": zod.enum(['buy', 'sell']),
+  "quantity": zod.number().int(),
+  "priceKwd": zod.number(),
+  "notionalKwd": zod.number(),
+  "createdAt": zod.coerce.date(),
+  "marketTime": zod.coerce.date().nullable(),
+  "sample": zod.boolean(),
+  "stale": zod.boolean()
+})),
+  "holdings": zod.array(zod.object({
+  "symbol": zod.string(),
+  "companyName": zod.string(),
+  "quantity": zod.number().int(),
+  "averageCostKwd": zod.number(),
+  "costBasisKwd": zod.number(),
+  "currentPriceKwd": zod.number().nullable(),
+  "marketValueKwd": zod.number().nullable(),
+  "profitLossKwd": zod.number().nullable(),
+  "sample": zod.boolean(),
+  "stale": zod.boolean()
+})),
+  "cashKwd": zod.number(),
+  "marketValueKwd": zod.number().nullable(),
+  "portfolioValueKwd": zod.number().nullable(),
+  "profitLossKwd": zod.number().nullable(),
+  "roiPercent": zod.number().nullable(),
+  "roiResult": zod.union([zod.object({
+  "symbol": zod.string(),
+  "budgetKwd": zod.number(),
+  "buyPriceKwd": zod.number(),
+  "targetPriceKwd": zod.number(),
+  "annualDividendKwd": zod.number(),
+  "yearsHeld": zod.number(),
+  "shares": zod.number(),
+  "dividendTotalKwd": zod.number(),
+  "finalValueKwd": zod.number(),
+  "profitLossKwd": zod.number(),
+  "roiPercent": zod.number(),
+  "annualizedReturnPercent": zod.number(),
+  "riskLabel": zod.enum(['Low', 'Medium', 'High']),
+  "createdAt": zod.coerce.date()
+}),zod.null()]),
+  "marketDataNote": zod.string()
+})
+
+
+/**
+ * @summary Ask the AI research assistant about a Kuwait-listed company
+ */
+export const analyzeJourneyCompanyBodySymbolRegExp = new RegExp('^[A-Z0-9]{1,12}$');
+export const analyzeJourneyCompanyBodyQuestionMax = 600;
+
+
+
+export const AnalyzeJourneyCompanyBody = zod.object({
+  "symbol": zod.string().regex(analyzeJourneyCompanyBodySymbolRegExp),
+  "question": zod.string().min(1).max(analyzeJourneyCompanyBodyQuestionMax),
+  "language": zod.enum(['en', 'ar'])
+})
+
+export const AnalyzeJourneyCompanyResponse = zod.object({
+  "symbol": zod.string(),
+  "companyName": zod.string(),
+  "analysisText": zod.string(),
+  "refreshStatus": zod.enum(['fresh', 'stale', 'sample', 'unavailable']),
+  "warning": zod.string().nullable(),
+  "sample": zod.boolean(),
+  "stale": zod.boolean()
+})
+
+
+/**
+ * @summary List the signed-in user's research conversations
+ */
+export const listAnthropicConversationsQuerySymbolRegExp = new RegExp('^[A-Z0-9]{1,12}$');
+
+
+export const ListAnthropicConversationsQueryParams = zod.object({
+  "symbol": zod.coerce.string().regex(listAnthropicConversationsQuerySymbolRegExp).optional()
+})
+
+export const ListAnthropicConversationsResponseItem = zod.object({
+  "id": zod.number().int(),
+  "title": zod.string(),
+  "symbol": zod.string(),
+  "createdAt": zod.coerce.date()
+})
+export const ListAnthropicConversationsResponse = zod.array(ListAnthropicConversationsResponseItem)
+
+
+/**
+ * @summary Create or return a research conversation for a company
+ */
+export const createAnthropicConversationBodyTitleMax = 120;
+
+export const createAnthropicConversationBodySymbolRegExp = new RegExp('^[A-Z0-9]{1,12}$');
+
+
+export const CreateAnthropicConversationBody = zod.object({
+  "title": zod.string().min(1).max(createAnthropicConversationBodyTitleMax),
+  "symbol": zod.string().regex(createAnthropicConversationBodySymbolRegExp)
+})
+
+export const CreateAnthropicConversationResponse = zod.object({
+  "id": zod.number().int(),
+  "title": zod.string(),
+  "symbol": zod.string(),
+  "createdAt": zod.coerce.date()
+})
+
+
+/**
+ * @summary Get a conversation and its messages
+ */
+export const GetAnthropicConversationParams = zod.object({
+  "id": zod.coerce.number().int()
+})
+
+export const GetAnthropicConversationResponse = zod.object({
+  "id": zod.number().int(),
+  "title": zod.string(),
+  "symbol": zod.string(),
+  "createdAt": zod.coerce.date(),
+  "messages": zod.array(zod.object({
+  "id": zod.number().int(),
+  "conversationId": zod.number().int(),
+  "role": zod.enum(['user', 'assistant']),
+  "content": zod.string(),
+  "createdAt": zod.coerce.date()
+}))
+})
+
+
+/**
+ * @summary Delete a conversation owned by the signed-in user
+ */
+export const DeleteAnthropicConversationParams = zod.object({
+  "id": zod.coerce.number().int()
+})
+
+export const DeleteAnthropicConversationResponse = zod.void()
+
+
+/**
+ * @summary List messages in a user's conversation
+ */
+export const ListAnthropicMessagesParams = zod.object({
+  "id": zod.coerce.number().int()
+})
+
+export const ListAnthropicMessagesResponseItem = zod.object({
+  "id": zod.number().int(),
+  "conversationId": zod.number().int(),
+  "role": zod.enum(['user', 'assistant']),
+  "content": zod.string(),
+  "createdAt": zod.coerce.date()
+})
+export const ListAnthropicMessagesResponse = zod.array(ListAnthropicMessagesResponseItem)
+
+
+/**
+ * @summary Send a message and receive a streamed AI response
+ */
+export const SendAnthropicMessageParams = zod.object({
+  "id": zod.coerce.number().int()
+})
+
+export const sendAnthropicMessageBodyContentMax = 600;
+
+
+
+export const SendAnthropicMessageBody = zod.object({
+  "content": zod.string().min(1).max(sendAnthropicMessageBodyContentMax),
+  "language": zod.enum(['en', 'ar'])
+})
+
+export const SendAnthropicMessageResponse = zod.unknown()
+
+

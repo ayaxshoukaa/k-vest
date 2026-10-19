@@ -128,3 +128,278 @@ export interface MarketStockDetailResponse {
   stock: MarketScannerStock;
 }
 
+export type JourneyStep = typeof JourneyStep[keyof typeof JourneyStep];
+
+
+export const JourneyStep = {
+  'scan-intro': 'scan-intro',
+  scan: 'scan',
+  'research-intro': 'research-intro',
+  research: 'research',
+  'practice-intro': 'practice-intro',
+  practice: 'practice',
+  'roi-intro': 'roi-intro',
+  roi: 'roi',
+  finish: 'finish',
+} as const;
+
+export type DemoTradeSide = typeof DemoTradeSide[keyof typeof DemoTradeSide];
+
+
+export const DemoTradeSide = {
+  buy: 'buy',
+  sell: 'sell',
+} as const;
+
+export interface DemoTrade {
+  id: number;
+  symbol: string;
+  companyName: string;
+  side: DemoTradeSide;
+  quantity: number;
+  priceKwd: number;
+  notionalKwd: number;
+  createdAt: string;
+  /** @nullable */
+  marketTime: string | null;
+  sample: boolean;
+  stale: boolean;
+}
+
+export interface DemoHolding {
+  symbol: string;
+  companyName: string;
+  quantity: number;
+  averageCostKwd: number;
+  costBasisKwd: number;
+  /** @nullable */
+  currentPriceKwd: number | null;
+  /** @nullable */
+  marketValueKwd: number | null;
+  /** @nullable */
+  profitLossKwd: number | null;
+  sample: boolean;
+  stale: boolean;
+}
+
+export type JourneyRoiResultRiskLabel = typeof JourneyRoiResultRiskLabel[keyof typeof JourneyRoiResultRiskLabel];
+
+
+export const JourneyRoiResultRiskLabel = {
+  Low: 'Low',
+  Medium: 'Medium',
+  High: 'High',
+} as const;
+
+export interface JourneyRoiResult {
+  symbol: string;
+  budgetKwd: number;
+  buyPriceKwd: number;
+  targetPriceKwd: number;
+  annualDividendKwd: number;
+  yearsHeld: number;
+  shares: number;
+  dividendTotalKwd: number;
+  finalValueKwd: number;
+  profitLossKwd: number;
+  roiPercent: number;
+  annualizedReturnPercent: number;
+  riskLabel: JourneyRoiResultRiskLabel;
+  createdAt: string;
+}
+
+export interface JourneyStateResponse {
+  currentStep: JourneyStep;
+  /**
+     * @minimum 0
+     * @maximum 8
+     */
+  furthestStep: number;
+  watchlistSymbols: string[];
+  researchCompleted: boolean;
+  practiceSkipped: boolean;
+  trades: DemoTrade[];
+  holdings: DemoHolding[];
+  cashKwd: number;
+  /** @nullable */
+  marketValueKwd: number | null;
+  /** @nullable */
+  portfolioValueKwd: number | null;
+  /** @nullable */
+  profitLossKwd: number | null;
+  /** @nullable */
+  roiPercent: number | null;
+  roiResult: JourneyRoiResult | null;
+  marketDataNote: string;
+}
+
+export interface JourneyWatchlistInput {
+  /**
+     * @minItems 1
+     * @maxItems 20
+     * @items.pattern ^[A-Z0-9]{1,12}$
+     */
+  symbols: string[];
+}
+
+export interface AdvanceJourneyInput {
+  fromStep: JourneyStep;
+  nextStep: JourneyStep;
+}
+
+export interface PracticeSkipInput { [key: string]: unknown }
+
+export type DemoTradeInputSide = typeof DemoTradeInputSide[keyof typeof DemoTradeInputSide];
+
+
+export const DemoTradeInputSide = {
+  buy: 'buy',
+  sell: 'sell',
+} as const;
+
+export interface DemoTradeInput {
+  /** @pattern ^[A-Z0-9]{1,12}$ */
+  symbol: string;
+  side: DemoTradeInputSide;
+  /**
+     * @minimum 1
+     * @maximum 1000000
+     */
+  quantity: number;
+}
+
+export interface JourneyCalculatorInput {
+  /** @pattern ^[A-Z0-9]{1,12}$ */
+  symbol: string;
+  /**
+     * @maximum 100000000
+     * @exclusiveMinimum 0
+     */
+  budgetKwd: number;
+  /**
+     * @maximum 1000000
+     * @exclusiveMinimum 0
+     */
+  buyPriceKwd: number;
+  /**
+     * @minimum 0
+     * @maximum 1000000
+     */
+  targetPriceKwd: number;
+  /**
+     * @minimum 0
+     * @maximum 1000000
+     */
+  annualDividendKwd?: number;
+  /**
+     * @maximum 100
+     * @exclusiveMinimum 0
+     */
+  yearsHeld: number;
+}
+
+export type JourneyResearchInputLanguage = typeof JourneyResearchInputLanguage[keyof typeof JourneyResearchInputLanguage];
+
+
+export const JourneyResearchInputLanguage = {
+  en: 'en',
+  ar: 'ar',
+} as const;
+
+export interface JourneyResearchInput {
+  /** @pattern ^[A-Z0-9]{1,12}$ */
+  symbol: string;
+  /**
+     * @minLength 1
+     * @maxLength 600
+     */
+  question: string;
+  language: JourneyResearchInputLanguage;
+}
+
+export type JourneyResearchResponseRefreshStatus = typeof JourneyResearchResponseRefreshStatus[keyof typeof JourneyResearchResponseRefreshStatus];
+
+
+export const JourneyResearchResponseRefreshStatus = {
+  fresh: 'fresh',
+  stale: 'stale',
+  sample: 'sample',
+  unavailable: 'unavailable',
+} as const;
+
+export interface JourneyResearchResponse {
+  symbol: string;
+  companyName: string;
+  analysisText: string;
+  refreshStatus: JourneyResearchResponseRefreshStatus;
+  /** @nullable */
+  warning: string | null;
+  sample: boolean;
+  stale: boolean;
+}
+
+export interface AnthropicConversation {
+  id: number;
+  title: string;
+  symbol: string;
+  createdAt: string;
+}
+
+export type AnthropicMessageRole = typeof AnthropicMessageRole[keyof typeof AnthropicMessageRole];
+
+
+export const AnthropicMessageRole = {
+  user: 'user',
+  assistant: 'assistant',
+} as const;
+
+export interface AnthropicMessage {
+  id: number;
+  conversationId: number;
+  role: AnthropicMessageRole;
+  content: string;
+  createdAt: string;
+}
+
+export interface AnthropicConversationInput {
+  /**
+     * @minLength 1
+     * @maxLength 120
+     */
+  title: string;
+  /** @pattern ^[A-Z0-9]{1,12}$ */
+  symbol: string;
+}
+
+export type AnthropicMessageInputLanguage = typeof AnthropicMessageInputLanguage[keyof typeof AnthropicMessageInputLanguage];
+
+
+export const AnthropicMessageInputLanguage = {
+  en: 'en',
+  ar: 'ar',
+} as const;
+
+export interface AnthropicMessageInput {
+  /**
+     * @minLength 1
+     * @maxLength 600
+     */
+  content: string;
+  language: AnthropicMessageInputLanguage;
+}
+
+export interface AnthropicConversationWithMessages {
+  id: number;
+  title: string;
+  symbol: string;
+  createdAt: string;
+  messages: AnthropicMessage[];
+}
+
+export type ListAnthropicConversationsParams = {
+/**
+ * @pattern ^[A-Z0-9]{1,12}$
+ */
+symbol?: string;
+};
+
