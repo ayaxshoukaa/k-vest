@@ -36,3 +36,74 @@ export const GetMarketQuotesResponse = zod.object({
 })
 
 
+/**
+ * @summary Get the cached Kuwait market scanner data
+ */
+export const GetMarketScannerResponse = zod.object({
+  "refreshStatus": zod.enum(['fresh', 'stale', 'sample', 'unavailable']),
+  "lastUpdatedAt": zod.coerce.date().nullable(),
+  "warning": zod.string().nullable(),
+  "index": zod.union([zod.object({
+  "symbol": zod.string(),
+  "name": zod.string(),
+  "value": zod.number(),
+  "changeAbs": zod.number(),
+  "changePercent": zod.number(),
+  "marketTime": zod.coerce.date().nullable()
+}),zod.null()]),
+  "stocks": zod.array(zod.object({
+  "symbol": zod.string(),
+  "companyName": zod.string(),
+  "sector": zod.string().nullable(),
+  "priceKwd": zod.number().nullable(),
+  "changeKwd": zod.number().nullable(),
+  "changePercent": zod.number().nullable(),
+  "volume": zod.number().nullable(),
+  "marketTime": zod.coerce.date().nullable(),
+  "momentumPercent": zod.number().nullable(),
+  "rating": zod.enum(['Strong', 'Neutral', 'Weak', 'Unavailable']),
+  "sparkline": zod.array(zod.object({
+  "date": zod.coerce.date(),
+  "closeKwd": zod.number()
+})),
+  "stale": zod.boolean(),
+  "sample": zod.boolean()
+}))
+})
+
+
+/**
+ * @summary Get a Kuwait stock quote and one-month history
+ */
+export const getMarketStockPathSymbolRegExp = new RegExp('^[A-Z0-9]{1,12}$');
+
+
+export const GetMarketStockParams = zod.object({
+  "symbol": zod.coerce.string().regex(getMarketStockPathSymbolRegExp)
+})
+
+export const GetMarketStockResponse = zod.object({
+  "refreshStatus": zod.enum(['fresh', 'stale', 'sample', 'unavailable']),
+  "lastUpdatedAt": zod.coerce.date().nullable(),
+  "warning": zod.string().nullable(),
+  "stock": zod.object({
+  "symbol": zod.string(),
+  "companyName": zod.string(),
+  "sector": zod.string().nullable(),
+  "priceKwd": zod.number().nullable(),
+  "changeKwd": zod.number().nullable(),
+  "changePercent": zod.number().nullable(),
+  "volume": zod.number().nullable(),
+  "marketTime": zod.coerce.date().nullable(),
+  "momentumPercent": zod.number().nullable(),
+  "rating": zod.enum(['Strong', 'Neutral', 'Weak', 'Unavailable']),
+  "sparkline": zod.array(zod.object({
+  "date": zod.coerce.date(),
+  "closeKwd": zod.number()
+})),
+  "stale": zod.boolean(),
+  "sample": zod.boolean()
+})
+})
+
+

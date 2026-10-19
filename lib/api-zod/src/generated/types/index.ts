@@ -7,6 +7,14 @@
  */
 
 export * from './healthStatus';
+export * from './marketHistoryPoint';
+export * from './marketIndex';
 export * from './marketQuote';
 export * from './marketQuotesResponse';
 export * from './marketQuotesResponseRefreshStatus';
+export * from './marketScannerResponse';
+export * from './marketScannerResponseRefreshStatus';
+export * from './marketScannerStock';
+export * from './marketScannerStockRating';
+export * from './marketStockDetailResponse';
+export * from './marketStockDetailResponseRefreshStatus';

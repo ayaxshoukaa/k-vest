@@ -19,6 +19,9 @@ import { BrandMark } from '@/components/brand-mark';
 import { Toaster } from '@/components/ui/toaster';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import Home from '@/pages/home';
+import ScannerPage from '@/pages/scanner';
+import StockDetailPage from '@/pages/stock-detail';
+import WatchlistPage from '@/pages/watchlist';
 import NotFound from '@/pages/not-found';
 
 const queryClient = new QueryClient();
@@ -49,7 +52,7 @@ const clerkAppearance = {
   options: {
     logoPlacement: 'inside' as const,
     logoLinkUrl: basePath || '/',
-    logoImageUrl: `${window.location.origin}${basePath}/logo.svg`,
+    logoImageUrl: `${window.location.origin}${basePath}/k-vest-logo-wide.png`,
   },
   variables: {
     colorPrimary: '#ff7138',
@@ -178,12 +181,8 @@ function SignedInPortal() {
   return (
     <div className="kv-auth" data-testid="page-account">
       <header className="kv-auth__header">
-        <Link href="/" className="kv-auth__brand" data-testid="link-account-home">
+        <Link href="/" className="kv-auth__brand" aria-label="K-vest AI home" data-testid="link-account-home">
           <BrandMark className="kv-auth__mark" />
-          <span>
-            <span className="kv-auth__brand-name">K-vest AI</span>
-            <span className="kv-auth__brand-caption">Kuwait investing research</span>
-          </span>
         </Link>
         <button
           className="kv-auth__home-link"
@@ -267,6 +266,9 @@ function ClerkRoutes() {
       <RoutedErrorBoundary>
         <Switch>
           <Route path="/" component={HomeRedirect} />
+          <Route path="/scanner" component={ScannerPage} />
+          <Route path="/stocks/:symbol" component={StockDetailPage} />
+          <Route path="/watchlist" component={WatchlistPage} />
           <Route path="/sign-in/*?" component={SignInPage} />
           <Route path="/sign-up/*?" component={SignUpPage} />
           <Route path="/user-portal" component={UserPortal} />

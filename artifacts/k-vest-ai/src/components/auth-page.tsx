@@ -118,10 +118,6 @@ export function AuthPage({ mode, children }: AuthPageProps) {
       <header className="kv-auth__header">
         <Link href="/" className="kv-auth__brand" aria-label="K-vest AI home" data-testid="link-auth-home">
           <BrandMark className="kv-auth__mark" />
-          <span>
-            <span className="kv-auth__brand-name">K-vest AI</span>
-            <span className="kv-auth__brand-caption">Kuwait investing research</span>
-          </span>
         </Link>
         <Link href="/" className="kv-auth__home-link" data-testid="link-auth-back-home">
           <ArrowLeft className="kv-auth__home-arrow" size={16} aria-hidden="true" />

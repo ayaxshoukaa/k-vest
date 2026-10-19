@@ -6,17 +6,18 @@ import { ScenarioCalculator } from '@/components/scenario-calculator';
 import { BrandMark } from '@/components/brand-mark';
 
 const links = [
+  { href: '/scanner', label: 'Scanner' },
   { href: '#calculator', label: 'Calculator' },
-  { href: '#platform', label: 'Planned features' },
+  { href: '#platform', label: 'Market tools' },
   { href: '#how-it-works', label: 'How it works' },
   { href: '#vision', label: 'Our vision' },
 ];
 
 const modules = [
-  { icon: ScanSearch, title: 'Company scanner', text: 'A planned way to explore Boursa Kuwait companies side by side, in plain language.' },
-  { icon: Star, title: 'Beginner ratings', text: 'Simple, explained ratings that show their reasoning rather than just a score.' },
-  { icon: ListChecks, title: 'Watchlist', text: 'Keep the companies you are learning about in one place.' },
-  { icon: Sparkles, title: 'AI analysis', text: 'Plain-English summaries of company information, built on a licensed data source.' },
+  { icon: ScanSearch, title: 'Company scanner', text: 'Compare delayed Kuwait listings, recent price moves, and one-month history.', status: 'Available' },
+  { icon: Star, title: 'Learning signals', text: 'See simple momentum-and-volume labels with their educational limits explained.', status: 'Available' },
+  { icon: ListChecks, title: 'Watchlist', text: 'Save companies on this device and return to them while learning about the market.', status: 'Available' },
+  { icon: Sparkles, title: 'AI analysis', text: 'Plain-English summaries of company information remain planned for a later step.', status: 'Planned' },
 ];
 
 function formatKwd(value: number | null) {
@@ -84,10 +85,13 @@ export default function Home() {
         <div className="kv-nav-in">
           <Link href="/" className="kv-brand" aria-label="K-vest AI home" data-testid="link-home">
             <BrandMark className="kv-mark" />
-            <span><span className="kv-bname">K-vest AI</span><span className="kv-bcap">Kuwait investing research</span></span>
           </Link>
           <nav className="kv-links" aria-label="Primary">
-            {links.map((l) => <a key={l.href} href={l.href} data-testid={`link-nav-${l.href.slice(1)}`}>{l.label}</a>)}
+            {links.map((l) => l.href.startsWith('/') ? (
+              <Link key={l.href} href={l.href} data-testid={`link-nav-${l.href.slice(1)}`}>{l.label}</Link>
+            ) : (
+              <a key={l.href} href={l.href} data-testid={`link-nav-${l.href.slice(1)}`}>{l.label}</a>
+            ))}
             <Link href="/sign-in" data-testid="link-nav-sign-in">Sign in</Link>
           </nav>
           <a href="#calculator" className="kv-btn kv-nav-cta" data-testid="button-nav-calculator"><span>Try the calculator</span><ArrowRight size={16} /></a>
@@ -97,7 +101,11 @@ export default function Home() {
         </div>
         {open && (
           <nav className="kv-drawer" aria-label="Mobile">
-            {links.map((l) => <a key={l.href} href={l.href} onClick={() => setOpen(false)} data-testid={`link-mobile-${l.href.slice(1)}`}>{l.label}</a>)}
+              {links.map((l) => l.href.startsWith('/') ? (
+                <Link key={l.href} href={l.href} onClick={() => setOpen(false)} data-testid={`link-mobile-${l.href.slice(1)}`}>{l.label}</Link>
+              ) : (
+                <a key={l.href} href={l.href} onClick={() => setOpen(false)} data-testid={`link-mobile-${l.href.slice(1)}`}>{l.label}</a>
+              ))}
               <Link href="/sign-in" onClick={() => setOpen(false)} data-testid="link-mobile-sign-in">Sign in</Link>
           </nav>
         )}
@@ -109,9 +117,9 @@ export default function Home() {
           <div className="kv-glow" style={{ top: '30%', right: -190, width: 480, height: 480, background: 'rgba(4,94,207,.2)' }} />
           <div className="kv-wrap kv-hero-grid">
             <div className="kv-rise">
-              <span className="kv-pill"><span className="kv-dot" aria-hidden="true" />Research preview | Calculator live</span>
+              <span className="kv-pill"><span className="kv-dot" aria-hidden="true" />Market scanner | Calculator live</span>
               <h1>Learn to invest in Kuwait.<br /><span className="kv-grad">One clear step at a time.</span></h1>
-              <p className="kv-lead">K-vest AI is a learning-focused research companion for first-time investors in Kuwait. Explore delayed company quotes and try a KWD scenario calculator built for learning.</p>
+              <p className="kv-lead">K-vest AI is a learning-focused research companion for first-time investors in Kuwait. Explore delayed company data and try a KWD scenario calculator built for learning.</p>
               <div className="kv-ctas">
                 <a href="#calculator" className="kv-btn" data-testid="button-hero-calculator"><span>Try the calculator</span><ArrowRight size={18} /></a>
                 <a href="#how-it-works" className="kv-btn sec" data-testid="button-hero-how"><Calculator size={18} /><span>How it works</span></a>
@@ -198,8 +206,8 @@ export default function Home() {
         <section className="kv-sec" id="platform">
           <div className="kv-wrap">
             <div className="kv-head">
-              <div><span className="kv-eyebrow">Planned MVP features</span><h2>What we are building next.</h2></div>
-              <p>The quote feed is a research preview. Scanner, ratings, and watchlist remain planned learning features.</p>
+              <div><span className="kv-eyebrow">Available learning tools</span><h2>Explore the Kuwait market.</h2></div>
+              <p>The scanner, learning signals, watchlist, and KWD calculator are ready to explore. AI analysis remains planned.</p>
             </div>
             <div className="kv-cards">
               {modules.map((m) => (
@@ -209,7 +217,7 @@ export default function Home() {
                     <h3>{m.title}</h3>
                     <p>{m.text}</p>
                   </div>
-                  <div className="kv-status">STATUS: PLANNED</div>
+                  <div className="kv-status">STATUS: {m.status.toUpperCase()}</div>
                 </div>
               ))}
             </div>

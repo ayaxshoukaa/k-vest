@@ -1,0 +1,61 @@
+Read replit.md and follow its stack and rules (React + Vite, Node + Express, MongoDB). Build one screen/feature at a time and stop after each so I can test it. Explain each change briefly.
+
+PRODUCT IDEA
+K-vest is a beginner-friendly guided journey that teaches people how to invest in the Kuwait stock market. The user is walked through 4 phases in a fixed order, with a short explainer page before each phase. Nothing is skipped or hidden: the user always knows what's next.
+
+GLOBAL DESIGN
+- Very simple and clean: mostly white, one deep-blue accent, big readable text, rounded cards, lots of space.
+- Very little text. Use short sentences, icons, and numbers. Never more than 3 short lines on an explainer page.
+- Mobile friendly. English and Arabic toggle (RTL for Arabic).
+- Subtle animations: fade-ins, smooth page transitions, buttons that gently press down.
+- A progress bar at the top once the journey starts: 4 dots (Scan, Research, Practice, ROI) showing where the user is. Users can revisit completed phases.
+- Footer on every page: "For education only. Not financial advice."
+
+FLOW
+1. Sign In page
+2. "Get Started Investing" welcome page
+3. Phase 1 intro -> Phase 1: Scan the market
+4. Phase 2 intro -> Phase 2: Research with AI
+5. Phase 3 intro -> Phase 3: Practice with 1,000 KD
+6. Phase 4 intro -> Phase 4: ROI calculator
+7. Finish page: short summary of what they did, with buttons to restart or revisit any phase.
+
+PAGE 1: SIGN IN
+Centered card with logo, email, password, a big "Sign in" button, plus "Create account" and "Continue as guest". On load, an animated mouse cursor glides to the Sign in button and "clicks" it (button presses with a ripple). Play once, make it skippable, CSS/JS only. Accounts stored in MongoDB with hashed passwords and JWT or session auth.
+
+PAGE 2: GET STARTED
+Friendly welcome with the user's name, one headline ("Learn to invest in Kuwait, step by step"), and a simple 4-step illustration of the journey (Scan -> Research -> Practice -> ROI) with one short line each. One big "Get started" button.
+
+EXPLAINER PAGES (one before each phase)
+Same layout every time: big icon, phase number and title, 2-3 very short lines explaining what will happen and what they'll learn, then one big button ("Let's go" or "Let's get started"). A small "Back" link too. Example for Phase 1: "Phase 1: Scan the market. You'll see which Kuwaiti stocks are rising, falling, and busiest today. Takes about 2 minutes."
+
+PHASE 1: SCAN THE MARKET
+- Top: Boursa Kuwait Premier Market index with today's % change.
+- Tabs: Top Gainers, Top Losers, Most Active. Each row: company name, price in KWD, % change (green/red), tiny sparkline, and a simple rating badge (Strong / Neutral / Weak) based on momentum and volume.
+- Tap a company for a simple 1-month chart.
+- Star icon adds a company to a Watchlist. The user picks at least one company (or taps "Pick for me") before the "Next" button activates. The watchlist carries into Phase 2.
+- Data: Oanor API (https://api.oanor.com/kuwait-stock-api/v1/screener and /v1/quote, header x-oanor-key) for lists, and yahoo-finance2 (tickers ending in .KW) for history. Cache results 5 minutes. If loading fails, show a friendly message and sample data. Note: "Prices may be delayed."
+
+PHASE 2: RESEARCH WITH AI
+- Chat screen with message bubbles, a typing animation, and 4 suggested question chips (e.g. "Is this company risky?", "What does this company do?", "What is a dividend?", "Should a beginner buy this?").
+- A company selector at the top, pre-filled with the user's watchlist. An "Analyze with AI" button gives a short plain-language summary: strengths, risks, simple outlook.
+- Backend calls Anthropic (claude-sonnet-4-6). System prompt: "You are a friendly assistant for beginner investors in Kuwait. Answer briefly and simply, in the user's language (English or Arabic). Use the provided market data. Never give personal financial advice; remind users that investing carries risk." Pass the selected company's latest data into the context. API key stays on the backend only.
+
+PHASE 3: PRACTICE WITH 1,000 KD
+- Every user gets a virtual 1,000 KD wallet, clearly labeled "Demo - not real money".
+- Buy and sell Kuwaiti stocks at current prices (start with the watchlist, allow any company). Show holdings, portfolio value, profit/loss, ROI %, and trade history. Reset button.
+- Show a friendly tip card after the first trade ("Good start! Prices change daily, so check back").
+- Optional top-10 leaderboard (usernames only, opt-out).
+- Save per user in MongoDB. The Phase 4 "Next" button works after at least one demo trade, or via "Skip".
+
+PHASE 4: ROI CALCULATOR
+- Simple form: budget in KWD, company (auto-fills current price), buy price, target/sell price, dividends (optional), years held. Offer a "Use my demo results" shortcut that fills the form from Phase 3.
+- Result card: profit/loss in KWD, ROI %, annualized return, and a simple Low / Medium / High risk label. Green for profit, red for loss. Counting-up number animation.
+
+FINISH PAGE
+Congratulate the user, show a 3-line summary (stocks scanned, demo ROI, calculator result), and offer "Start again" and links to revisit any phase.
+
+TECHNICAL NOTES
+- Store each user's progress (current phase, watchlist, demo wallet) in MongoDB so they can return where they left off.
+- Block skipping ahead via the URL: users can only open phases they have reached.
+- When done, list the Secrets I need to add (MONGODB_URI, OANOR_KEY, ANTHROPIC_API_KEY, JWT_SECRET).

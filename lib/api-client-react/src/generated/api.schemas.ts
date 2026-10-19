@@ -41,3 +41,90 @@ export interface MarketQuotesResponse {
   quotes: MarketQuote[];
 }
 
+export interface MarketHistoryPoint {
+  date: string;
+  closeKwd: number;
+}
+
+export type MarketScannerStockRating = typeof MarketScannerStockRating[keyof typeof MarketScannerStockRating];
+
+
+export const MarketScannerStockRating = {
+  Strong: 'Strong',
+  Neutral: 'Neutral',
+  Weak: 'Weak',
+  Unavailable: 'Unavailable',
+} as const;
+
+export interface MarketScannerStock {
+  symbol: string;
+  companyName: string;
+  /** @nullable */
+  sector: string | null;
+  /** @nullable */
+  priceKwd: number | null;
+  /** @nullable */
+  changeKwd: number | null;
+  /** @nullable */
+  changePercent: number | null;
+  /** @nullable */
+  volume: number | null;
+  /** @nullable */
+  marketTime: string | null;
+  /** @nullable */
+  momentumPercent: number | null;
+  rating: MarketScannerStockRating;
+  sparkline: MarketHistoryPoint[];
+  stale: boolean;
+  sample: boolean;
+}
+
+export interface MarketIndex {
+  symbol: string;
+  name: string;
+  value: number;
+  changeAbs: number;
+  changePercent: number;
+  /** @nullable */
+  marketTime: string | null;
+}
+
+export type MarketScannerResponseRefreshStatus = typeof MarketScannerResponseRefreshStatus[keyof typeof MarketScannerResponseRefreshStatus];
+
+
+export const MarketScannerResponseRefreshStatus = {
+  fresh: 'fresh',
+  stale: 'stale',
+  sample: 'sample',
+  unavailable: 'unavailable',
+} as const;
+
+export interface MarketScannerResponse {
+  refreshStatus: MarketScannerResponseRefreshStatus;
+  /** @nullable */
+  lastUpdatedAt: string | null;
+  /** @nullable */
+  warning: string | null;
+  index: MarketIndex | null;
+  stocks: MarketScannerStock[];
+}
+
+export type MarketStockDetailResponseRefreshStatus = typeof MarketStockDetailResponseRefreshStatus[keyof typeof MarketStockDetailResponseRefreshStatus];
+
+
+export const MarketStockDetailResponseRefreshStatus = {
+  fresh: 'fresh',
+  stale: 'stale',
+  sample: 'sample',
+  unavailable: 'unavailable',
+} as const;
+
+export interface MarketStockDetailResponse {
+  refreshStatus: MarketStockDetailResponseRefreshStatus;
+  /** @nullable */
+  lastUpdatedAt: string | null;
+  /** @nullable */
+  warning: string | null;
+  stock: MarketScannerStock;
+}
+

@@ -17,7 +17,9 @@ import type {
 
 import type {
   HealthStatus,
-  MarketQuotesResponse
+  MarketQuotesResponse,
+  MarketScannerResponse,
+  MarketStockDetailResponse
 } from './api.schemas';
 
 import { customFetch } from '../custom-fetch';
@@ -190,6 +192,160 @@ export function useGetMarketQuotes<TData = Awaited<ReturnType<typeof getMarketQu
  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
 
   const queryOptions = getGetMarketQuotesQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getGetMarketScannerUrl = () => {
+
+
+
+
+  return `/api/market/scanner`
+}
+
+/**
+ * @summary Get the cached Kuwait market scanner data
+ */
+export const getMarketScanner = async ( options?: Parameters<typeof customFetch>[1]): Promise<MarketScannerResponse> => {
+
+  return customFetch<MarketScannerResponse>(getGetMarketScannerUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetMarketScannerQueryKey = () => {
+    return [
+    `/api/market/scanner`
+    ] as const;
+    }
+
+
+export const getGetMarketScannerQueryOptions = <TData = Awaited<ReturnType<typeof getMarketScanner>>, TError = ErrorType<unknown>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getMarketScanner>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetMarketScannerQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getMarketScanner>>> = ({ signal }) => getMarketScanner({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getMarketScanner>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetMarketScannerQueryResult = NonNullable<Awaited<ReturnType<typeof getMarketScanner>>>
+export type GetMarketScannerQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary Get the cached Kuwait market scanner data
+ */
+
+export function useGetMarketScanner<TData = Awaited<ReturnType<typeof getMarketScanner>>, TError = ErrorType<unknown>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getMarketScanner>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetMarketScannerQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getGetMarketStockUrl = (symbol: string,) => {
+
+
+
+
+  return `/api/market/stocks/${symbol}`
+}
+
+/**
+ * @summary Get a Kuwait stock quote and one-month history
+ */
+export const getMarketStock = async (symbol: string, options?: Parameters<typeof customFetch>[1]): Promise<MarketStockDetailResponse> => {
+
+  return customFetch<MarketStockDetailResponse>(getGetMarketStockUrl(symbol),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetMarketStockQueryKey = (symbol: string,) => {
+    return [
+    `/api/market/stocks/${symbol}`
+    ] as const;
+    }
+
+
+export const getGetMarketStockQueryOptions = <TData = Awaited<ReturnType<typeof getMarketStock>>, TError = ErrorType<void>>(symbol: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getMarketStock>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetMarketStockQueryKey(symbol);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getMarketStock>>> = ({ signal }) => getMarketStock(symbol, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: symbol !== null && symbol !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getMarketStock>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetMarketStockQueryResult = NonNullable<Awaited<ReturnType<typeof getMarketStock>>>
+export type GetMarketStockQueryError = ErrorType<void>
+
+
+/**
+ * @summary Get a Kuwait stock quote and one-month history
+ */
+
+export function useGetMarketStock<TData = Awaited<ReturnType<typeof getMarketStock>>, TError = ErrorType<void>>(
+ symbol: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getMarketStock>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetMarketStockQueryOptions(symbol,options)
 
   const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
 

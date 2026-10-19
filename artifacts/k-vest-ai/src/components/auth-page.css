@@ -53,9 +53,11 @@
 
 .kv-auth__mark {
   display: block;
-  width: 36px;
-  height: 36px;
+  width: 126px;
+  height: 68px;
   flex: 0 0 auto;
+  object-fit: contain;
+  border-radius: 8px;
   filter: drop-shadow(0 5px 10px rgba(255, 113, 56, 0.16));
 }
 
@@ -487,8 +489,8 @@
   }
 
   .kv-auth__mark {
-    width: 33px;
-    height: 33px;
+    width: 112px;
+    height: 58px;
   }
 
   .kv-auth__home-link {

@@ -38,6 +38,41 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/MarketQuotesResponse"
+  /market/scanner:
+    get:
+      operationId: getMarketScanner
+      tags: [market]
+      summary: Get the cached Kuwait market scanner data
+      responses:
+        "200":
+          description: Premier Market index, screened stocks, and one-month history sparklines
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MarketScannerResponse"
+  /market/stocks/{symbol}:
+    get:
+      operationId: getMarketStock
+      tags: [market]
+      summary: Get a Kuwait stock quote and one-month history
+      parameters:
+        - name: symbol
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: "^[A-Z0-9]{1,12}$"
+      responses:
+        "200":
+          description: Quote and one-month history for one Kuwait listing
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MarketStockDetailResponse"
+        "400":
+          description: Invalid stock symbol
+        "404":
+          description: Stock symbol is not in the scanner universe
 components:
   schemas:
     HealthStatus:
@@ -94,4 +129,128 @@ components:
         - refreshStatus
         - lastUpdatedAt
         - quotes
+    MarketHistoryPoint:
+      type: object
+      properties:
+        date:
+          type: string
+          format: date-time
+        closeKwd:
+          type: number
+      required:
+        - date
+        - closeKwd
+    MarketScannerStock:
+      type: object
+      properties:
+        symbol:
+          type: string
+        companyName:
+          type: string
+        sector:
+          type: ["string", "null"]
+        priceKwd:
+          type: ["number", "null"]
+        changeKwd:
+          type: ["number", "null"]
+        changePercent:
+          type: ["number", "null"]
+        volume:
+          type: ["number", "null"]
+        marketTime:
+          type: ["string", "null"]
+          format: date-time
+        momentumPercent:
+          type: ["number", "null"]
+        rating:
+          type: string
+          enum: [Strong, Neutral, Weak, Unavailable]
+        sparkline:
+          type: array
+          items:
+            $ref: "#/components/schemas/MarketHistoryPoint"
+        stale:
+          type: boolean
+        sample:
+          type: boolean
+      required:
+        - symbol
+        - companyName
+        - sector
+        - priceKwd
+        - changeKwd
+        - changePercent
+        - volume
+        - marketTime
+        - momentumPercent
+        - rating
+        - sparkline
+        - stale
+        - sample
+    MarketIndex:
+      type: object
+      properties:
+        symbol:
+          type: string
+        name:
+          type: string
+        value:
+          type: number
+        changeAbs:
+          type: number
+        changePercent:
+          type: number
+        marketTime:
+          type: ["string", "null"]
+          format: date-time
+      required:
+        - symbol
+        - name
+        - value
+        - changeAbs
+        - changePercent
+        - marketTime
+    MarketScannerResponse:
+      type: object
+      properties:
+        refreshStatus:
+          type: string
+          enum: [fresh, stale, sample, unavailable]
+        lastUpdatedAt:
+          type: ["string", "null"]
+          format: date-time
+        warning:
+          type: ["string", "null"]
+        index:
+          oneOf:
+            - $ref: "#/components/schemas/MarketIndex"
+            - type: "null"
+        stocks:
+          type: array
+          items:
+            $ref: "#/components/schemas/MarketScannerStock"
+      required:
+        - refreshStatus
+        - lastUpdatedAt
+        - warning
+        - index
+        - stocks
+    MarketStockDetailResponse:
+      type: object
+      properties:
+        refreshStatus:
+          type: string
+          enum: [fresh, stale, sample, unavailable]
+        lastUpdatedAt:
+          type: ["string", "null"]
+          format: date-time
+        warning:
+          type: ["string", "null"]
+        stock:
+          $ref: "#/components/schemas/MarketScannerStock"
+      required:
+        - refreshStatus
+        - lastUpdatedAt
+        - warning
+        - stock
 
