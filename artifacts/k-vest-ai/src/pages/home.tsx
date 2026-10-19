@@ -6,6 +6,7 @@ import { ScenarioCalculator } from '@/components/scenario-calculator';
 import { BrandMark } from '@/components/brand-mark';
 
 const links = [
+  { href: '/journey/welcome', label: 'Start learning' },
   { href: '/scanner', label: 'Scanner' },
   { href: '#calculator', label: 'Calculator' },
   { href: '#platform', label: 'Market tools' },
@@ -17,7 +18,7 @@ const modules = [
   { icon: ScanSearch, title: 'Company scanner', text: 'Compare delayed Kuwait listings, recent price moves, and one-month history.', status: 'Available' },
   { icon: Star, title: 'Learning signals', text: 'See simple momentum-and-volume labels with their educational limits explained.', status: 'Available' },
   { icon: ListChecks, title: 'Watchlist', text: 'Save companies on this device and return to them while learning about the market.', status: 'Available' },
-  { icon: Sparkles, title: 'AI analysis', text: 'Plain-English summaries of company information remain planned for a later step.', status: 'Planned' },
+  { icon: Sparkles, title: 'AI analysis', text: 'Explore company data with brief English or Arabic explanations in the guided learning journey.', status: 'Available' },
 ];
 
 function formatKwd(value: number | null) {
@@ -121,6 +122,7 @@ export default function Home() {
               <h1>Learn to invest in Kuwait.<br /><span className="kv-grad">One clear step at a time.</span></h1>
               <p className="kv-lead">K-vest AI is a learning-focused research companion for first-time investors in Kuwait. Explore delayed company data and try a KWD scenario calculator built for learning.</p>
               <div className="kv-ctas">
+                <Link href="/journey/welcome" className="kv-btn sec" data-testid="button-hero-journey"><span>Start learning</span><ArrowRight size={18} /></Link>
                 <a href="#calculator" className="kv-btn" data-testid="button-hero-calculator"><span>Try the calculator</span><ArrowRight size={18} /></a>
                 <a href="#how-it-works" className="kv-btn sec" data-testid="button-hero-how"><Calculator size={18} /><span>How it works</span></a>
               </div>
@@ -207,7 +209,7 @@ export default function Home() {
           <div className="kv-wrap">
             <div className="kv-head">
               <div><span className="kv-eyebrow">Available learning tools</span><h2>Explore the Kuwait market.</h2></div>
-              <p>The scanner, learning signals, watchlist, and KWD calculator are ready to explore. AI analysis remains planned.</p>
+              <p>The full learning journey is ready: scan companies, research with AI, practice with demo money, and explore ROI.</p>
             </div>
             <div className="kv-cards">
               {modules.map((m) => (

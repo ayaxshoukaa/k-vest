@@ -13,6 +13,12 @@ Keep the existing home and sign-in designs unchanged; use the new mostly-white, 
 
 **How to apply:** do not restyle existing pages while building the journey; apply the new visual direction to each new screen.
 
+Preserving the homepage design must not leave new journey features undiscoverable. Keep a visible homepage entry to the journey and present the relevant new screen, not only the unchanged welcome page.
+
+**Why:** the user reported “nothing changed” after the journey was implemented but the default homepage still lacked an entry and described completed features as planned.
+
+**How to apply:** preserve existing styling and calculator access while wiring new journey navigation and keeping availability text accurate.
+
 The attached journey specification mentions MongoDB, but the project's actual `replit.md` specifies React/Vite, Express, PostgreSQL, and Drizzle. Follow `replit.md`; do not migrate storage or authentication as part of a screen-level feature.
 
 **Why:** the user asked to follow the project's `replit.md` stack, which differs from the MongoDB note in the pasted feature specification.
