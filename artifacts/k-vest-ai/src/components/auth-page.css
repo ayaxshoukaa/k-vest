@@ -135,19 +135,27 @@
 
 .kv-auth__guest-button {
   width: 100%;
-  min-height: 44px;
+  min-height: 52px;
   padding: 10px 16px;
-  border: 1px solid var(--auth-line);
-  border-radius: 8px;
-  background: rgba(34, 211, 238, .06);
+  border: 1px solid rgba(76, 215, 246, .32);
+  border-radius: 10px;
+  background: linear-gradient(135deg, rgba(76, 215, 246, .1), rgba(16, 185, 129, .08));
   color: var(--auth-ink);
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
+  transition: border-color 180ms ease, background-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
 }
 
 .kv-auth__guest-button:hover {
-  border-color: var(--blue);
-  background: rgba(34, 211, 238, .12);
+  transform: translateY(-1px);
+  border-color: #10B981;
+  background: rgba(16, 185, 129, .14);
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, .08);
+}
+
+.kv-auth__guest-button:focus-visible {
+  outline: 3px solid #4CD7F6;
+  outline-offset: 3px;
 }
 
 .kv-auth__story {
