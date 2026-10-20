@@ -41,11 +41,11 @@ The attached journey specification mentions MongoDB, but the project's actual `r
 
 **How to apply:** use the current Postgres/Drizzle and Clerk setup for incremental work. Ask before replacing the database or authentication architecture.
 
-For the private educational class demo, keep the homepage quote preview on Yahoo Finance and use Oanor for the scanner, index, and current quotes, with Yahoo Finance history fetched via `yahoo-finance2` on the backend only. Cache briefly; use clearly marked last-good or published sample fallbacks, and never invent a price. Before any public or commercial launch, switch market data to a licensed provider through Boursa Kuwait.
+For the private educational class demo, keep Oanor as the primary scanner and index source, with delayed Yahoo Finance `.KW` quotes as the verified fallback for learning-stock rows and Yahoo Finance history fetched via `yahoo-finance2` on the backend only. When Oanor fails, omit its unavailable index rather than display an old value. Cache briefly; use clearly marked last-good or published sample fallbacks, and never invent a price. Before any public or commercial launch, switch market data to a licensed provider through Boursa Kuwait.
 
-**Why:** the user clarified this is a private class demonstration and chose Oanor quotes plus Yahoo Finance history for the scanner, with a future move to licensed data through Boursa Kuwait.
+**Why:** the user clarified this is a private class demonstration and chose Oanor quotes plus Yahoo Finance history for the scanner. Oanor returned HTTP 402, while Yahoo Finance provided verified delayed quotes for all 11 learning stocks; Yahoo is therefore the fallback, not the primary source.
 
-**How to apply:** keep Oanor credentials and Yahoo requests server-side. Yahoo returns Kuwait prices in KWF (fils); normalize by 1,000 to KWD. Distinguish live, stale, and sample data; disclose source, delay, and educational purpose. Preserve last-good values if refreshes fail and use a licensed vendor before public or commercial use.
+**How to apply:** keep Oanor credentials and Yahoo requests server-side. Yahoo returns Kuwait prices in KWF (fils); normalize by 1,000 to KWD. Distinguish Oanor, delayed Yahoo, stale, and sample data; disclose source, delay, and educational purpose. Preserve last-good values if refreshes fail and use a licensed vendor before public or commercial use.
 
 The ROI calculator's Low / Medium / High label describes the size of the user's assumed target-price move, not the actual investment risk of a company.
 

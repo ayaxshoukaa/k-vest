@@ -29,6 +29,7 @@ export const GetMarketQuotesResponse = zod.object({
   "priceKwd": zod.number().nullable(),
   "changeKwd": zod.number().nullable(),
   "changePercent": zod.number().nullable(),
+  "volume": zod.number().nullable(),
   "marketTime": zod.coerce.date().nullable(),
   "updatedAt": zod.coerce.date().nullable(),
   "stale": zod.boolean()

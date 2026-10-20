@@ -1,6 +1,9 @@
 import { useMemo, useState } from 'react';
 import { ArrowRight, RefreshCw, Search, Sparkles, Star } from 'lucide-react';
 import {
+  Bar, BarChart, CartesianGrid, Cell, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis,
+} from 'recharts';
+import {
   getGetMarketStockQueryKey,
   getGetMarketScannerQueryKey,
   useGetMarketScanner,
@@ -107,6 +110,14 @@ function ScanBody({ ctx }: { ctx: JourneyCtx }) {
     if (tab === 'active') list = list.filter((s) => s.volume !== null).sort((a, b) => (b.volume ?? 0) - (a.volume ?? 0));
     return list;
   }, [stocks, tab, search]);
+  const changeChartData = useMemo(() => visible
+    .filter((stock): stock is MarketScannerStock & { changePercent: number } => stock.changePercent !== null)
+    .sort((a, b) => b.changePercent - a.changePercent)
+    .map((stock) => ({
+      symbol: stock.symbol,
+      companyName: stock.companyName,
+      changePercent: stock.changePercent,
+    })), [visible]);
 
   const toggle = (symbol: string) => {
     const next = selected.includes(symbol) ? selected.filter((x) => x !== symbol) : [...selected, symbol];
@@ -158,6 +169,57 @@ function ScanBody({ ctx }: { ctx: JourneyCtx }) {
         <p className="jx-muted">{tr('Star the companies you want to learn about. Open a name for details.', 'ضع نجمة على الشركات التي تريد التعرف عليها. افتح أي اسم لرؤية التفاصيل.')}</p>
       </div>
       {scanner.data && <DataWarning sample={scanner.data.refreshStatus === 'sample' || (stocks ?? []).some((s) => s.sample)} stale={scanner.data.refreshStatus === 'stale'} warning={scanner.data.warning} tr={tr} />}
+
+      <section className="jx-card jx-change-chart" aria-labelledby="scan-change-heading" data-testid="chart-kuwait-stock-changes">
+        <div>
+          <h2 id="scan-change-heading">{tr('Kuwait stock changes', 'تغيّرات الأسهم الكويتية')}</h2>
+          <p id="scan-change-caption" className="jx-muted">
+            {tr('Daily percentage change for stocks in this view. Emerald shows a gain; coral shows a decline. Quotes may be delayed.', 'التغيّر اليومي بالنسبة المئوية للأسهم في هذا العرض. الأخضر للارتفاع والمرجاني للانخفاض. قد تتأخر الأسعار.')}
+          </p>
+        </div>
+        {changeChartData.length > 0 ? (
+          <div className="jx-change-chart__plot" role="img" aria-labelledby="scan-change-heading" aria-describedby="scan-change-caption">
+            <ResponsiveContainer width="100%" height={Math.max(240, changeChartData.length * 34 + 48)}>
+              <BarChart data={changeChartData} layout="vertical" margin={{ top: 8, right: 18, bottom: 8, left: 4 }}>
+                <CartesianGrid stroke="rgba(255,255,255,.08)" strokeDasharray="3 3" vertical />
+                <XAxis
+                  type="number"
+                  tickFormatter={(value: number) => `${Number(value).toFixed(1)}%`}
+                  tick={{ fill: '#BBCABF', fontSize: 11 }}
+                  axisLine={false}
+                  tickLine={false}
+                />
+                <YAxis
+                  type="category"
+                  dataKey="symbol"
+                  width={72}
+                  tick={{ fill: '#E1E2E9', fontSize: 12 }}
+                  axisLine={false}
+                  tickLine={false}
+                />
+                <ReferenceLine x={0} stroke="#4CD7F6" strokeDasharray="4 4" />
+                <Tooltip
+                  contentStyle={{ background: '#090D16', border: '1px solid rgba(255,255,255,.14)', borderRadius: 10, color: '#E1E2E9' }}
+                  labelFormatter={(label) => {
+                    const point = changeChartData.find((item) => item.symbol === String(label));
+                    return point ? `${point.companyName} (${point.symbol})` : String(label);
+                  }}
+                  formatter={(value) => [`${Number(value).toFixed(2)}%`, tr('Daily change', 'التغيّر اليومي')]}
+                />
+                <Bar dataKey="changePercent" name={tr('Daily change', 'التغيّر اليومي')} radius={4} barSize={18} isAnimationActive={false}>
+                  {changeChartData.map((point) => (
+                    <Cell key={point.symbol} fill={point.changePercent >= 0 ? '#10B981' : '#FB7185'} />
+                  ))}
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        ) : (
+          <p className="jx-muted" role="status" data-testid="status-no-chart-data">
+            {tr('Verified daily price changes are not available for this view yet.', 'لا تتوفر تغيّرات يومية موثوقة لهذا العرض حاليًا.')}
+          </p>
+        )}
+      </section>
 
       <div className="jx-grid jx-grid--2">
         <section aria-label={tr('Companies', 'الشركات')}>

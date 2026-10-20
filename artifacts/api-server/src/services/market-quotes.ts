@@ -26,6 +26,7 @@ interface ProviderQuote {
   regularMarketPrice?: number;
   regularMarketChange?: number;
   regularMarketChangePercent?: number;
+  regularMarketVolume?: number;
   regularMarketTime?: Date | string | number;
 }
 
@@ -48,6 +49,7 @@ class YahooFinanceQuoteProvider implements MarketQuoteProvider {
           "regularMarketPrice",
           "regularMarketChange",
           "regularMarketChangePercent",
+          "regularMarketVolume",
           "regularMarketTime",
         ],
       },
@@ -62,6 +64,7 @@ class YahooFinanceQuoteProvider implements MarketQuoteProvider {
       regularMarketPrice: quote.regularMarketPrice,
       regularMarketChange: quote.regularMarketChange,
       regularMarketChangePercent: quote.regularMarketChangePercent,
+      regularMarketVolume: quote.regularMarketVolume,
       regularMarketTime: quote.regularMarketTime,
     }));
   }
@@ -167,6 +170,9 @@ export class MarketQuotesService {
             priceKwd,
             changeKwd,
             changePercent,
+            volume: typeof quote.regularMarketVolume === "number" && Number.isFinite(quote.regularMarketVolume)
+              ? quote.regularMarketVolume
+              : null,
             marketTime: toDate(quote.regularMarketTime),
             updatedAt: fetchedAt,
             stale: false,
@@ -195,6 +201,7 @@ export class MarketQuotesService {
           priceKwd: null,
           changeKwd: null,
           changePercent: null,
+          volume: null,
           marketTime: null,
           updatedAt: null,
           stale: true,

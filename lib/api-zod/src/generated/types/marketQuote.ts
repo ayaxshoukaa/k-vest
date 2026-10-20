@@ -16,6 +16,8 @@ export interface MarketQuote {
   /** @nullable */
   changePercent: number | null;
   /** @nullable */
+  volume: number | null;
+  /** @nullable */
   marketTime: Date | null;
   /** @nullable */
   updatedAt: Date | null;

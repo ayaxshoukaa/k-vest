@@ -63,6 +63,10 @@
 /* sections */
 .jx-page-head { display: grid; gap: 8px; margin: 8px 0 20px; max-width: 720px; }
 .jx-grid { display: grid; gap: 16px; }
+.jx-change-chart { display: grid; gap: 14px; margin-bottom: 16px; }
+.jx-change-chart__plot { width: 100%; min-width: 0; }
+.jx-change-chart__plot .recharts-wrapper { max-width: 100%; }
+.jx-change-chart__plot .recharts-cartesian-axis-tick text { font-family: 'Plus Jakarta Sans', sans-serif; }
 @media (min-width: 900px) { .jx-grid--2 { grid-template-columns: 1.3fr 1fr; align-items: start; } .jx-grid--even { grid-template-columns: 1fr 1fr; align-items: start; } }
 .jx-tabs { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0; }
 .jx-tab { border: 1px solid var(--line); background: var(--panel); border-radius: 999px; padding: 8px 16px; min-height: 40px; cursor: pointer; font-weight: 600; color: var(--blue-d); }

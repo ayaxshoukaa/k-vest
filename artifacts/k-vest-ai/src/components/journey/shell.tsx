@@ -139,7 +139,7 @@ export function JourneyShell({ step, children }: { step: JourneyStep; children: 
       <footer className="jx-footer" data-testid="footer-journey-disclaimer">
         <p className="jx-footer__strong">{isAr ? DISCLAIMER_AR : DISCLAIMER_EN}</p>
         <p data-testid="text-data-note">{isAr ? DATA_NOTE_AR : DATA_NOTE_EN}</p>
-        <p>{tr('Current quotes come from Oanor; price history comes from Yahoo Finance.', 'الأسعار الحالية من Oanor، والتاريخ السعري من Yahoo Finance.')}</p>
+          <p>{tr('Current quotes use Oanor when available, with delayed Yahoo Finance quotes as fallback; price history comes from Yahoo Finance.', 'تُستخدم أسعار Oanor عند توفرها، مع أسعار Yahoo Finance المتأخرة كخيار بديل؛ ويأتي سجل الأسعار من Yahoo Finance.')}</p>
         <p>{tr('Private classroom demo. No real money is used.', 'عرض تعليمي خاص. لا يُستخدم أي مال حقيقي.')}</p>
       </footer>
     </div>

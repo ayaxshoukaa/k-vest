@@ -16,6 +16,7 @@ import {
   type OanorIndex,
   type OanorListing,
 } from "./market-data-providers";
+import { getMarketQuotes } from "./market-quotes";
 import { publishedSampleAt, publishedSampleIndex, publishedSampleStocks } from "./market-scanner-samples";
 
 const SCANNER_CACHE_KEY = "market-scanner-v2";
@@ -190,7 +191,7 @@ class MarketScannerService {
     } catch (error) {
       logger.warn({ err: error }, "Oanor market scanner refresh failed");
       if (previous) return asStale(previous);
-      return this.getPublishedSample();
+      return this.getYahooFallback();
     }
   }
 
@@ -208,6 +209,60 @@ class MarketScannerService {
       index: publishedSampleIndex,
       stocks,
     };
+  }
+
+  private async getYahooFallback(): Promise<MarketScannerResponse> {
+    try {
+      const quoteResponse = await getMarketQuotes();
+      const quoteBySymbol = new Map(quoteResponse.quotes.map((quote) => [quote.symbol, quote]));
+      const yahooQuoteCount = quoteResponse.quotes.filter((quote) => quote.priceKwd !== null).length;
+      if (yahooQuoteCount === 0) return this.getPublishedSample();
+
+      const availableVolumes = quoteResponse.quotes
+        .map((quote) => quote.volume)
+        .filter((volume): volume is number => volume !== null && volume > 0);
+      const medianVolume = median(availableVolumes);
+      const stocks = await Promise.all(
+        publishedSampleStocks.map(async (sampleStock) => {
+          const quote = quoteBySymbol.get(`${sampleStock.symbol}.KW`);
+          const history = await this.yahooHistory.fetchOneMonth(sampleStock.symbol, "KWF");
+          if (!quote || quote.priceKwd === null) {
+            return {
+              ...sampleStock,
+              sparkline: history.length > 0 ? history : sampleStock.sparkline,
+            };
+          }
+
+          const momentumPercent = getMonthlyMomentum(history);
+          return {
+            ...sampleStock,
+            priceKwd: quote.priceKwd,
+            changeKwd: quote.changeKwd,
+            changePercent: quote.changePercent,
+            volume: quote.volume,
+            marketTime: quote.marketTime ?? quote.updatedAt,
+            momentumPercent,
+            rating: getRating(momentumPercent, quote.volume, medianVolume),
+            sparkline: history,
+            stale: quote.stale,
+            sample: false,
+          };
+        }),
+      );
+
+      return {
+        refreshStatus: quoteResponse.refreshStatus === "fresh" && yahooQuoteCount === publishedSampleStocks.length
+          ? "fresh"
+          : "stale",
+        lastUpdatedAt: quoteResponse.lastUpdatedAt,
+        warning: `Oanor is unavailable. Delayed Yahoo Finance quotes are shown for ${yahooQuoteCount} of ${publishedSampleStocks.length} learning stocks; the Premier Market index is unavailable.`,
+        index: null,
+        stocks,
+      };
+    } catch (error) {
+      logger.warn({ err: error }, "Yahoo Finance fallback for the market scanner failed");
+      return this.getPublishedSample();
+    }
   }
 
   async getStock(symbol: string): Promise<MarketStockDetailResponse | null> {
@@ -262,17 +317,17 @@ class MarketScannerService {
       if (!fallbackStock) return null;
       const currency = "KWF";
       const history = await this.yahooHistory.fetchOneMonth(symbol, currency);
-      const isSample = fallbackStock.sample || scanner.refreshStatus === "sample";
+      const isSample = fallbackStock.sample;
       return {
-        refreshStatus: isSample ? "sample" : "stale",
+        refreshStatus: isSample ? "sample" : fallbackStock.stale ? "stale" : "fresh",
         lastUpdatedAt: fallbackStock.marketTime,
         warning: isSample
           ? SAMPLE_WARNING
-          : "Oanor could not refresh. Showing the last successful market data.",
+          : scanner.warning ?? "Oanor could not refresh. Showing the last successful market data.",
         stock: {
           ...fallbackStock,
           sparkline: history.length > 0 ? history : fallbackStock.sparkline,
-          stale: true,
+          stale: fallbackStock.stale,
           sample: isSample,
         },
       };
