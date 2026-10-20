@@ -1,10 +1,12 @@
 import {
   GetMarketQuotesResponse,
   GetMarketScannerResponse,
+  GetMarketNewsResponse,
   GetMarketStockResponse,
 } from "@workspace/api-zod";
 import { Router, type IRouter } from "express";
 import { getMarketQuotes } from "../services/market-quotes";
+import { getMarketNews } from "../services/market-news";
 import { getMarketScanner, getMarketStock } from "../services/market-scanner";
 
 const router: IRouter = Router();
@@ -24,6 +26,18 @@ router.get("/market/scanner", async (_req, res, next) => {
   try {
     const response = await getMarketScanner();
     res.json(GetMarketScannerResponse.parse(response));
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.get("/market/news", async (req, res, next): Promise<void> => {
+  res.setHeader("Cache-Control", "no-store");
+  try {
+    const response = await getMarketNews((error) => {
+      req.log.warn({ err: error }, "Yahoo Finance news refresh failed");
+    });
+    res.json(GetMarketNewsResponse.parse(response));
   } catch (error) {
     next(error);
   }

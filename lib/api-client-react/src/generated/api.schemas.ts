@@ -128,6 +128,41 @@ export interface MarketStockDetailResponse {
   stock: MarketScannerStock;
 }
 
+export interface MarketNewsArticle {
+  id: string;
+  title: string;
+  publisher: string;
+  url: string;
+  /** @nullable */
+  publishedAt: string | null;
+}
+
+export type MarketNewsResponseStatus = typeof MarketNewsResponseStatus[keyof typeof MarketNewsResponseStatus];
+
+
+export const MarketNewsResponseStatus = {
+  fresh: 'fresh',
+  stale: 'stale',
+  unavailable: 'unavailable',
+} as const;
+
+export type MarketNewsResponseSource = typeof MarketNewsResponseSource[keyof typeof MarketNewsResponseSource];
+
+
+export const MarketNewsResponseSource = {
+  Yahoo_Finance: 'Yahoo Finance',
+} as const;
+
+export interface MarketNewsResponse {
+  status: MarketNewsResponseStatus;
+  /** @nullable */
+  lastUpdatedAt: string | null;
+  /** @nullable */
+  warning: string | null;
+  source: MarketNewsResponseSource;
+  articles: MarketNewsArticle[];
+}
+
 export type JourneyStep = typeof JourneyStep[keyof typeof JourneyStep];
 
 

@@ -54,6 +54,18 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/MarketScannerResponse"
+  /market/news:
+    get:
+      operationId: getMarketNews
+      tags: [market]
+      summary: Get cached Yahoo Finance headlines relevant to Kuwait markets
+      responses:
+        "200":
+          description: Current, stale, or unavailable headlines with source metadata
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MarketNewsResponse"
   /market/stocks/{symbol}:
     get:
       operationId: getMarketStock
@@ -545,6 +557,41 @@ components:
         - lastUpdatedAt
         - warning
         - stock
+    MarketNewsArticle:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        publisher:
+          type: string
+        url:
+          type: string
+          format: uri
+        publishedAt:
+          type: ["string", "null"]
+          format: date-time
+      required: [id, title, publisher, url, publishedAt]
+    MarketNewsResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: [fresh, stale, unavailable]
+        lastUpdatedAt:
+          type: ["string", "null"]
+          format: date-time
+        warning:
+          type: ["string", "null"]
+        source:
+          type: string
+          enum: ["Yahoo Finance"]
+        articles:
+          type: array
+          items:
+            $ref: "#/components/schemas/MarketNewsArticle"
+      required: [status, lastUpdatedAt, warning, source, articles]
     JourneyStep:
       type: string
       enum:

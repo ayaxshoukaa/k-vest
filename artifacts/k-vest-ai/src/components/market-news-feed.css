@@ -1,0 +1,184 @@
+.market-news-feed {
+  display: grid;
+  gap: 14px;
+  min-width: 0;
+  text-align: start;
+}
+
+.market-news-feed__meta,
+.market-news-feed__article-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.market-news-feed__meta {
+  color: #98a6b5;
+  font-size: 12px;
+}
+
+.market-news-feed__status {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.market-news-feed__status i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #34d399;
+  box-shadow: 0 0 0 4px rgba(52, 211, 153, .11);
+}
+
+.market-news-feed__status.is-stale i,
+.market-news-feed__status.is-unavailable i {
+  background: #f1bd6b;
+  box-shadow: 0 0 0 4px rgba(241, 189, 107, .11);
+}
+
+.market-news-feed__warning {
+  margin: 0;
+  color: #f3cc8d;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.market-news-feed__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+  gap: 12px;
+}
+
+.market-news-feed__article,
+.market-news-feed__skeleton,
+.market-news-feed__state {
+  min-width: 0;
+  border: 1px solid rgba(255, 255, 255, .09);
+  border-radius: 14px;
+  background: linear-gradient(145deg, rgba(18, 28, 44, .92), rgba(9, 13, 22, .88));
+}
+
+.market-news-feed__article {
+  min-height: 190px;
+  padding: 17px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 15px;
+  transition: border-color .18s ease, transform .18s ease, background-color .18s ease;
+}
+
+.market-news-feed__article:hover {
+  transform: translateY(-2px);
+  border-color: rgba(52, 211, 153, .4);
+}
+
+.market-news-feed__article-meta {
+  width: 100%;
+  color: #93a0af;
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+.market-news-feed__article-meta span {
+  overflow: hidden;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.market-news-feed__article-meta time {
+  flex: 0 0 auto;
+  font-variant-numeric: tabular-nums;
+}
+
+.market-news-feed__article h3 {
+  margin: 0;
+  color: #f2f5f7;
+  font: 600 15px/1.55 'Plus Jakarta Sans', sans-serif;
+  text-wrap: pretty;
+}
+
+.market-news-feed__read-link {
+  margin-top: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: #48d9b2;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.market-news-feed__read-link:hover {
+  color: #84f2d1;
+}
+
+.market-news-feed__state {
+  min-height: 112px;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  color: #bdc8d1;
+  text-align: center;
+}
+
+.market-news-feed__state p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.market-news-feed__retry {
+  min-height: 38px;
+  padding: 0 13px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 1px solid rgba(255, 255, 255, .16);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .04);
+  color: #e5ecf2;
+  font: 700 12px 'Plus Jakarta Sans', sans-serif;
+  cursor: pointer;
+}
+
+.market-news-feed__retry:hover {
+  border-color: #34d399;
+}
+
+.market-news-feed__skeleton {
+  min-height: 190px;
+  background: linear-gradient(110deg, rgba(18, 28, 44, .7) 8%, rgba(31, 45, 62, .75) 18%, rgba(18, 28, 44, .7) 33%);
+  background-size: 200% 100%;
+  animation: market-news-skeleton 1.3s linear infinite;
+}
+
+@keyframes market-news-skeleton {
+  to { background-position-x: -200%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .market-news-feed__article,
+  .market-news-feed__skeleton {
+    animation: none;
+    transition: none;
+  }
+}
+
+@media (max-width: 560px) {
+  .market-news-feed__article {
+    min-height: 170px;
+  }
+
+  .market-news-feed__article-meta {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 3px;
+  }
+}

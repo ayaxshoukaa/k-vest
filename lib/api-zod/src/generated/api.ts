@@ -73,6 +73,24 @@ export const GetMarketScannerResponse = zod.object({
 
 
 /**
+ * @summary Get cached Yahoo Finance headlines relevant to Kuwait markets
+ */
+export const GetMarketNewsResponse = zod.object({
+  "status": zod.enum(['fresh', 'stale', 'unavailable']),
+  "lastUpdatedAt": zod.coerce.date().nullable(),
+  "warning": zod.string().nullable(),
+  "source": zod.enum(['Yahoo Finance']),
+  "articles": zod.array(zod.object({
+  "id": zod.string(),
+  "title": zod.string(),
+  "publisher": zod.string(),
+  "url": zod.string().url(),
+  "publishedAt": zod.coerce.date().nullable()
+}))
+})
+
+
+/**
  * @summary Get a Kuwait stock quote and one-month history
  */
 export const getMarketStockPathSymbolRegExp = new RegExp('^[A-Z0-9]{1,12}$');

@@ -1,0 +1,106 @@
+.market-news-page__header {
+  width: min(100% - 48px, 1120px);
+}
+
+.market-news-page__nav {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.market-news-page__back {
+  min-height: 40px;
+  padding: 0 13px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid rgba(52, 211, 153, .38);
+  border-radius: 999px;
+  background: rgba(16, 185, 129, .08);
+  color: #b8f4df;
+  font-size: 12px;
+  font-weight: 700;
+  transition: background-color .18s ease, border-color .18s ease;
+}
+
+.market-news-page__back:hover {
+  border-color: #34d399;
+  background: rgba(16, 185, 129, .15);
+}
+
+.market-news-page__main {
+  width: min(100% - 48px, 1120px);
+  flex: 1;
+  margin: 0 auto;
+  padding: clamp(38px, 7vh, 72px) 0 60px;
+  display: grid;
+  align-content: start;
+  gap: 28px;
+}
+
+.market-news-page__intro {
+  max-width: 760px;
+}
+
+.market-news-page__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #58ddba;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .13em;
+}
+
+.market-news-page__intro h1 {
+  margin: 15px 0 0;
+  color: #f5f7fa;
+  font: 700 clamp(34px, 5vw, 54px)/1.1 'Syne', sans-serif;
+  letter-spacing: -.04em;
+  text-wrap: balance;
+}
+
+.market-news-page__intro p {
+  max-width: 650px;
+  margin: 15px 0 0;
+  color: #b8c3cb;
+  font-size: 15px;
+  line-height: 1.75;
+}
+
+.market-news-page__note {
+  margin: 0;
+  color: #87949e;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.market-news-page .jwelcome__footer {
+  width: min(100% - 48px, 1120px);
+}
+
+@media (max-width: 640px) {
+  .market-news-page__header,
+  .market-news-page__main,
+  .market-news-page .jwelcome__footer {
+    width: calc(100% - 36px);
+  }
+
+  .market-news-page__header {
+    min-height: 74px;
+  }
+
+  .market-news-page__back {
+    width: 40px;
+    min-width: 40px;
+    padding: 0;
+    justify-content: center;
+    font-size: 0;
+  }
+
+  .market-news-page__main {
+    padding-top: 35px;
+  }
+}

@@ -34,6 +34,7 @@ import type {
   JourneyStateResponse,
   JourneyWatchlistInput,
   ListAnthropicConversationsParams,
+  MarketNewsResponse,
   MarketQuotesResponse,
   MarketScannerResponse,
   MarketStockDetailResponse,
@@ -287,6 +288,83 @@ export function useGetMarketScanner<TData = Awaited<ReturnType<typeof getMarketS
  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
 
   const queryOptions = getGetMarketScannerQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getGetMarketNewsUrl = () => {
+
+
+
+
+  return `/api/market/news`
+}
+
+/**
+ * @summary Get cached Yahoo Finance headlines relevant to Kuwait markets
+ */
+export const getMarketNews = async ( options?: Parameters<typeof customFetch>[1]): Promise<MarketNewsResponse> => {
+
+  return customFetch<MarketNewsResponse>(getGetMarketNewsUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetMarketNewsQueryKey = () => {
+    return [
+    `/api/market/news`
+    ] as const;
+    }
+
+
+export const getGetMarketNewsQueryOptions = <TData = Awaited<ReturnType<typeof getMarketNews>>, TError = ErrorType<unknown>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getMarketNews>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetMarketNewsQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getMarketNews>>> = ({ signal }) => getMarketNews({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getMarketNews>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetMarketNewsQueryResult = NonNullable<Awaited<ReturnType<typeof getMarketNews>>>
+export type GetMarketNewsQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary Get cached Yahoo Finance headlines relevant to Kuwait markets
+ */
+
+export function useGetMarketNews<TData = Awaited<ReturnType<typeof getMarketNews>>, TError = ErrorType<unknown>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getMarketNews>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetMarketNewsQueryOptions(options)
 
   const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
 
