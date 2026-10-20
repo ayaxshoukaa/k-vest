@@ -9,7 +9,7 @@ import { and, asc, desc, eq } from "drizzle-orm";
 import { Router, type IRouter, type Request } from "express";
 import { getCompanyResearchContext, JourneyError, markResearchComplete } from "../services/journey";
 import { checkResearchLimit, researchSystemPrompt } from "../services/research";
-import { GEMINI_MODEL, getGeminiClient } from "../services/gemini";
+import { OPENROUTER_MODEL, getOpenRouterClient } from "../services/openrouter";
 import { sameOriginLearningApi } from "../middlewares/journeyOwner";
 
 const router: IRouter = Router();
@@ -123,26 +123,24 @@ router.post("/anthropic/conversations/:id/messages", async (req, res, next) => {
     res.on("close", () => {
       if (!res.writableEnded) abortController.abort();
     });
-    const stream = await getGeminiClient().models.generateContentStream({
-      model: GEMINI_MODEL,
-      config: {
-        abortSignal: abortController.signal,
-        maxOutputTokens: 8192,
-        systemInstruction: researchSystemPrompt(context, parsed.data.language),
-      },
-      contents: [
+    const stream = await getOpenRouterClient().chat.completions.create({
+      model: OPENROUTER_MODEL,
+      max_tokens: 8192,
+      messages: [
+        { role: "system", content: researchSystemPrompt(context, parsed.data.language) },
         ...previous.map((message) => ({
-          role: message.role === "assistant" ? "model" : "user",
-          parts: [{ text: message.content }],
+          role: message.role === "assistant" ? "assistant" as const : "user" as const,
+          content: message.content,
         })),
-        { role: "user", parts: [{ text: parsed.data.content }] },
+        { role: "user", content: parsed.data.content },
       ],
-    });
+      stream: true,
+    }, { signal: abortController.signal });
     let text = "";
     try {
       for await (const chunk of stream) {
-        const content = chunk.text ?? "";
-        if (content) {
+        const content = chunk.choices[0]?.delta?.content;
+        if (typeof content === "string" && content) {
           text += content;
           res.write(`data: ${JSON.stringify({ content })}\n\n`);
         }

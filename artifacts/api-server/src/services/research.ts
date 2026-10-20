@@ -1,5 +1,5 @@
 import type { MarketStockDetailResponse } from "@workspace/api-zod";
-import { GEMINI_MODEL, getGeminiClient } from "./gemini";
+import { OPENROUTER_MODEL, getOpenRouterClient } from "./openrouter";
 import { JourneyError } from "./journey";
 
 const requestWindows = new Map<string, { count: number; expiresAt: number }>();
@@ -82,15 +82,16 @@ export async function analyzeCompany(
   question: string,
   language: "en" | "ar",
 ): Promise<string> {
-  const response = await getGeminiClient().models.generateContent({
-    model: GEMINI_MODEL,
-    contents: question,
-    config: {
-      maxOutputTokens: 8192,
-      systemInstruction: researchSystemPrompt(context, language),
-    },
+  const response = await getOpenRouterClient().chat.completions.create({
+    model: OPENROUTER_MODEL,
+    max_tokens: 8192,
+    messages: [
+      { role: "system", content: researchSystemPrompt(context, language) },
+      { role: "user", content: question },
+    ],
   });
-  const text = response.text?.trim() ?? "";
+  const content = response.choices[0]?.message?.content;
+  const text = content?.trim() ?? "";
   if (!text) {
     throw new JourneyError("The AI returned no analysis. Please try again.", 502);
   }
