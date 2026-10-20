@@ -9,6 +9,16 @@ export function AuthEntry({ mode, children }: { mode: 'sign-in' | 'sign-up'; chi
   const reduceMotion = useReducedMotion();
   const { continueAsGuest } = useGuestAccess();
   const [, setLocation] = useLocation();
+  const guestAction = (
+    <div className="kv-auth__guest-action">
+      <button type="button" className="kv-auth__guest-button" data-testid="button-continue-as-guest" onClick={() => {
+        continueAsGuest();
+        setLocation('/journey/welcome');
+      }}>
+        Continue as guest
+      </button>
+    </div>
+  );
   return (
     <div className="kv-auth kv-auth--entry" data-testid="page-auth">
       <header className="kv-auth__header">
@@ -27,17 +37,9 @@ export function AuthEntry({ mode, children }: { mode: 'sign-in' | 'sign-up'; chi
             transition: { duration: .3 },
           })}
         >
+          {mode === 'sign-up' && guestAction}
           {children}
-          {mode === 'sign-in' && (
-            <div className="kv-auth__guest-action">
-              <button type="button" className="kv-auth__guest-button" data-testid="link-continue-as-guest" onClick={() => {
-                continueAsGuest();
-                setLocation('/journey/welcome');
-              }}>
-                Continue as guest
-              </button>
-            </div>
-          )}
+          {mode === 'sign-in' && guestAction}
           <p className="kv-auth__footer-note">For education only. Not financial advice.</p>
         </motion.section>
       </main>
