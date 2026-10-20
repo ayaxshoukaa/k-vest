@@ -52,3 +52,9 @@ The ROI calculator's Low / Medium / High label describes the size of the user's 
 **Why:** quote and price-history data alone are insufficient to assess company risk; an educational scenario must not imply a verified risk assessment or personal recommendation.
 
 **How to apply:** label this as a target-move heuristic and explain the limitation wherever it appears. Do not turn the label into a buy/sell recommendation.
+
+The Daily News page uses broader Yahoo Finance market headlines when Kuwait-specific searches return no results. Label broader coverage as not Kuwait-specific and link each headline to its original publisher.
+
+**Why:** the user chose broader Yahoo Finance headlines after live searches returned no Kuwait-related stories.
+
+**How to apply:** keep news fetching on the backend, cache briefly, label stale data clearly, and never present unrelated headlines as Kuwait news or invent fallback articles.

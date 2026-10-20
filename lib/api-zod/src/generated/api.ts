@@ -73,7 +73,7 @@ export const GetMarketScannerResponse = zod.object({
 
 
 /**
- * @summary Get cached Yahoo Finance headlines relevant to Kuwait markets
+ * @summary Get cached broader-market headlines from Yahoo Finance
  */
 export const GetMarketNewsResponse = zod.object({
   "status": zod.enum(['fresh', 'stale', 'unavailable']),

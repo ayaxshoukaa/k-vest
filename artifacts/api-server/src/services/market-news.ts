@@ -4,7 +4,7 @@ import { GetMarketNewsResponse } from "@workspace/api-zod";
 const CACHE_TTL_MS = 5 * 60 * 1000;
 const MAX_STALE_MS = 24 * 60 * 60 * 1000;
 const REQUEST_TIMEOUT_MS = 12_000;
-const NEWS_SEARCH_TERMS = ["Boursa Kuwait", "Kuwait stock market", "Kuwait economy"] as const;
+const NEWS_SEARCH_TERMS = ["stock market today", "global financial markets"] as const;
 
 type MarketNewsResponse = ReturnType<typeof GetMarketNewsResponse.parse>;
 type MarketNewsArticle = MarketNewsResponse["articles"][number];

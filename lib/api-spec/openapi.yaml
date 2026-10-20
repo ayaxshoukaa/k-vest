@@ -58,7 +58,7 @@ paths:
     get:
       operationId: getMarketNews
       tags: [market]
-      summary: Get cached Yahoo Finance headlines relevant to Kuwait markets
+      summary: Get cached broader-market headlines from Yahoo Finance
       responses:
         "200":
           description: Current, stale, or unavailable headlines with source metadata

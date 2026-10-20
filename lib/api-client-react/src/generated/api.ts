@@ -309,7 +309,7 @@ export const getGetMarketNewsUrl = () => {
 }
 
 /**
- * @summary Get cached Yahoo Finance headlines relevant to Kuwait markets
+ * @summary Get cached broader-market headlines from Yahoo Finance
  */
 export const getMarketNews = async ( options?: Parameters<typeof customFetch>[1]): Promise<MarketNewsResponse> => {
 
@@ -356,7 +356,7 @@ export type GetMarketNewsQueryError = ErrorType<unknown>
 
 
 /**
- * @summary Get cached Yahoo Finance headlines relevant to Kuwait markets
+ * @summary Get cached broader-market headlines from Yahoo Finance
  */
 
 export function useGetMarketNews<TData = Awaited<ReturnType<typeof getMarketNews>>, TError = ErrorType<unknown>>(

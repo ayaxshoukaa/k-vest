@@ -11,8 +11,8 @@ const newsCopy = {
     back: "Back to your welcome page",
     eyebrow: "DAILY MARKET NEWS",
     title: "Headlines, with context.",
-    description: "Explore recent headlines related to Boursa Kuwait and the wider Kuwaiti economy. Open each story at its original publisher.",
-    note: "Headlines from Yahoo Finance. Educational use only; market information may be delayed.",
+    description: "Explore broader headlines about global markets and finance. These stories are not Kuwait-specific; open each one at its original publisher.",
+    note: "Broader global market headlines from Yahoo Finance. Educational use only; market information may be delayed.",
     footer: "For educational purposes only. Not financial advice or an investment recommendation.",
   },
   ar: {
@@ -20,8 +20,8 @@ const newsCopy = {
     back: "العودة إلى صفحة البداية",
     eyebrow: "أخبار السوق اليومية",
     title: "أخبار السوق في سياقها.",
-    description: "اطّلع على عناوين حديثة مرتبطة ببورصة الكويت والاقتصاد الكويتي. افتح الخبر من مصدره الأصلي.",
-    note: "العناوين من Yahoo Finance. للاستخدام التثقيفي فقط؛ قد تتأخر معلومات السوق.",
+    description: "اطّلع على عناوين أوسع عن الأسواق والتمويل عالميًا. هذه الأخبار ليست خاصة بالكويت؛ افتح كل خبر من مصدره الأصلي.",
+    note: "عناوين أوسع عن الأسواق العالمية من Yahoo Finance. للاستخدام التثقيفي فقط؛ قد تتأخر معلومات السوق.",
     footer: "للتثقيف فقط. لا يُعد نصيحة مالية أو توصية استثمارية.",
   },
 } as const;
