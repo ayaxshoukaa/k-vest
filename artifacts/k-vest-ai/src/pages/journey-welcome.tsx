@@ -152,6 +152,9 @@ export default function JourneyWelcomePage() {
             <Link href="/news" className="jwelcome__vision-link" data-testid="link-news-page">
               {isArabic ? 'الأخبار' : 'News'}
             </Link>
+            <a href="#learning" className="jwelcome__start-link" data-testid="link-header-start-learning">
+              {isArabic ? 'ابدأ التعلّم' : 'Start learning'}
+            </a>
           <div className="jwelcome__language" role="group" aria-label={text.languageLabel} data-testid="control-language">
           <button
             className="jwelcome__language-button"
