@@ -155,17 +155,6 @@ export default function JourneyWelcomePage() {
             <a href="#learning" className="jwelcome__start-link" data-testid="link-header-start-learning">
               {isArabic ? 'ابدأ التعلّم' : 'Start learning'}
             </a>
-          <div className="jwelcome__language" role="group" aria-label={text.languageLabel} data-testid="control-language">
-          <button
-            className="jwelcome__language-button"
-            type="button"
-            onClick={() => setLanguage(isArabic ? 'en' : 'ar')}
-            aria-label={isArabic ? 'تغيير اللغة إلى الإنجليزية' : 'Switch language to Arabic'}
-            data-testid="button-toggle-language"
-          >
-            {text.switchLabel}
-          </button>
-          </div>
           {isSignedIn ? (
             <button type="button" className="jwelcome__language-button" disabled={signingOut} onClick={() => void leaveAccount()} data-testid="button-sign-out">
               {signingOut ? (isArabic ? 'جارٍ الخروج…' : 'Signing out…') : (isArabic ? 'تسجيل الخروج' : 'Sign out')}
@@ -178,6 +167,17 @@ export default function JourneyWelcomePage() {
               {isArabic ? 'تسجيل الدخول' : 'Sign in'}
             </button>
           )}
+          <div className="jwelcome__language" role="group" aria-label={text.languageLabel} data-testid="control-language">
+            <button
+              className="jwelcome__language-button"
+              type="button"
+              onClick={() => setLanguage(isArabic ? 'en' : 'ar')}
+              aria-label={isArabic ? 'تغيير اللغة إلى الإنجليزية' : 'Switch language to Arabic'}
+              data-testid="button-toggle-language"
+            >
+              {text.switchLabel}
+            </button>
+          </div>
         </div>
       </header>
 
