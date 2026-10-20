@@ -18,7 +18,7 @@ import {
 } from "./market-data-providers";
 import { publishedSampleAt, publishedSampleIndex, publishedSampleStocks } from "./market-scanner-samples";
 
-const SCANNER_CACHE_KEY = "market-scanner-v1";
+const SCANNER_CACHE_KEY = "market-scanner-v2";
 const STOCK_CACHE_PREFIX = "market-stock-v1:";
 const SAMPLE_WARNING =
   "Oanor is unavailable. Published example quotes are shown as sample data, not live prices.";
@@ -156,7 +156,7 @@ class MarketScannerService {
         throw screenerResult.reason;
       }
 
-      const listings = screenerResult.value.slice(0, 20);
+      const listings = screenerResult.value;
       const index = indexResult.status === "fulfilled" ? toMarketIndex(indexResult.value) : null;
       if (indexResult.status === "rejected") {
         logger.warn({ err: indexResult.reason }, "Oanor Premier Market index refresh failed");

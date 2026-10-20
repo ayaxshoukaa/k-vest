@@ -133,7 +133,7 @@ export class OanorMarketDataProvider {
     const url = new URL(`${OANOR_BASE_URL}/screener`);
     url.searchParams.set("sort", "market_cap");
     url.searchParams.set("order", "desc");
-    url.searchParams.set("limit", "20");
+    url.searchParams.set("limit", "100");
     return parseListings(await fetchOanorJson(url), "results");
   }
 
