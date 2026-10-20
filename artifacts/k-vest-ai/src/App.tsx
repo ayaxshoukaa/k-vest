@@ -21,6 +21,7 @@ import JourneyResearchPage from '@/pages/journey-research';
 import JourneyPracticePage from '@/pages/journey-practice';
 import JourneyRoiPage from '@/pages/journey-roi';
 import JourneyFinishPage from '@/pages/journey-finish';
+import VisionPage from '@/pages/vision';
 import { ScanIntroPage, ResearchIntroPage, PracticeIntroPage, RoiIntroPage } from '@/pages/journey-intro';
 import NotFound from '@/pages/not-found';
 
@@ -188,6 +189,7 @@ function ClerkRoutes() {
         <Switch>
           <Route path="/" component={HomeRedirect} />
           <Route path="/journey/welcome" component={JourneyWelcomePage} />
+          <Route path="/vision" component={VisionPage} />
           <Route path="/journey/scan-intro" component={ScanIntroPage} />
           <Route path="/journey/scan" component={JourneyScanPage} />
           <Route path="/journey/research-intro" component={ResearchIntroPage} />

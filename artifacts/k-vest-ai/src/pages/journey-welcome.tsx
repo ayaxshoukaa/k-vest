@@ -79,7 +79,10 @@ export default function JourneyWelcomePage() {
         <Link href="/" className="jwelcome__brand" aria-label={isArabic ? 'العودة إلى الصفحة الرئيسية' : 'K-vest home'} data-testid="link-journey-home">
           <BrandMark className="jwelcome__logo" />
         </Link>
-        <div className="jwelcome__header-actions">
+          <div className="jwelcome__header-actions">
+            <Link href="/vision" className="jwelcome__vision-link" data-testid="link-vision-page">
+              {isArabic ? 'رؤيتنا' : 'Our vision'}
+            </Link>
           <div className="jwelcome__language" role="group" aria-label={text.languageLabel} data-testid="control-language">
           <button
             className="jwelcome__language-button"
