@@ -12,7 +12,7 @@ import {
 
 type ViewMode = 'all' | 'gainers' | 'losers' | 'active';
 type SortKey = 'companyName' | 'priceKwd' | 'changePercent' | 'volume' | 'momentumPercent';
-const CHART_COLORS = { main: '#ff7138', positive: '#00b987', negative: '#e27678', secondary: '#afc6ff' };
+const CHART_COLORS = { main: '#10B981', positive: '#4EDEA3', negative: '#FB7185', secondary: '#4CD7F6' };
 
 function formatCompact(value: number | null) {
   return value === null ? 'Unavailable' : new Intl.NumberFormat('en-KW', { notation: 'compact', maximumFractionDigits: 1 }).format(value);

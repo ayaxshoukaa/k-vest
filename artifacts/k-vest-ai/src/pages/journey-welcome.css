@@ -1,21 +1,21 @@
 .jwelcome {
-  --jw-ink: #ffffff;
-  --jw-ink-soft: #a9b1cb;
-  --jw-blue: #ff7138;
-  --jw-blue-dark: #ff8a5a;
-  --jw-line: rgba(148,163,200,.22);
-  --jw-surface: #121830;
-  --jw-tint: #1a2038;
-  --jw-accent: rgba(34,211,238,.1);
+  --jw-ink: #F8FAFC;
+  --jw-ink-soft: #BBCABF;
+  --jw-blue: #10B981;
+  --jw-blue-dark: #34D399;
+  --jw-line: rgba(255,255,255,.08);
+  --jw-surface: #090D16;
+  --jw-tint: #141D33;
+  --jw-accent: rgba(76,215,246,.1);
   min-height: 100dvh;
   display: flex;
   flex-direction: column;
   overflow: hidden;
   background:
-    radial-gradient(ellipse at 50% 30%, rgba(255,113,56,.12), transparent 45%), linear-gradient(rgba(148,163,200,.05) 1px,transparent 1px) 0 0/40px 40px, linear-gradient(90deg,rgba(148,163,200,.05) 1px,transparent 1px) 0 0/40px 40px,
-    #080d1f;
+    radial-gradient(ellipse at 78% 25%, rgba(16,185,129,.1), transparent 42%), radial-gradient(ellipse at 18% 78%, rgba(76,215,246,.06), transparent 40%), linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px) 0 0/40px 40px, linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px) 0 0/40px 40px,
+    #05070B;
   color: var(--jw-ink);
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'Plus Jakarta Sans', sans-serif;
   isolation: isolate;
 }
 
@@ -77,14 +77,14 @@
   border: 1px solid var(--jw-line);
   border-radius: 999px;
   color: var(--jw-ink-soft);
-  font: 700 13px 'DM Sans', sans-serif;
+  font: 700 13px 'Plus Jakarta Sans', sans-serif;
   text-decoration: none;
   transition: border-color .18s ease, background-color .18s ease, color .18s ease;
 }
 
 .jwelcome__vision-link:hover {
-  border-color: #22d3ee;
-  background: rgba(34, 211, 238, .08);
+  border-color: #4CD7F6;
+  background: rgba(76, 215, 246, .08);
   color: var(--jw-ink);
 }
 
@@ -101,15 +101,15 @@
   border-radius: 999px;
   background: var(--jw-surface);
   color: var(--jw-blue);
-  font: 700 13px 'DM Sans', sans-serif;
+  font: 700 13px 'Plus Jakarta Sans', sans-serif;
   cursor: pointer;
   transition: transform .18s ease, border-color .18s ease, background-color .18s ease;
 }
 
 .jwelcome__language-button:hover {
   transform: translateY(-1px);
-  border-color: #22d3ee;
-  background: rgba(34,211,238,.1);
+  border-color: #4CD7F6;
+  background: rgba(76,215,246,.1);
 }
 
 .jwelcome__main {
@@ -134,7 +134,7 @@
   align-items: center;
   gap: 9px;
   margin-bottom: 22px;
-  color: #22d3ee;
+  color: #4CD7F6;
   font-size: 14px;
   font-weight: 700;
   letter-spacing: .01em;
@@ -144,15 +144,15 @@
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: #ff7138;
-  box-shadow: 0 0 0 5px rgba(255,113,56,.2);
+  background: #10B981;
+  box-shadow: 0 0 0 5px rgba(16,185,129,.2);
 }
 
 .jwelcome__intro h1 {
   max-width: 680px;
   margin: 0 auto;
   color: var(--jw-ink);
-  font: 800 clamp(36px, 6vw, 58px)/1.12 'Manrope', sans-serif;
+  font: 700 clamp(36px, 6vw, 58px)/1.12 'Syne', sans-serif;
   letter-spacing: -.045em;
   text-wrap: balance;
 }
@@ -172,7 +172,8 @@
   padding: 26px;
   border: 1px solid var(--jw-line);
   border-radius: 14px;
-  background: rgba(18,24,48,.9);
+  background: rgba(9,13,22,.76);
+  backdrop-filter: blur(24px);
   box-shadow: 0 30px 70px -20px rgba(0,0,0,.7);
   text-align: start;
   animation: jwelcome-enter .65s cubic-bezier(.22, 1, .36, 1) .14s both;
@@ -183,7 +184,7 @@
 }
 
 .jwelcome__path-overline {
-  color: #22d3ee;
+  color: #4CD7F6;
   font-size: 11px;
   font-weight: 700;
   letter-spacing: .12em;
@@ -193,7 +194,7 @@
 .jwelcome__path-heading h2 {
   margin: 5px 0 0;
   color: var(--jw-ink);
-  font: 700 20px/1.35 'Manrope', sans-serif;
+  font: 600 20px/1.35 'Syne', sans-serif;
   letter-spacing: -.02em;
 }
 
@@ -211,9 +212,10 @@
   min-height: 158px;
   padding: 15px 14px 16px;
   position: relative;
-  border: 1px solid rgba(148,163,200,.18);
+  border: 1px solid rgba(255,255,255,.08);
   border-radius: 16px;
-  background: #0d1429;
+  background: rgba(9,13,22,.72);
+  backdrop-filter: blur(18px);
   animation: jwelcome-enter .55s cubic-bezier(.22, 1, .36, 1) both;
 }
 
@@ -226,8 +228,8 @@
   position: absolute;
   inset-block-start: 14px;
   inset-inline-end: 14px;
-  color: #7c86a6;
-  font: 600 10px 'JetBrains Mono', monospace;
+  color: #86948A;
+  font: 600 10px 'Space Grotesk', sans-serif;
   letter-spacing: .04em;
 }
 
@@ -245,12 +247,12 @@
 .jwelcome__step-copy h3 {
   margin: 0 0 6px;
   color: var(--jw-ink);
-  font: 700 15px/1.3 'Manrope', sans-serif;
+  font: 700 15px/1.3 'Syne', sans-serif;
 }
 
 .jwelcome__step-copy p {
   margin: 0;
-  color: #a3abc6;
+  color: #BBCABF;
   font-size: 12px;
   line-height: 1.55;
 }
@@ -276,17 +278,17 @@
   border: 0;
   border-radius: 15px;
   background: var(--jw-blue);
-  color: #1b1110 !important;
+  color: #003824 !important;
   font-size: 16px;
   font-weight: 700;
-  box-shadow: 0 0 24px rgba(255,113,56,.35);
+  box-shadow: 0 0 24px rgba(16,185,129,.28);
   transition: transform .18s ease, background-color .18s ease, box-shadow .18s ease;
 }
 
 .jwelcome__cta:hover {
   transform: translateY(-2px);
   background: var(--jw-blue-dark);
-  box-shadow: 0 0 32px rgba(255,113,56,.5);
+  box-shadow: 0 0 32px rgba(16,185,129,.42);
 }
 
 .jwelcome__cta:active,
@@ -311,7 +313,7 @@
 }
 
 .jwelcome__gentle-note {
-  color: #8b94b0;
+  color: #BBCABF;
   font-size: 12px;
 }
 
@@ -323,8 +325,8 @@
   align-items: center;
   justify-content: center;
   gap: 10px;
-  border-top: 1px solid rgba(148,163,200,.2);
-  color: #8b94b0;
+  border-top: 1px solid rgba(255,255,255,.08);
+  color: #BBCABF;
   font-size: 12px;
 }
 
@@ -337,22 +339,22 @@
   height: 20px;
   display: grid;
   place-items: center;
-  border: 1px solid rgba(148,163,200,.3);
+  border: 1px solid rgba(255,255,255,.12);
   border-radius: 7px;
-  color: #22d3ee;
-  font: 700 10px 'Manrope', sans-serif;
+  color: #4CD7F6;
+  font: 700 10px 'Syne', sans-serif;
 }
 
 .jwelcome:focus-visible a,
 .jwelcome:focus-visible button,
 .jwelcome a:focus-visible,
 .jwelcome button:focus-visible {
-  outline: 3px solid #22d3ee;
+  outline: 3px solid #4CD7F6;
   outline-offset: 4px;
 }
 
 .jwelcome--rtl {
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'Plus Jakarta Sans', sans-serif;
 }
 
 .jwelcome--rtl .jwelcome__logo {
@@ -362,7 +364,7 @@
 .jwelcome--rtl .jwelcome__intro h1,
 .jwelcome--rtl .jwelcome__path-heading h2,
 .jwelcome--rtl .jwelcome__step-copy h3 {
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'Plus Jakarta Sans', sans-serif;
   letter-spacing: 0;
 }
 

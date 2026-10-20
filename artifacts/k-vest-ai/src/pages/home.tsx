@@ -114,8 +114,8 @@ export default function Home() {
 
       <main>
         <section className="kv-sec kv-hero">
-          <div className="kv-glow" style={{ top: '20%', left: -190, width: 380, height: 380, background: 'rgba(255,113,56,.15)' }} />
-          <div className="kv-glow" style={{ top: '30%', right: -190, width: 480, height: 480, background: 'rgba(4,94,207,.2)' }} />
+          <div className="kv-glow" style={{ top: '20%', left: -190, width: 380, height: 380, background: 'rgba(16,185,129,.12)' }} />
+          <div className="kv-glow" style={{ top: '30%', right: -190, width: 480, height: 480, background: 'rgba(76,215,246,.12)' }} />
           <div className="kv-wrap kv-hero-grid">
             <div className="kv-rise">
               <span className="kv-pill"><span className="kv-dot" aria-hidden="true" />Market scanner | Calculator live</span>

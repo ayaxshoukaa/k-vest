@@ -12,20 +12,20 @@
   padding: 8px 14px;
   border: 1px solid var(--line);
   border-radius: 8px;
-  background: rgba(34, 211, 238, .06);
-  color: #dde1fb;
+  background: rgba(76, 215, 246, .06);
+  color: #E1E2E9;
   font-size: 14px;
   font-weight: 600;
   text-decoration: none;
 }
 
 .journey-home-nav .journey-home-link:hover {
-  border-color: #22d3ee;
-  background: rgba(34, 211, 238, .12);
+  border-color: #4CD7F6;
+  background: rgba(76, 215, 246, .12);
 }
 
 .journey-home-nav .journey-home-link:focus-visible {
-  outline: 2px solid #22d3ee;
+  outline: 2px solid #4CD7F6;
   outline-offset: 3px;
 }
 

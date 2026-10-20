@@ -8,7 +8,7 @@ import {
   useSavedSymbols,
 } from '@/components/market-tools';
 
-const CHART_COLOR = '#ff7138';
+const CHART_COLOR = '#10B981';
 
 function formatHistoryDate(value: string) {
   const date = new Date(value);

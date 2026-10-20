@@ -5,13 +5,17 @@ description: Product scope, build cadence, and financial-data boundaries for the
 
 K-vest AI is a beginner-friendly guided journey for investing education in Kuwait: Scan, Research with AI, Practice with a demo 1,000 KD wallet, and ROI calculator. GCC expansion remains future vision.
 
-Build one screen or feature at a time, explain each change briefly, and stop for the user to test before moving to the next. Do not implement the whole journey in one pass.
+Give the user brief step-by-step progress updates while completing the requested scope. When they ask to complete a connected experience in one pass, finish it without pausing for confirmation after every screen.
 
-Use the user's dark financial-terminal reference as inspiration across the whole website, including the startup, home, sign-in, and journey screens. Keep those screens visually consistent rather than maintaining a separate white-and-blue journey theme.
+Use the attached futuristic wealth-platform design as inspiration across the full website, including sign-in, startup, company research, and learning screens. Keep the K-vest name and education-first positioning.
 
-**Why:** the user explicitly asked to make the startup match the rest of the website, then requested the attached reference as inspiration “across my website,” superseding the earlier journey-only design restriction.
+**Why:** the user asked to change the full website design to match the attached reference, including recoloring the logo.
 
-**How to apply:** use the same dark navy, orange-action, cyan-accent visual language for future screens. Treat the reference as visual inspiration, not permission to copy unsupported institutional claims or market data.
+**How to apply:** use obsidian surfaces, frosted charcoal panels, emerald actions, cyan accents, and Syne / Plus Jakarta Sans / Space Grotesk typography. Do not import the reference brand or its unsupported institutional claims and telemetry.
+
+**Why:** the user asked to complete the journey in one pass while providing step-by-step updates.
+
+**How to apply:** keep progress updates concise and continue through the connected scope unless a real ambiguity or risk needs user input.
 
 Keep the Get started screen minimal, without welcome prose or milestone cards.
 

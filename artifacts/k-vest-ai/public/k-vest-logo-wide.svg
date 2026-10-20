@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 96" role="img" aria-label="K-vest">
+  <defs>
+    <linearGradient id="kv-emerald-cyan" x1="21" y1="66" x2="69" y2="20" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#10B981"/>
+      <stop offset="1" stop-color="#4CD7F6"/>
+    </linearGradient>
+  </defs>
+  <rect x="4" y="8" width="80" height="80" rx="22" fill="#090D16" stroke="#fff" stroke-opacity=".1"/>
+  <path d="M25 66V30" fill="none" stroke="#E1E2E9" stroke-width="7" stroke-linecap="round"/>
+  <path d="M27 50h10L57 30" fill="none" stroke="url(#kv-emerald-cyan)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M52 25 68 20 63 36" fill="none" stroke="url(#kv-emerald-cyan)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="m37 50 23 17" fill="none" stroke="#4CD7F6" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="64" cy="68" r="3.5" fill="#10B981"/>
+  <text x="101" y="53" fill="#F8FAFC" font-family="Syne, sans-serif" font-size="35" font-weight="700" letter-spacing=".5">K-VEST</text>
+  <text x="104" y="73" fill="#4CD7F6" font-family="Space Grotesk, sans-serif" font-size="9" font-weight="600" letter-spacing="2.2">LEARN  •  INVEST</text>
+</svg>
