@@ -1,0 +1,31 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "services": {
+    "api-server": {
+      "root": "artifacts/api-server",
+      "framework": "express",
+      "entrypoint": "dist/index.mjs",
+      "buildCommand": "pnpm run build"
+    },
+    "k-vest-ai": {
+      "root": "artifacts/k-vest-ai",
+      "framework": "vite",
+      "buildCommand": "PORT=3000 BASE_PATH=/ pnpm run build",
+      "outputDirectory": "dist/public"
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": {
+        "service": "api-server"
+      }
+    },
+    {
+      "source": "/(.*)",
+      "destination": {
+        "service": "k-vest-ai"
+      }
+    }
+  ]
+}
