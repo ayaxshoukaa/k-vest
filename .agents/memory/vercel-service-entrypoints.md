@@ -14,3 +14,9 @@ For Express services, allow a default port when `PORT` is unset; Vercel's Expres
 **Why:** The Replit artifact workflow injects `PORT`, but the Vercel runtime may not; throwing during startup makes every API route fail.
 
 **How to apply:** Prefer `process.env.PORT ?? "3000"` before validating the parsed port.
+
+Ensure runtime dependencies externalized by esbuild are installed in the Vercel service runtime; otherwise bundle them into the service output.
+
+**Why:** The deployed API failed with `ERR_MODULE_NOT_FOUND` for the externalized MongoDB driver, even though it was declared in the workspace package.
+
+**How to apply:** Review esbuild's `external` list for required runtime packages and confirm each external package is present in the deployment artifact.
