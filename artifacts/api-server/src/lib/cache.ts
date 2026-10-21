@@ -1,5 +1,4 @@
-import { apiCacheTable, db } from "@workspace/db";
-import { eq } from "drizzle-orm";
+import { getMongoCollections } from "./mongodb";
 
 export const API_CACHE_TTL_MS = 5 * 60 * 1000;
 
@@ -9,15 +8,8 @@ export interface CacheEntry {
 }
 
 export async function getCacheEntry(cacheKey: string): Promise<CacheEntry | null> {
-  const [entry] = await db
-    .select({
-      responseData: apiCacheTable.responseData,
-      cachedAt: apiCacheTable.cachedAt,
-    })
-    .from(apiCacheTable)
-    .where(eq(apiCacheTable.cacheKey, cacheKey));
-
-  return entry ?? null;
+  const entry = await getMongoCollections().apiCache.findOne({ _id: cacheKey });
+  return entry ? { responseData: entry.responseData, cachedAt: entry.cachedAt } : null;
 }
 
 export async function getCached<T>(cacheKey: string): Promise<T | null> {
@@ -30,11 +22,9 @@ export async function getCached<T>(cacheKey: string): Promise<T | null> {
 
 export async function setCache(cacheKey: string, responseData: unknown): Promise<void> {
   const cachedAt = new Date();
-  await db
-    .insert(apiCacheTable)
-    .values({ cacheKey, responseData, cachedAt })
-    .onConflictDoUpdate({
-      target: apiCacheTable.cacheKey,
-      set: { responseData, cachedAt },
-    });
+  await getMongoCollections().apiCache.updateOne(
+    { _id: cacheKey },
+    { $set: { responseData, cachedAt } },
+    { upsert: true },
+  );
 }

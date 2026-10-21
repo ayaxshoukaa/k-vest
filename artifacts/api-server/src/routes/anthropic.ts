@@ -4,13 +4,13 @@ import {
   ListAnthropicConversationsQueryParams,
   SendAnthropicMessageBody,
 } from "@workspace/api-zod";
-import { conversations, db, messages } from "@workspace/db";
-import { and, asc, desc, eq } from "drizzle-orm";
+import { MongoServerError } from "mongodb";
 import { Router, type IRouter, type Request } from "express";
 import { getCompanyResearchContext, JourneyError, markResearchComplete } from "../services/journey";
 import { checkResearchLimit, researchSystemPrompt } from "../services/research";
 import { OPENROUTER_MODEL, getOpenRouterClient } from "../services/openrouter";
 import { sameOriginLearningApi } from "../middlewares/journeyOwner";
+import { getMongoClient, getMongoCollections, nextMongoId } from "../lib/mongodb";
 
 const router: IRouter = Router();
 const userId = (req: Request): string => getAuth(req).userId!;
@@ -27,9 +27,11 @@ router.use("/anthropic", sameOriginLearningApi, (req, res, next) => {
 async function ownedConversation(req: Request) {
   const id = Number(req.params.id);
   if (!Number.isSafeInteger(id) || id <= 0) return null;
-  const [conversation] = await db.select().from(conversations)
-    .where(and(eq(conversations.id, id), eq(conversations.userId, userId(req)))).limit(1);
-  return conversation ?? null;
+  return getMongoCollections().conversations.findOne({ id, userId: userId(req) });
+}
+
+function isDuplicateKeyError(error: unknown): boolean {
+  return error instanceof MongoServerError && error.code === 11000;
 }
 
 router.get("/anthropic/conversations", async (req, res) => {
@@ -38,10 +40,14 @@ router.get("/anthropic/conversations", async (req, res) => {
     res.status(400).json({ message: "Enter a valid company symbol." });
     return;
   }
-  const rows = await db.select().from(conversations).where(and(
-    eq(conversations.userId, userId(req)),
-    parsed.data.symbol ? eq(conversations.symbol, parsed.data.symbol) : undefined,
-  )).orderBy(desc(conversations.createdAt)).limit(20);
+  const filter = parsed.data.symbol
+    ? { userId: userId(req), symbol: parsed.data.symbol }
+    : { userId: userId(req) };
+  const rows = await getMongoCollections().conversations
+    .find(filter)
+    .sort({ createdAt: -1 })
+    .limit(20)
+    .toArray();
   res.json(rows.map(({ id, title, symbol, createdAt }) => ({ id, title, symbol, createdAt })));
 });
 
@@ -53,10 +59,22 @@ router.post("/anthropic/conversations", async (req, res, next) => {
   }
   try {
     await getCompanyResearchContext(parsed.data.symbol);
-    await db.insert(conversations).values({ ...parsed.data, userId: userId(req) }).onConflictDoNothing();
-    const [row] = await db.select().from(conversations).where(and(
-      eq(conversations.userId, userId(req)), eq(conversations.symbol, parsed.data.symbol),
-    )).limit(1);
+    const collection = getMongoCollections().conversations;
+    const conversationFilter = { userId: userId(req), symbol: parsed.data.symbol };
+    let row = await collection.findOne(conversationFilter);
+    if (!row) {
+      try {
+        await collection.insertOne({
+          id: await nextMongoId("conversations"),
+          ...parsed.data,
+          userId: userId(req),
+          createdAt: new Date(),
+        });
+      } catch (error) {
+        if (!isDuplicateKeyError(error)) throw error;
+      }
+      row = await collection.findOne(conversationFilter);
+    }
     if (!row) throw new Error("Conversation could not be created.");
     res.status(201).json({ id: row.id, title: row.title, symbol: row.symbol, createdAt: row.createdAt });
   } catch (error) {
@@ -71,9 +89,17 @@ router.get("/anthropic/conversations/:id", async (req, res) => {
     res.status(404).json({ message: "Conversation not found." });
     return;
   }
-  const history = await db.select().from(messages).where(eq(messages.conversationId, row.id))
-    .orderBy(asc(messages.createdAt), asc(messages.id));
-  res.json({ id: row.id, title: row.title, symbol: row.symbol, createdAt: row.createdAt, messages: history });
+  const history = await getMongoCollections().messages
+    .find({ conversationId: row.id })
+    .sort({ createdAt: 1, id: 1 })
+    .toArray();
+  res.json({
+    id: row.id,
+    title: row.title,
+    symbol: row.symbol,
+    createdAt: row.createdAt,
+    messages: history.map(({ _id: _mongoId, ...message }) => message),
+  });
 });
 
 router.delete("/anthropic/conversations/:id", async (req, res) => {
@@ -82,7 +108,16 @@ router.delete("/anthropic/conversations/:id", async (req, res) => {
     res.status(404).json({ message: "Conversation not found." });
     return;
   }
-  await db.delete(conversations).where(and(eq(conversations.id, row.id), eq(conversations.userId, userId(req))));
+  const { conversations, messages } = getMongoCollections();
+  const session = getMongoClient().startSession();
+  try {
+    await session.withTransaction(async () => {
+      await messages.deleteMany({ conversationId: row.id }, { session });
+      await conversations.deleteOne({ id: row.id, userId: userId(req) }, { session });
+    });
+  } finally {
+    await session.endSession();
+  }
   res.status(204).end();
 });
 
@@ -92,9 +127,11 @@ router.get("/anthropic/conversations/:id/messages", async (req, res) => {
     res.status(404).json({ message: "Conversation not found." });
     return;
   }
-  const history = await db.select().from(messages).where(eq(messages.conversationId, row.id))
-    .orderBy(asc(messages.createdAt), asc(messages.id));
-  res.json(history);
+  const history = await getMongoCollections().messages
+    .find({ conversationId: row.id })
+    .sort({ createdAt: 1, id: 1 })
+    .toArray();
+  res.json(history.map(({ _id: _mongoId, ...message }) => message));
 });
 
 router.post("/anthropic/conversations/:id/messages", async (req, res, next) => {
@@ -111,10 +148,19 @@ router.post("/anthropic/conversations/:id/messages", async (req, res, next) => {
   try {
     checkResearchLimit(userId(req));
     const context = await getCompanyResearchContext(conversation.symbol);
-    const previous = (await db.select().from(messages)
-      .where(eq(messages.conversationId, conversation.id))
-      .orderBy(desc(messages.createdAt), desc(messages.id)).limit(12)).reverse();
-    await db.insert(messages).values({ conversationId: conversation.id, role: "user", content: parsed.data.content });
+    const { messages } = getMongoCollections();
+    const previous = (await messages
+      .find({ conversationId: conversation.id })
+      .sort({ createdAt: -1, id: -1 })
+      .limit(12)
+      .toArray()).reverse();
+    await messages.insertOne({
+      id: await nextMongoId("messages"),
+      conversationId: conversation.id,
+      role: "user",
+      content: parsed.data.content,
+      createdAt: new Date(),
+    });
     res.setHeader("Content-Type", "text/event-stream");
     res.setHeader("Cache-Control", "no-cache, no-transform");
     res.setHeader("X-Accel-Buffering", "no");
@@ -146,7 +192,13 @@ router.post("/anthropic/conversations/:id/messages", async (req, res, next) => {
         }
       }
       if (!text.trim()) throw new Error("AI returned an empty response.");
-      await db.insert(messages).values({ conversationId: conversation.id, role: "assistant", content: text });
+      await messages.insertOne({
+        id: await nextMongoId("messages"),
+        conversationId: conversation.id,
+        role: "assistant",
+        content: text,
+        createdAt: new Date(),
+      });
       await markResearchComplete(userId(req));
       res.write(`data: ${JSON.stringify({ done: true })}\n\n`);
     } catch (error) {

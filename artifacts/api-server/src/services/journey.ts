@@ -1,9 +1,3 @@
-import { and, asc, eq, gte } from "drizzle-orm";
-import {
-  demoTradesTable,
-  journeyProgressTable,
-  type JourneyProgress,
-} from "@workspace/db";
 import type {
   DemoHolding,
   DemoTrade,
@@ -11,7 +5,12 @@ import type {
   JourneyStateResponse,
   JourneyStep,
 } from "@workspace/api-zod";
-import { db } from "@workspace/db";
+import {
+  getMongoClient,
+  getMongoCollections,
+  nextMongoId,
+  type JourneyProgressDocument,
+} from "../lib/mongodb";
 import { getMarketScanner, getMarketStock } from "./market-scanner";
 import { calculateLedger as calculateAccount, calculateRoiScenario, roundKwd, roundPercent } from "./journey-calculations";
 
@@ -44,13 +43,25 @@ function getStepIndex(step: string): number {
   return JOURNEY_STEPS.indexOf(step as JourneyStep);
 }
 
-export async function ensureJourneyProgress(userId: string): Promise<JourneyProgress> {
-  await db.insert(journeyProgressTable).values({ userId }).onConflictDoNothing();
-  const [progress] = await db
-    .select()
-    .from(journeyProgressTable)
-    .where(eq(journeyProgressTable.userId, userId))
-    .limit(1);
+export async function ensureJourneyProgress(userId: string): Promise<JourneyProgressDocument> {
+  const { journeyProgress } = getMongoCollections();
+  await journeyProgress.updateOne(
+    { userId },
+    {
+      $setOnInsert: {
+        userId,
+        currentStep: "scan-intro",
+        furthestStep: 0,
+        watchlistSymbols: [],
+        researchCompleted: false,
+        practiceSkipped: false,
+        roiResult: null,
+        updatedAt: new Date(),
+      },
+    },
+    { upsert: true },
+  );
+  const progress = await journeyProgress.findOne({ userId });
 
   if (!progress) {
     throw new Error("Journey progress could not be initialized.");
@@ -60,14 +71,13 @@ export async function ensureJourneyProgress(userId: string): Promise<JourneyProg
 
 async function buildJourneyState(
   userId: string,
-  progress?: JourneyProgress,
+  progress?: JourneyProgressDocument,
 ): Promise<JourneyStateResponse> {
   const savedProgress = progress ?? (await ensureJourneyProgress(userId));
-  const trades = await db
-    .select()
-    .from(demoTradesTable)
-    .where(eq(demoTradesTable.userId, userId))
-    .orderBy(asc(demoTradesTable.createdAt), asc(demoTradesTable.id));
+  const trades = await getMongoCollections().demoTrades
+    .find({ userId })
+    .sort({ createdAt: 1, id: 1 })
+    .toArray();
   const { cashKwd, positions } = calculateAccount(trades);
   const symbols = [...new Set([...positions.keys(), ...trades.map((trade) => trade.symbol)])];
   const market = symbols.length > 0 ? await getMarketScanner() : null;
@@ -173,10 +183,10 @@ export async function updateJourneyWatchlist(
     throw new JourneyError("Start the market scan before saving companies.");
   }
 
-  await db
-    .update(journeyProgressTable)
-    .set({ watchlistSymbols: [...new Set(symbols)] })
-    .where(eq(journeyProgressTable.userId, userId));
+  await getMongoCollections().journeyProgress.updateOne(
+    { userId },
+    { $set: { watchlistSymbols: [...new Set(symbols)], updatedAt: new Date() } },
+  );
   return getJourneyState(userId);
 }
 
@@ -202,11 +212,10 @@ export async function advanceJourney(
     throw new JourneyError("Complete one AI company analysis before continuing.");
   }
   if (fromStep === "practice" && !progress.practiceSkipped) {
-    const [trade] = await db
-      .select({ id: demoTradesTable.id })
-      .from(demoTradesTable)
-      .where(eq(demoTradesTable.userId, userId))
-      .limit(1);
+    const trade = await getMongoCollections().demoTrades.findOne(
+      { userId },
+      { projection: { id: 1 } },
+    );
     if (!trade) {
       throw new JourneyError("Make one practice trade or choose Skip to continue.");
     }
@@ -215,13 +224,10 @@ export async function advanceJourney(
     throw new JourneyError("Calculate your scenario before finishing.");
   }
 
-  await db
-    .update(journeyProgressTable)
-    .set({
-      currentStep: nextStep,
-      furthestStep: Math.max(progress.furthestStep, nextIndex),
-    })
-    .where(eq(journeyProgressTable.userId, userId));
+  await getMongoCollections().journeyProgress.updateOne(
+    { userId },
+    { $set: { currentStep: nextStep, updatedAt: new Date() }, $max: { furthestStep: nextIndex } },
+  );
   return getJourneyState(userId);
 }
 
@@ -233,14 +239,17 @@ export async function skipPractice(
     throw new JourneyError("Reach the practice phase before skipping it.");
   }
 
-  await db
-    .update(journeyProgressTable)
-    .set({
-      practiceSkipped: true,
-      currentStep: "roi-intro",
-      furthestStep: Math.max(progress.furthestStep, 6),
-    })
-    .where(eq(journeyProgressTable.userId, userId));
+  await getMongoCollections().journeyProgress.updateOne(
+    { userId },
+    {
+      $set: {
+        practiceSkipped: true,
+        currentStep: "roi-intro",
+        updatedAt: new Date(),
+      },
+      $max: { furthestStep: 6 },
+    },
+  );
   return getJourneyState(userId);
 }
 
@@ -260,50 +269,54 @@ export async function placeDemoTrade(
   }
   const notionalKwd = roundKwd(currentPriceKwd * input.quantity);
 
-  await db.transaction(async (tx) => {
-    const [lockedProgress] = await tx
-      .select()
-      .from(journeyProgressTable)
-      .where(eq(journeyProgressTable.userId, userId))
-      .for("update")
-      .limit(1);
-    if (!lockedProgress) {
-      throw new JourneyError("Start the journey before placing a practice trade.");
-    }
-    if (lockedProgress.furthestStep < 5) {
-      throw new JourneyError("Reach the practice phase before trading.");
-    }
-
-    const userTrades = await tx
-      .select()
-      .from(demoTradesTable)
-      .where(eq(demoTradesTable.userId, userId))
-      .orderBy(asc(demoTradesTable.createdAt), asc(demoTradesTable.id))
-      .for("update");
-    const account = calculateAccount(userTrades);
-
-    if (input.side === "buy" && account.cashKwd < notionalKwd) {
-      throw new JourneyError("The practice wallet does not have enough cash.", 409);
-    }
-    if (input.side === "sell") {
-      const position = account.positions.get(input.symbol);
-      if (!position || position.quantity < input.quantity) {
-        throw new JourneyError("You do not have enough shares to sell.", 409);
+  const { demoTrades, journeyProgress } = getMongoCollections();
+  const session = getMongoClient().startSession();
+  try {
+    await session.withTransaction(async () => {
+      const lockedProgress = await journeyProgress.findOne({ userId }, { session });
+      if (!lockedProgress) {
+        throw new JourneyError("Start the journey before placing a practice trade.");
       }
-    }
+      if (lockedProgress.furthestStep < 5) {
+        throw new JourneyError("Reach the practice phase before trading.");
+      }
 
-    await tx.insert(demoTradesTable).values({
-      userId,
-      symbol: input.symbol,
-      side: input.side,
-      quantity: input.quantity,
-      priceKwd: currentPriceKwd.toFixed(3),
-      notionalKwd: notionalKwd.toFixed(3),
-      marketTime: stock?.stock.marketTime ?? null,
-      sample: stock?.stock.sample ?? true,
-      stale: stock?.stock.stale ?? true,
+      const userTrades = await demoTrades
+        .find({ userId }, { session })
+        .sort({ createdAt: 1, id: 1 })
+        .toArray();
+      const account = calculateAccount(userTrades);
+
+      if (input.side === "buy" && account.cashKwd < notionalKwd) {
+        throw new JourneyError("The practice wallet does not have enough cash.", 409);
+      }
+      if (input.side === "sell") {
+        const position = account.positions.get(input.symbol);
+        if (!position || position.quantity < input.quantity) {
+          throw new JourneyError("You do not have enough shares to sell.", 409);
+        }
+      }
+
+      await demoTrades.insertOne(
+        {
+          id: await nextMongoId("demo_trades", session),
+          userId,
+          symbol: input.symbol,
+          side: input.side,
+          quantity: input.quantity,
+          priceKwd: currentPriceKwd.toFixed(3),
+          notionalKwd: notionalKwd.toFixed(3),
+          marketTime: stock?.stock.marketTime ?? null,
+          sample: stock?.stock.sample ?? true,
+          stale: stock?.stock.stale ?? true,
+          createdAt: new Date(),
+        },
+        { session },
+      );
     });
-  });
+  } finally {
+    await session.endSession();
+  }
 
   return getJourneyState(userId);
 }
@@ -316,23 +329,32 @@ export async function resetPracticeWallet(
     throw new JourneyError("Reach the practice phase before resetting the wallet.");
   }
 
-  await db.transaction(async (tx) => {
-    const [locked] = await tx.select().from(journeyProgressTable)
-      .where(eq(journeyProgressTable.userId, userId)).for("update").limit(1);
-    if (!locked || locked.furthestStep < 5) {
-      throw new JourneyError("Reach the practice phase before resetting the wallet.");
-    }
-    await tx.delete(demoTradesTable).where(eq(demoTradesTable.userId, userId));
-    await tx
-      .update(journeyProgressTable)
-      .set({
-        currentStep: "practice",
-        furthestStep: 5,
-        practiceSkipped: false,
-        roiResult: null,
-      })
-      .where(eq(journeyProgressTable.userId, userId));
-  });
+  const { demoTrades, journeyProgress } = getMongoCollections();
+  const session = getMongoClient().startSession();
+  try {
+    await session.withTransaction(async () => {
+      const locked = await journeyProgress.findOne({ userId }, { session });
+      if (!locked || locked.furthestStep < 5) {
+        throw new JourneyError("Reach the practice phase before resetting the wallet.");
+      }
+      await demoTrades.deleteMany({ userId }, { session });
+      await journeyProgress.updateOne(
+        { userId },
+        {
+          $set: {
+            currentStep: "practice",
+            furthestStep: 5,
+            practiceSkipped: false,
+            roiResult: null,
+            updatedAt: new Date(),
+          },
+        },
+        { session },
+      );
+    });
+  } finally {
+    await session.endSession();
+  }
   return getJourneyState(userId);
 }
 
@@ -360,10 +382,10 @@ export async function saveRoiResult(
     throw error;
   }
 
-  await db
-    .update(journeyProgressTable)
-    .set({ roiResult: result, currentStep: "roi" })
-    .where(eq(journeyProgressTable.userId, userId));
+  await getMongoCollections().journeyProgress.updateOne(
+    { userId },
+    { $set: { roiResult: result, currentStep: "roi", updatedAt: new Date() } },
+  );
   return getJourneyState(userId);
 }
 
@@ -371,22 +393,30 @@ export async function resetJourney(
   userId: string,
 ): Promise<JourneyStateResponse> {
   await ensureJourneyProgress(userId);
-  await db.transaction(async (tx) => {
-    await tx.select().from(journeyProgressTable)
-      .where(eq(journeyProgressTable.userId, userId)).for("update");
-    await tx.delete(demoTradesTable).where(eq(demoTradesTable.userId, userId));
-    await tx
-      .update(journeyProgressTable)
-      .set({
-        currentStep: "scan-intro",
-        furthestStep: 0,
-        watchlistSymbols: [],
-        researchCompleted: false,
-        practiceSkipped: false,
-        roiResult: null,
-      })
-      .where(eq(journeyProgressTable.userId, userId));
-  });
+  const { demoTrades, journeyProgress } = getMongoCollections();
+  const session = getMongoClient().startSession();
+  try {
+    await session.withTransaction(async () => {
+      await demoTrades.deleteMany({ userId }, { session });
+      await journeyProgress.updateOne(
+        { userId },
+        {
+          $set: {
+            currentStep: "scan-intro",
+            furthestStep: 0,
+            watchlistSymbols: [],
+            researchCompleted: false,
+            practiceSkipped: false,
+            roiResult: null,
+            updatedAt: new Date(),
+          },
+        },
+        { session },
+      );
+    });
+  } finally {
+    await session.endSession();
+  }
   return getJourneyState(userId);
 }
 
@@ -394,16 +424,10 @@ export async function markResearchComplete(userId: string | undefined): Promise<
   if (!userId) {
     return;
   }
-  await db
-    .update(journeyProgressTable)
-    .set({ researchCompleted: true })
-    .where(
-      and(
-        eq(journeyProgressTable.userId, userId),
-        // Only mark the phase complete if the user has reached it.
-        gte(journeyProgressTable.furthestStep, 3),
-      ),
-    );
+  await getMongoCollections().journeyProgress.updateOne(
+    { userId, furthestStep: { $gte: 3 } },
+    { $set: { researchCompleted: true, updatedAt: new Date() } },
+  );
 }
 
 export async function getCompanyResearchContext(symbol: string) {

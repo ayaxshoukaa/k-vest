@@ -35,11 +35,11 @@ Company analysis and saved AI research use the user's own OpenRouter API key dir
 
 **How to apply:** read `OPENROUTER_API_KEY` only from Replit Secrets on the API server, never expose it to the Vite client or logs, and preserve explicit stale/sample-data disclosures in AI answers.
 
-The attached journey specification mentions MongoDB, but the project's actual `replit.md` specifies React/Vite, Express, PostgreSQL, and Drizzle. Follow `replit.md`; do not migrate storage or authentication as part of a screen-level feature.
+MongoDB is the app's primary database. The user explicitly approved migrating all app data from PostgreSQL to MongoDB; preserve the PostgreSQL data as an untouched rollback copy until they choose to retire it.
 
-**Why:** the user asked to follow the project's `replit.md` stack, which differs from the MongoDB note in the pasted feature specification.
+**Why:** the user confirmed that MongoDB should replace PostgreSQL for all app data.
 
-**How to apply:** use the current Postgres/Drizzle and Clerk setup for incremental work. Ask before replacing the database or authentication architecture.
+**How to apply:** use `MONGODB_URI` only on the backend, keep Clerk authentication unchanged, and do not drop PostgreSQL tables or data.
 
 For the private educational class demo, keep Oanor as the primary scanner and index source, with delayed Yahoo Finance `.KW` quotes as the verified fallback for learning-stock rows and Yahoo Finance history fetched via `yahoo-finance2` on the backend only. When Oanor fails, omit its unavailable index rather than display an old value. Cache briefly; use clearly marked last-good or published sample fallbacks, and never invent a price. Before any public or commercial launch, switch market data to a licensed provider through Boursa Kuwait.
 

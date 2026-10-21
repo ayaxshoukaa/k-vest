@@ -4,21 +4,29 @@ _Replace the heading above with the project's name, and this line with one sente
 
 ## Run & Operate
 
-- `pnpm --filter @workspace/api-server run dev` — run the API server (port 5000)
+- `pnpm --filter @workspace/api-server run dev` — run the API server (port 8080)
 - `pnpm run typecheck` — full typecheck across all packages
 - `pnpm run build` — typecheck + build all packages
 - `pnpm --filter @workspace/api-spec run codegen` — regenerate API hooks and Zod schemas from the OpenAPI spec
 - `pnpm --filter @workspace/db run push` — push DB schema changes (dev only)
-- Required env: `DATABASE_URL` — Postgres connection string
+- `pnpm --filter @workspace/api-server run migrate:mongodb -- --apply` — copy app data from PostgreSQL to MongoDB; it does not delete PostgreSQL data
+- Required runtime env: `MONGODB_URI` — MongoDB connection string, supplied through Replit Secrets
+- `DATABASE_URL` is needed only by the one-time migration script and for the retained PostgreSQL rollback copy
 
 ## Stack
 
 - pnpm workspaces, Node.js 24, TypeScript 5.9
 - API: Express 5
-- DB: PostgreSQL + Drizzle ORM
-- Validation: Zod (`zod/v4`), `drizzle-zod`
+- DB: MongoDB for API runtime; PostgreSQL + Drizzle retained for migration and rollback
+- The current `MONGODB_URI` does not specify a database path, so the MongoDB driver selects its default `test` database
+- Validation: Zod (`zod/v4`); Drizzle is used only by the PostgreSQL migration script
 - API codegen: Orval (from OpenAPI spec)
-- Build: esbuild (CJS bundle)
+- Build: esbuild (ESM bundle)
+
+## Architecture decisions
+
+- MongoDB is the active API database. PostgreSQL is preserved as an untouched rollback source; do not drop its data without the user's later approval.
+- Clerk authentication remains unchanged by the database migration.
 
 ## Where things live
 
