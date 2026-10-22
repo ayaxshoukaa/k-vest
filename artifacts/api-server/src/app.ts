@@ -4,7 +4,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import { clerkMiddleware } from "@clerk/express";
 import { publishableKeyFromHost } from "@clerk/shared/keys";
-import pinoHttp, { type Options as PinoHttpOptions } from "pino-http";
+import { pinoHttp, type Options as PinoHttpOptions } from "pino-http";
 import router from "./routes";
 import { logger } from "./lib/logger";
 import {
