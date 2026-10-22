@@ -15,11 +15,11 @@ For Express services, allow a default port when `PORT` is unset; Vercel's Expres
 
 **How to apply:** Prefer `process.env.PORT ?? "3000"` before validating the parsed port.
 
-For `yahoo-finance2` under Vercel, use the namespace's explicit default export when the builder resolves the package's CommonJS branch.
+For `yahoo-finance2` under Vercel, the namespace's `.default` may need an explicit constructor type contract.
 
-**Why:** Vercel's TypeScript build treated the package namespace as the default import and rejected it as a constructor, although the local typecheck accepted the default import.
+**Why:** Vercel still reported `TS2351` after accessing `.default`, even though the runtime value is a constructor and local TypeScript accepts the package declaration.
 
-**How to apply:** Import the package as a namespace and instantiate its `.default` export; this also preserves the package's inferred quote result types.
+**How to apply:** Import the package as a namespace, cast `.default` to a constructor with an explicit client method/result interface, and avoid leaving callback results as `any`.
 
 Ensure runtime dependencies externalized by esbuild are installed in the Vercel service runtime; otherwise bundle them into the service output.
 

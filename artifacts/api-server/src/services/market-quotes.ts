@@ -34,8 +34,20 @@ export interface MarketQuoteProvider {
   fetchQuotes(): Promise<ProviderQuote[]>;
 }
 
+interface YahooFinanceClient {
+  quote(
+    symbols: string[],
+    queryOptions: { fields: Array<keyof ProviderQuote> },
+    moduleOptions: { fetchOptions: { signal: AbortSignal } },
+  ): Promise<ProviderQuote[]>;
+}
+
+const YahooFinanceConstructor = YahooFinanceModule.default as unknown as new (
+  options: { suppressNotices: string[] },
+) => YahooFinanceClient;
+
 class YahooFinanceQuoteProvider implements MarketQuoteProvider {
-  private readonly yahooFinance = new YahooFinanceModule.default({
+  private readonly yahooFinance = new YahooFinanceConstructor({
     suppressNotices: ["yahooSurvey"],
   });
 
