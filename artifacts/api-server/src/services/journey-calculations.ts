@@ -1,6 +1,13 @@
 export const roundKwd = (value: number): number => Math.round((value + Number.EPSILON) * 1000) / 1000;
 export const roundPercent = (value: number): number => Math.round((value + Number.EPSILON) * 100) / 100;
 
+export function shouldCelebrateFirstPracticeTrade(
+  tradeCount: number,
+  celebrationSeen: boolean,
+): boolean {
+  return tradeCount === 0 && !celebrationSeen;
+}
+
 const KUWAIT_OFFSET_MS = 3 * 60 * 60 * 1000;
 const DAY_MS = 24 * 60 * 60 * 1000;
 

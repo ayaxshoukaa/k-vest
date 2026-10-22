@@ -15,8 +15,15 @@ const {
   deriveWeeklyChallenges,
   calculateWeeklyPortfolio,
   getKuwaitWeekWindow,
+  shouldCelebrateFirstPracticeTrade,
 } = await import(pathToFileURL(outfile));
 after(() => rm(dir, { recursive: true, force: true }));
+
+test("first practice trade celebration is eligible once per user", () => {
+  assert.equal(shouldCelebrateFirstPracticeTrade(0, false), true);
+  assert.equal(shouldCelebrateFirstPracticeTrade(1, false), false);
+  assert.equal(shouldCelebrateFirstPracticeTrade(0, true), false);
+});
 
 test("demo wallet starts with exactly 1,000 KWD", () => {
   assert.equal(calculateLedger([]).cashKwd, 1000);

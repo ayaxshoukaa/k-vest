@@ -17,6 +17,7 @@ export interface JourneyProgressDocument extends Document {
   watchlistUpdatedAt?: Date | null;
   researchCompleted: boolean;
   practiceSkipped: boolean;
+  firstTradeCelebrationSeen?: boolean;
   roiResult: JourneyRoiResult | null;
   updatedAt: Date;
 }

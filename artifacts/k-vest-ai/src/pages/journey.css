@@ -228,6 +228,59 @@
 @media (prefers-reduced-motion: reduce) {
   .jx *, .jx *::before, .jx *::after { animation: none !important; transition: none !important; }
 }
+
+.jx-first-trade-dialog {
+  display: grid !important;
+  width: min(calc(100vw - 32px), 460px) !important;
+  max-height: calc(100dvh - 32px) !important;
+  gap: 22px !important;
+  padding: 32px !important;
+  border: 1px solid rgba(76,215,246,.24) !important;
+  border-radius: 22px !important;
+  background: linear-gradient(145deg, #10182a, #090d16 76%) !important;
+  color: #e1e2e9;
+  box-shadow: 0 26px 90px rgba(0,0,0,.58), 0 0 36px rgba(16,185,129,.08) !important;
+}
+
+.jx-first-trade-dialog__header { align-items: center; gap: 8px; text-align: center !important; }
+.jx-first-trade-dialog__title { color: #f8fafc; font-family: 'Syne', sans-serif; font-size: clamp(22px, 5vw, 28px); font-weight: 700; line-height: 1.25; }
+.jx-first-trade-dialog__description { max-width: 36ch; color: #bbc8c5 !important; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 15px !important; line-height: 1.6 !important; }
+.jx-first-trade-dialog__continue { width: 100%; min-height: 52px; }
+.jx-first-trade-celebration__art { position: relative; display: grid; width: 112px; height: 112px; place-items: center; margin: 0 auto; }
+.jx-first-trade-celebration__badge { z-index: 1; display: grid; width: 78px; height: 78px; place-items: center; border: 1px solid rgba(76,215,246,.45); border-radius: 50%; background: radial-gradient(circle at 35% 30%, rgba(76,215,246,.2), rgba(16,185,129,.12) 65%, rgba(9,13,22,.92)); color: #45dfa4; box-shadow: 0 0 30px rgba(16,185,129,.17); animation: jx-first-trade-bounce 850ms cubic-bezier(.2,.9,.25,1.2) both; }
+.jx-first-trade-celebration__confetti { position: absolute; top: 50%; left: 50%; width: 7px; height: 11px; border-radius: 2px; background: #10b981; opacity: 0; animation: jx-first-trade-burst 900ms cubic-bezier(.16,1,.3,1) both; }
+.jx-first-trade-celebration__confetti:nth-child(1) { --x: -45px; --y: -34px; background: #4cd7f6; animation-delay: 60ms; }
+.jx-first-trade-celebration__confetti:nth-child(2) { --x: -16px; --y: -51px; background: #45dfa4; animation-delay: 110ms; }
+.jx-first-trade-celebration__confetti:nth-child(3) { --x: 24px; --y: -47px; background: #f1c787; animation-delay: 30ms; }
+.jx-first-trade-celebration__confetti:nth-child(4) { --x: 47px; --y: -22px; background: #4cd7f6; animation-delay: 130ms; }
+.jx-first-trade-celebration__confetti:nth-child(5) { --x: 43px; --y: 24px; background: #10b981; animation-delay: 90ms; }
+.jx-first-trade-celebration__confetti:nth-child(6) { --x: 10px; --y: 49px; background: #f1c787; animation-delay: 150ms; }
+.jx-first-trade-celebration__confetti:nth-child(7) { --x: -30px; --y: 43px; background: #45dfa4; animation-delay: 40ms; }
+.jx-first-trade-celebration__confetti:nth-child(8) { --x: -50px; --y: 8px; background: #f1c787; animation-delay: 100ms; }
+
+@keyframes jx-first-trade-bounce {
+  0% { transform: translateY(7px) scale(.72); opacity: .35; }
+  65% { transform: translateY(-5px) scale(1.08); opacity: 1; }
+  100% { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+@keyframes jx-first-trade-burst {
+  0% { transform: translate(-50%,-50%) scale(.15) rotate(0); opacity: 0; }
+  68% { transform: translate(calc(-50% + var(--x)),calc(-50% + var(--y))) scale(1) rotate(150deg); opacity: 1; }
+  100% { transform: translate(calc(-50% + var(--x)),calc(-50% + var(--y))) scale(.75) rotate(190deg); opacity: 0; }
+}
+
+@media (max-width: 480px) {
+  .jx-first-trade-dialog { gap: 18px !important; padding: 26px 20px !important; }
+  .jx-first-trade-celebration__art { width: 100px; height: 100px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .jx-first-trade-dialog { animation: none !important; transition: none !important; }
+  .jx-first-trade-celebration__badge,
+  .jx-first-trade-celebration__confetti { animation: none !important; }
+  .jx-first-trade-celebration__confetti { display: none; }
+}
 .jx-saved { width: min(100% - 32px, 1120px); margin: 0 auto; font-size: 13px; color: var(--soft); }
 .jx-chip, .jx-badge, .jx-stat b, .jx-kv dd, .jx-summary li, .jx-table td { overflow-wrap: anywhere; }
 .jx-chip { max-width: 100%; }

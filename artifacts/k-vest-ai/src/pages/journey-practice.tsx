@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ArrowRight, CalendarDays, RotateCcw } from 'lucide-react';
+import { ArrowRight, CalendarDays, PartyPopper, RotateCcw } from 'lucide-react';
 import { Link } from 'wouter';
 import {
   getGetMarketStockQueryKey,
@@ -11,6 +11,13 @@ import {
 } from '@workspace/api-client-react';
 import { ConfirmDialog, DataWarning, JourneyShell, type JourneyCtx } from '@/components/journey/shell';
 import { InvestmentSkeleton } from '@/components/investment-loader';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import { errMsg, fmtKwd, fmtTime, mergeSymbols } from '@/lib/journey';
 
 function PracticeBody({ ctx }: { ctx: JourneyCtx }) {
@@ -26,6 +33,7 @@ function PracticeBody({ ctx }: { ctx: JourneyCtx }) {
   const [error, setError] = useState<string | null>(null);
   const [confirm, setConfirm] = useState(false);
   const [resetError, setResetError] = useState<string | null>(null);
+  const [firstTradeCelebrationOpen, setFirstTradeCelebrationOpen] = useState(false);
 
   const quote = useGetMarketStock(symbol, { query: { enabled: !!symbol, queryKey: getGetMarketStockQueryKey(symbol), retry: false } });
   const stock = quote.data?.stock;
@@ -38,7 +46,9 @@ function PracticeBody({ ctx }: { ctx: JourneyCtx }) {
     setError(null);
     if (!validQty) { setError(tr('Enter a whole number of shares, 1 or more.', 'أدخل عددًا صحيحًا من الأسهم، 1 أو أكثر.')); return; }
     try {
-      ctx.setState(await trade.mutateAsync({ data: { symbol, side, quantity } }));
+      const nextState = await trade.mutateAsync({ data: { symbol, side, quantity } });
+      ctx.setState({ ...nextState, celebrateFirstTrade: false });
+      if (nextState.celebrateFirstTrade) setFirstTradeCelebrationOpen(true);
     } catch (e) {
       setError(errMsg(e, tr('The trade could not be completed.', 'تعذّر تنفيذ الصفقة.')));
     }
@@ -170,6 +180,46 @@ function PracticeBody({ ctx }: { ctx: JourneyCtx }) {
         </div>
       </div>
       {ctx.advanceError && <p className="jx-field-error" role="alert">{ctx.advanceError}</p>}
+
+      <Dialog open={firstTradeCelebrationOpen} onOpenChange={setFirstTradeCelebrationOpen}>
+        <DialogContent
+          className="jx-first-trade-dialog"
+          dir={ctx.isAr ? 'rtl' : 'ltr'}
+          closeLabel={tr('Close', 'إغلاق')}
+          data-testid="dialog-first-practice-trade"
+        >
+          <div className="jx-first-trade-celebration__art" aria-hidden="true">
+            <span className="jx-first-trade-celebration__confetti" />
+            <span className="jx-first-trade-celebration__confetti" />
+            <span className="jx-first-trade-celebration__confetti" />
+            <span className="jx-first-trade-celebration__confetti" />
+            <span className="jx-first-trade-celebration__confetti" />
+            <span className="jx-first-trade-celebration__confetti" />
+            <span className="jx-first-trade-celebration__confetti" />
+            <span className="jx-first-trade-celebration__confetti" />
+            <span className="jx-first-trade-celebration__badge"><PartyPopper size={36} strokeWidth={1.8} /></span>
+          </div>
+          <DialogHeader className="jx-first-trade-dialog__header">
+            <DialogTitle className="jx-first-trade-dialog__title">
+              {tr('You made your first practice trade! 🎉', 'نفّذت أول صفقة تدريبية لك! 🎉')}
+            </DialogTitle>
+            <DialogDescription className="jx-first-trade-dialog__description">
+              {tr(
+                'You recorded a trade with demo money and updated your practice portfolio.',
+                'سجّلت صفقة بمال تجريبي وتم تحديث محفظة التدريب.',
+              )}
+            </DialogDescription>
+          </DialogHeader>
+          <button
+            type="button"
+            className="jx-btn jx-first-trade-dialog__continue"
+            onClick={() => setFirstTradeCelebrationOpen(false)}
+            data-testid="button-continue-first-trade-celebration"
+          >
+            {tr('Continue', 'متابعة')}
+          </button>
+        </DialogContent>
+      </Dialog>
 
       <ConfirmDialog open={confirm} testid="reset-wallet" pending={reset.isPending} error={resetError}
         title={tr('Reset the practice wallet?', 'إعادة ضبط محفظة التدريب؟')}

@@ -33,4 +33,5 @@ export interface JourneyStateResponse {
   roiPercent: number | null;
   roiResult: JourneyRoiResult | null;
   marketDataNote: string;
+  celebrateFirstTrade?: boolean;
 }

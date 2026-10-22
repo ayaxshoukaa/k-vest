@@ -186,7 +186,8 @@ export const GetJourneyStateResponse = zod.object({
   "riskLabel": zod.enum(['Low', 'Medium', 'High']),
   "createdAt": zod.coerce.date()
 }),zod.null()]),
-  "marketDataNote": zod.string()
+  "marketDataNote": zod.string(),
+  "celebrateFirstTrade": zod.boolean().optional()
 })
 
 
@@ -289,7 +290,8 @@ export const StartJourneyResponse = zod.object({
   "riskLabel": zod.enum(['Low', 'Medium', 'High']),
   "createdAt": zod.coerce.date()
 }),zod.null()]),
-  "marketDataNote": zod.string()
+  "marketDataNote": zod.string(),
+  "celebrateFirstTrade": zod.boolean().optional()
 })
 
 
@@ -363,7 +365,8 @@ export const SaveJourneyWatchlistResponse = zod.object({
   "riskLabel": zod.enum(['Low', 'Medium', 'High']),
   "createdAt": zod.coerce.date()
 }),zod.null()]),
-  "marketDataNote": zod.string()
+  "marketDataNote": zod.string(),
+  "celebrateFirstTrade": zod.boolean().optional()
 })
 
 
@@ -432,7 +435,8 @@ export const AdvanceJourneyResponse = zod.object({
   "riskLabel": zod.enum(['Low', 'Medium', 'High']),
   "createdAt": zod.coerce.date()
 }),zod.null()]),
-  "marketDataNote": zod.string()
+  "marketDataNote": zod.string(),
+  "celebrateFirstTrade": zod.boolean().optional()
 })
 
 
@@ -500,7 +504,8 @@ export const SkipJourneyPracticeResponse = zod.object({
   "riskLabel": zod.enum(['Low', 'Medium', 'High']),
   "createdAt": zod.coerce.date()
 }),zod.null()]),
-  "marketDataNote": zod.string()
+  "marketDataNote": zod.string(),
+  "celebrateFirstTrade": zod.boolean().optional()
 })
 
 
@@ -575,7 +580,8 @@ export const CreateJourneyTradeResponse = zod.object({
   "riskLabel": zod.enum(['Low', 'Medium', 'High']),
   "createdAt": zod.coerce.date()
 }),zod.null()]),
-  "marketDataNote": zod.string()
+  "marketDataNote": zod.string(),
+  "celebrateFirstTrade": zod.boolean().optional()
 })
 
 
@@ -639,7 +645,8 @@ export const ResetJourneyWalletResponse = zod.object({
   "riskLabel": zod.enum(['Low', 'Medium', 'High']),
   "createdAt": zod.coerce.date()
 }),zod.null()]),
-  "marketDataNote": zod.string()
+  "marketDataNote": zod.string(),
+  "celebrateFirstTrade": zod.boolean().optional()
 })
 
 
@@ -731,7 +738,8 @@ export const CalculateJourneyRoiResponse = zod.object({
   "riskLabel": zod.enum(['Low', 'Medium', 'High']),
   "createdAt": zod.coerce.date()
 }),zod.null()]),
-  "marketDataNote": zod.string()
+  "marketDataNote": zod.string(),
+  "celebrateFirstTrade": zod.boolean().optional()
 })
 
 
@@ -795,7 +803,8 @@ export const ResetJourneyResponse = zod.object({
   "riskLabel": zod.enum(['Low', 'Medium', 'High']),
   "createdAt": zod.coerce.date()
 }),zod.null()]),
-  "marketDataNote": zod.string()
+  "marketDataNote": zod.string(),
+  "celebrateFirstTrade": zod.boolean().optional()
 })
 
 

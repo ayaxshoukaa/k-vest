@@ -27,6 +27,7 @@ import {
   getKuwaitWeekWindow,
   roundKwd,
   roundPercent,
+  shouldCelebrateFirstPracticeTrade,
   type WeeklyChallengeSnapshot,
 } from "./journey-calculations";
 import type { CompanyResearchContext } from "./research";
@@ -74,6 +75,7 @@ export async function ensureJourneyProgress(userId: string): Promise<JourneyProg
         watchlistUpdatedAt: null,
         researchCompleted: false,
         practiceSkipped: false,
+        firstTradeCelebrationSeen: false,
         roiResult: null,
         updatedAt: new Date(),
       },
@@ -431,8 +433,10 @@ export async function placeDemoTrade(
   const { demoTrades, journeyProgress } = getMongoCollections();
   const session = getMongoClient().startSession();
   const createdAt = new Date();
+  let celebrateFirstTrade = false;
   try {
     await session.withTransaction(async () => {
+      celebrateFirstTrade = false;
       const lockedProgress = await journeyProgress.findOne({ userId }, { session });
       if (!lockedProgress) {
         throw new JourneyError("Start the journey before placing a practice trade.");
@@ -455,6 +459,29 @@ export async function placeDemoTrade(
         if (!position || position.quantity < input.quantity) {
           throw new JourneyError("You do not have enough shares to sell.", 409);
         }
+      }
+
+      if (
+        shouldCelebrateFirstPracticeTrade(
+          userTrades.length,
+          lockedProgress.firstTradeCelebrationSeen === true,
+        )
+      ) {
+        const claimed = await journeyProgress.updateOne(
+          { userId, firstTradeCelebrationSeen: { $ne: true } },
+          { $set: { firstTradeCelebrationSeen: true, updatedAt: createdAt } },
+          { session },
+        );
+        celebrateFirstTrade = claimed.modifiedCount === 1;
+      } else if (
+        userTrades.length > 0 &&
+        lockedProgress.firstTradeCelebrationSeen !== true
+      ) {
+        await journeyProgress.updateOne(
+          { userId },
+          { $set: { firstTradeCelebrationSeen: true, updatedAt: createdAt } },
+          { session },
+        );
       }
 
       await demoTrades.insertOne(
@@ -494,7 +521,10 @@ export async function placeDemoTrade(
     logger.warn({ err: error }, "Weekly practice challenge progress will be refreshed on the next summary view");
   }
 
-  return getJourneyState(userId);
+  return {
+    ...(await getJourneyState(userId)),
+    celebrateFirstTrade,
+  };
 }
 
 export async function resetPracticeWallet(
@@ -514,6 +544,9 @@ export async function resetPracticeWallet(
       if (!locked || locked.furthestStep < 5) {
         throw new JourneyError("Reach the practice phase before resetting the wallet.");
       }
+      const hadTradesBeforeReset = Boolean(
+        await demoTrades.findOne({ userId }, { session, projection: { _id: 1 } }),
+      );
       await demoTrades.deleteMany({ userId }, { session });
       await weeklyChallenges.deleteMany({ userId, weekStart: currentWeekStart }, { session });
       await journeyProgress.updateOne(
@@ -523,6 +556,8 @@ export async function resetPracticeWallet(
             currentStep: "practice",
             furthestStep: 5,
             practiceSkipped: false,
+            firstTradeCelebrationSeen:
+              locked.firstTradeCelebrationSeen ?? hadTradesBeforeReset,
             watchlistUpdatedAt: null,
             roiResult: null,
             updatedAt: new Date(),
@@ -576,6 +611,10 @@ export async function resetJourney(
   const session = getMongoClient().startSession();
   try {
     await session.withTransaction(async () => {
+      const locked = await journeyProgress.findOne({ userId }, { session });
+      const hadTradesBeforeReset = Boolean(
+        await demoTrades.findOne({ userId }, { session, projection: { _id: 1 } }),
+      );
       await demoTrades.deleteMany({ userId }, { session });
       await weeklyChallenges.deleteMany({ userId }, { session });
       await journeyProgress.updateOne(
@@ -588,6 +627,8 @@ export async function resetJourney(
             watchlistUpdatedAt: null,
             researchCompleted: false,
             practiceSkipped: false,
+            firstTradeCelebrationSeen:
+              locked?.firstTradeCelebrationSeen ?? hadTradesBeforeReset,
             roiResult: null,
             updatedAt: new Date(),
           },

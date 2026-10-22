@@ -1,5 +1,4 @@
 - [K-vest AI scope](kvest-ai-scope.md) — build the MVP incrementally; do not invent stock data or extend beyond the stated features.
-- [Step-by-step collaboration](step-by-step-collaboration.md) — the user wants to work step by step on this website.
 - [MongoDB driver v7 IDs](mongodb-driver-v7-ids.md) — declare string `_id` fields in collection types; driver v7 accepts only one schema generic.
 - [MongoDB URI database default](mongodb-uri-database-default.md) — this app's URI omits a database path, so `MongoClient.db()` selects MongoDB's `test` database.
 - [Vercel service entrypoints](vercel-service-entrypoints.md) — point each service at an entry file tracked in Git, not generated output ignored by `.gitignore`.

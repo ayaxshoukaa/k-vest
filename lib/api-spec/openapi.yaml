@@ -748,6 +748,8 @@ components:
             - type: "null"
         marketDataNote:
           type: string
+        celebrateFirstTrade:
+          type: boolean
       required: [currentStep, furthestStep, watchlistSymbols, researchCompleted, practiceSkipped, trades, holdings, cashKwd, marketValueKwd, portfolioValueKwd, profitLossKwd, roiPercent, roiResult, marketDataNote]
     JourneyWeeklyHolding:
       type: object
