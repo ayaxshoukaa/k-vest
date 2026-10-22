@@ -11,6 +11,7 @@ import {
   clerkProxyMiddleware,
   getClerkProxyHost,
 } from "./middlewares/clerkProxyMiddleware";
+import { isAllowedFrontendOrigin } from "./lib/frontend-origin";
 
 const app: Express = express();
 
@@ -37,7 +38,18 @@ app.use(
 // The proxy must receive the original request body and run before parsers.
 app.use(CLERK_PROXY_PATH, clerkProxyMiddleware());
 
-app.use(cors({ credentials: true, origin: true }));
+app.use(
+  cors({
+    credentials: true,
+    origin(origin, callback) {
+      if (!origin || process.env.NODE_ENV !== "production" || isAllowedFrontendOrigin(origin)) {
+        callback(null, true);
+        return;
+      }
+      callback(null, false);
+    },
+  }),
+);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 if (!process.env.SESSION_SECRET) {

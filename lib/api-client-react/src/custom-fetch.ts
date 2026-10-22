@@ -360,7 +360,12 @@ export async function customFetch<T = unknown>(
 
   const requestInfo = { method, url: resolveUrl(input) };
 
-  const response = await fetch(input, { ...init, method, headers });
+  const fetchOptions: RequestInit = { ...init, method, headers };
+  if (_baseUrl && fetchOptions.credentials === undefined) {
+    fetchOptions.credentials = "include";
+  }
+
+  const response = await fetch(input, fetchOptions);
 
   if (!response.ok) {
     const errorData = await parseErrorBody(response, method);

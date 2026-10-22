@@ -2,13 +2,19 @@ import { randomUUID } from "node:crypto";
 import { getAuth } from "@clerk/express";
 import type { Request, RequestHandler } from "express";
 import { getClerkProxyHost } from "./clerkProxyMiddleware";
+import { isAllowedFrontendOrigin } from "../lib/frontend-origin";
 
 const owners = new WeakMap<Request, string>();
 const guestCookie = "kvest_guest";
 
 export const sameOriginLearningApi: RequestHandler = (req, res, next) => {
-  let crossOrigin = req.get("sec-fetch-site") === "cross-site";
   const origin = req.get("origin");
+  if (origin && isAllowedFrontendOrigin(origin)) {
+    next();
+    return;
+  }
+
+  let crossOrigin = req.get("sec-fetch-site") === "cross-site";
   if (origin) {
     try {
       const source = new URL(origin);

@@ -20,3 +20,9 @@ Ensure runtime dependencies externalized by esbuild are installed in the Vercel 
 **Why:** The deployed API failed with `ERR_MODULE_NOT_FOUND` for the externalized MongoDB driver, even though it was declared in the workspace package.
 
 **How to apply:** Review esbuild's `external` list for required runtime packages and confirm each external package is present in the deployment artifact.
+
+K-Vest deployment decision: the user chose to deploy the website and API as separate Vercel projects rather than as one multi-service project.
+
+**Why:** The user wants to keep the website deployment separate and deploy the API independently.
+
+**How to apply:** Configure the frontend with the deployed API origin and allow only the website's exact origin in the API. Verify guest-session cookies across the two origins because browser third-party-cookie policies can affect guest progress.
