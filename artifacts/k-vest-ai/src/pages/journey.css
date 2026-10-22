@@ -16,10 +16,10 @@
 .jx-header { width: min(100% - 32px, 1120px); margin: 0 auto; min-height: 84px; display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 16px; }
 .jx-logo { width: 110px; height: 54px; object-fit: contain; object-position: left center; display: block; }
 .jx--rtl .jx-logo { object-position: right center; }
-.jx-lang { border: 1px solid var(--line); background: var(--panel); color: var(--ink); border-radius: 999px; padding: 8px 16px; min-height: 40px; cursor: pointer; font-weight: 600; }
+.jx-lang { border: 1px solid var(--line); background: var(--panel); color: var(--ink); border-radius: 999px; padding: 8px 16px; min-height: 44px; cursor: pointer; font-weight: 600; }
 .jx-lang:hover { background: var(--accent); }
 .jx-progress ol { list-style: none; margin: 0; padding: 0; display: flex; justify-content: center; gap: clamp(10px, 3vw, 34px); }
-.jx-dot__link { display: inline-flex; flex-direction: column; align-items: center; gap: 5px; font-size: 12px; color: var(--soft); font-weight: 600; padding: 4px; }
+.jx-dot__link { display: inline-flex; min-width: 44px; min-height: 44px; flex-direction: column; align-items: center; justify-content: center; gap: 5px; font-size: 12px; color: var(--soft); font-weight: 600; padding: 4px; }
 .jx-dot__mark { width: 14px; height: 14px; border-radius: 50%; border: 2px solid #5d6788; background: var(--panel); transition: transform .3s, background .3s; }
 .jx-dot.is-done .jx-dot__mark { background: var(--blue); border-color: var(--blue); }
 .jx-dot.is-current .jx-dot__mark { border-color: var(--blue); background: var(--panel); box-shadow: 0 0 0 4px var(--accent); transform: scale(1.15); }
@@ -67,7 +67,7 @@
 .jx-btn:disabled { opacity: .5; cursor: not-allowed; }
 .jx-btn--ghost { background: var(--panel); color: var(--blue-d); border-color: var(--line); }
 .jx-btn--ghost:hover:not(:disabled) { background: var(--accent); }
-.jx-btn--sm { min-height: 40px; padding: 0 16px; font-size: 14px; }
+.jx-btn--sm { min-height: 44px; padding: 0 16px; font-size: 14px; }
 .jx--rtl .jx-btn svg.jx-flip { transform: scaleX(-1); }
 .jx-eyebrow { font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--blue); }
 .jx--rtl .jx-eyebrow { letter-spacing: 0; }
@@ -90,6 +90,7 @@
 .jx-intro__progress-label span:first-child { color: var(--blue); font-variant-numeric: tabular-nums; }
 .jx-intro__progress-track { position: relative; width: 100%; height: 8px; overflow: hidden; border-radius: 999px; background: rgba(255,255,255,.09); }
 .jx-intro__progress-fill { position: absolute; inset-block: 0; inset-inline-start: 0; display: block; border-radius: inherit; background: linear-gradient(90deg, #4CD7F6, #10B981); box-shadow: 0 0 18px rgba(76,215,246,.25); transition: width .4s ease; }
+.jx--rtl .jx-intro__progress-fill { background: linear-gradient(270deg, #4CD7F6, #10B981); }
 .jx-intro__icon { width: 82px; height: 82px; display: grid; place-items: center; border: 1px solid rgba(76,215,246,.28); border-radius: 24px; color: var(--blue); background: radial-gradient(circle at 25% 20%, rgba(76,215,246,.17), transparent 65%), rgba(16,185,129,.08); box-shadow: inset 0 1px rgba(255,255,255,.06), 0 14px 34px -24px rgba(76,215,246,.7); }
 .jx-intro__copy { display: grid; gap: 12px; }
 .jx-intro__copy h1 { max-width: 18ch; }
@@ -106,18 +107,17 @@
 .jx-change-chart__plot .recharts-cartesian-axis-tick text { font-family: 'Plus Jakarta Sans', sans-serif; }
 @media (min-width: 900px) { .jx-grid--2 { grid-template-columns: 1.3fr 1fr; align-items: start; } .jx-grid--even { grid-template-columns: 1fr 1fr; align-items: start; } }
 .jx-tabs { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0; }
-.jx-tab { border: 1px solid var(--line); background: var(--panel); border-radius: 999px; padding: 8px 16px; min-height: 40px; cursor: pointer; font-weight: 600; color: var(--blue-d); }
+.jx-tab { border: 1px solid var(--line); background: var(--panel); border-radius: 999px; padding: 8px 16px; min-height: 44px; cursor: pointer; font-weight: 600; color: var(--blue-d); }
 .jx-tab[aria-pressed="true"] { background: var(--orange); color: #003824; font-weight: 700; border-color: var(--orange); }
 .jx-input { width: 100%; min-height: 46px; border: 1px solid var(--line); background: var(--panel); border-radius: 12px; padding: 0 14px; }
 .jx-input:focus { border-color: var(--blue); }
 .jx-label { display: grid; gap: 6px; font-size: 14px; font-weight: 600; color: var(--blue-d); }
 .jx-label small { font-weight: 400; color: var(--soft); }
 .jx-list { list-style: none; margin: 0; padding: 0; max-height: 560px; overflow: auto; border: 1px solid var(--line); border-radius: 14px; }
-.jx-row { display: grid; grid-template-columns: 44px minmax(0,1fr) 60px auto; align-items: center; gap: 10px; padding: 8px 12px 8px 4px; border-bottom: 1px solid var(--line); background: var(--panel); }
-.jx--rtl .jx-row { padding: 8px 4px 8px 12px; }
+.jx-row { display: grid; grid-template-columns: 44px minmax(0,1fr) 60px auto; align-items: center; gap: 10px; padding-block: 8px; padding-inline: 4px 12px; border-bottom: 1px solid var(--line); background: var(--panel); }
 .jx-row:last-child { border-bottom: 0; }
 .jx-row.is-active { background: var(--tint); }
-.jx-star { width: 40px; height: 40px; border-radius: 10px; border: 0; background: transparent; cursor: pointer; color: #7c86a6; display: grid; place-items: center; }
+.jx-star { width: 44px; height: 44px; border-radius: 10px; border: 0; background: transparent; cursor: pointer; color: #7c86a6; display: grid; place-items: center; }
 .jx-star[aria-pressed="true"] { color: var(--blue); }
 .jx-star[aria-pressed="true"] svg { fill: currentColor; }
 .jx-row__main { border: 0; background: none; text-align: start; cursor: pointer; padding: 4px; min-width: 0; }
@@ -168,7 +168,7 @@
 .jx-kv dt { font-size: 12px; color: var(--soft); } .jx-kv dd { margin: 0; font-weight: 700; font-variant-numeric: tabular-nums; }
 .jx-sticky-bar { position: sticky; bottom: 0; background: rgba(5,7,11,.94); border-top: 1px solid var(--line); padding: 12px 0; margin-top: 20px; display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; }
 .jx-chips { display: flex; flex-wrap: wrap; gap: 8px; }
-.jx-chip { border: 1px solid var(--line); background: var(--panel); border-radius: 999px; padding: 8px 14px; min-height: 40px; cursor: pointer; font-size: 14px; color: var(--blue-d); text-align: start; }
+.jx-chip { border: 1px solid var(--line); background: var(--panel); border-radius: 999px; padding: 8px 14px; min-height: 44px; cursor: pointer; font-size: 14px; color: var(--blue-d); text-align: start; }
 .jx-chip:hover:not(:disabled) { background: var(--accent); }
 .jx-chip[aria-pressed="true"] { background: var(--orange); color: #003824; font-weight: 700; }
 
@@ -201,7 +201,7 @@
 @media (min-width: 700px) { .jx-stats { grid-template-columns: repeat(4, minmax(0,1fr)); } }
 .jx-stat { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 14px; }
 .jx-stat span { font-size: 12px; color: var(--soft); display: block; } .jx-stat b { font-size: 17px; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
-.jx-table-wrap { overflow-x: auto; }
+.jx-table-wrap { overflow-x: auto; overscroll-behavior-inline: contain; -webkit-overflow-scrolling: touch; }
 .jx-table { width: 100%; border-collapse: collapse; font-size: 14px; }
 .jx-table th { text-align: start; color: var(--soft); font-weight: 600; font-size: 12px; padding: 8px; }
 .jx-table td { padding: 10px 8px; border-top: 1px solid var(--line); font-variant-numeric: tabular-nums; }
@@ -287,6 +287,8 @@
 .jx-row > *, .jx-grid > *, .jx-kv > div { min-width: 0; }
 .jx select.jx-input { text-overflow: ellipsis; }
 .jx-modal__card { max-height: 90dvh; overflow: auto; }
+.jx-bidi-value { unicode-bidi: isolate; font-variant-numeric: tabular-nums; }
+.jx--rtl .jx-weekly-progress { direction: rtl; }
 
 /* Reference identity: terminal framing, orange action, cyan data */
 .jx-btn:hover:not(:disabled) { background: #34D399; border-color: #34D399; box-shadow: 0 0 22px rgba(16,185,129,.32); }
@@ -294,7 +296,7 @@
 .jx-btn--ghost:hover:not(:disabled) { background: rgba(76,215,246,.08); border-color: #4CD7F6; box-shadow: none; }
 .jx-header { border-bottom: 1px solid var(--line); width: min(100% - 32px, 1120px); }
 .jx-card { background: linear-gradient(160deg, rgba(26,32,56,.9), rgba(18,24,48,.95)); position: relative; }
-.jx-card::before { content: ""; position: absolute; top: -1px; left: 18px; width: 70px; height: 2px; background: var(--orange); }
+.jx-card::before { content: ""; position: absolute; top: -1px; inset-inline-start: 18px; width: 70px; height: 2px; background: var(--orange); }
 .jx-eyebrow { color: var(--orange); font-family: 'Space Grotesk', sans-serif; }
 .jx-dot.is-done .jx-dot__mark { background: #4CD7F6; border-color: #4CD7F6; }
 .jx-dot.is-current .jx-dot__mark { border-color: var(--orange); background: var(--orange); box-shadow: 0 0 0 4px rgba(16,185,129,.2); }

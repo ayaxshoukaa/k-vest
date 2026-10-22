@@ -46,6 +46,23 @@
   backdrop-filter: blur(24px);
 }
 
+.kv-auth__language-button {
+  min-width: 76px;
+  min-height: 44px;
+  padding-inline: 14px;
+  border: 1px solid var(--auth-line);
+  border-radius: 999px;
+  background: rgba(20, 29, 51, .72);
+  color: var(--auth-peach);
+  font: 700 13px 'Plus Jakarta Sans', sans-serif;
+  cursor: pointer;
+}
+
+.kv-auth__language-button:focus-visible {
+  outline: 3px solid #4CD7F6;
+  outline-offset: 3px;
+}
+
 .kv-auth__brand {
   display: inline-flex;
   align-items: center;
@@ -118,7 +135,7 @@
 }
 
 .kv-auth--entry .kv-auth__header {
-  justify-content: center;
+  justify-content: space-between;
 }
 
 .kv-auth__main.kv-auth__main--entry {

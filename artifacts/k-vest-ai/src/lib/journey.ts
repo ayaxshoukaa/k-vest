@@ -3,6 +3,7 @@ import type { JourneyStep } from '@workspace/api-client-react';
 
 export type Language = 'en' | 'ar';
 export const languageStorageKey = 'k-vest-journey-language';
+export const languageChangeEvent = 'k-vest-language-change';
 
 export const stepOrder: JourneyStep[] = [
   'scan-intro', 'scan', 'research-intro', 'research', 'practice-intro', 'practice', 'roi-intro', 'roi', 'finish',
@@ -24,14 +25,22 @@ export function readLanguage(): Language {
   }
 }
 
+export function saveLanguagePreference(language: Language) {
+  try {
+    window.localStorage.setItem(languageStorageKey, language);
+  } catch {
+    // The active page still receives the language change when storage is blocked.
+  }
+
+  document.documentElement.lang = language;
+  document.documentElement.dir = language === 'ar' ? 'rtl' : 'ltr';
+  window.dispatchEvent(new CustomEvent(languageChangeEvent, { detail: language }));
+}
+
 export function useJourneyLanguage() {
   const [language, setLang] = useState<Language>(readLanguage);
   useEffect(() => {
-    try {
-      window.localStorage.setItem(languageStorageKey, language);
-    } catch {
-      // storage unavailable; page still works
-    }
+    saveLanguagePreference(language);
   }, [language]);
   const toggle = useCallback(() => setLang((l) => (l === 'ar' ? 'en' : 'ar')), []);
   const tr = useCallback((en: string, ar: string) => (language === 'ar' ? ar : en), [language]);

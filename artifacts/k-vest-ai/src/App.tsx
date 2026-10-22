@@ -1,5 +1,6 @@
-import { useEffect, useRef, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { MutationCache, QueryCache, QueryClient, QueryClientProvider, useQueryClient } from '@tanstack/react-query';
+import { arSA } from '@clerk/localizations';
 import {
   ClerkProvider,
   SignIn,
@@ -26,6 +27,7 @@ import VisionPage from '@/pages/vision';
 import NewsPage from '@/pages/news';
 import { ScanIntroPage, ResearchIntroPage, PracticeIntroPage, RoiIntroPage } from '@/pages/journey-intro';
 import NotFound from '@/pages/not-found';
+import { languageChangeEvent, readLanguage, type Language } from '@/lib/journey';
 
 const queryClient = new QueryClient({
   queryCache: new QueryCache({
@@ -164,6 +166,16 @@ function SignUpPage() {
 
 function ClerkRoutes() {
   const [, setLocation] = useLocation();
+  const [language, setLanguage] = useState<Language>(readLanguage);
+
+  useEffect(() => {
+    const handleLanguageChange = (event: Event) => {
+      const next = (event as CustomEvent<Language>).detail;
+      if (next === 'ar' || next === 'en') setLanguage(next);
+    };
+    window.addEventListener(languageChangeEvent, handleLanguageChange);
+    return () => window.removeEventListener(languageChangeEvent, handleLanguageChange);
+  }, []);
 
   return (
     <ClerkProvider
@@ -172,7 +184,7 @@ function ClerkRoutes() {
       appearance={clerkAppearance}
       signInUrl={`${basePath}/sign-in`}
       signUpUrl={`${basePath}/sign-up`}
-      localization={{
+      localization={language === 'ar' ? arSA : {
         signIn: {
           start: {
             title: 'Sign in',

@@ -1,8 +1,8 @@
-import { useState } from "react";
 import { ArrowLeft, ArrowRight, Newspaper } from "lucide-react";
 import { Link } from "wouter";
 import { BrandMark } from "@/components/brand-mark";
 import { MarketNewsFeed, type NewsLanguage } from "@/components/market-news-feed";
+import { useJourneyLanguage } from "@/lib/journey";
 import "./news.css";
 
 const newsCopy = {
@@ -14,6 +14,8 @@ const newsCopy = {
     description: "Explore broader headlines about global markets and finance. These stories are not Kuwait-specific; open each one at its original publisher.",
     note: "Broader global market headlines from Yahoo Finance. Educational use only; market information may be delayed.",
     footer: "For educational purposes only. Not financial advice or an investment recommendation.",
+    switch: "العربية",
+    switchLabel: "Switch language to Arabic",
   },
   ar: {
     vision: "رؤيتنا",
@@ -23,23 +25,17 @@ const newsCopy = {
     description: "اطّلع على عناوين أوسع عن الأسواق والتمويل عالميًا. هذه الأخبار ليست خاصة بالكويت؛ افتح كل خبر من مصدره الأصلي.",
     note: "عناوين أوسع عن الأسواق العالمية من Yahoo Finance. للاستخدام التثقيفي فقط؛ قد تتأخر معلومات السوق.",
     footer: "للتثقيف فقط. لا يُعد نصيحة مالية أو توصية استثمارية.",
+    switch: "English",
+    switchLabel: "التبديل إلى الإنجليزية",
   },
 } as const;
 
-function getStoredLanguage(): NewsLanguage {
-  try {
-    return window.localStorage.getItem("k-vest-journey-language") === "ar" ? "ar" : "en";
-  } catch {
-    return "en";
-  }
-}
-
 export default function NewsPage() {
-  const [language] = useState<NewsLanguage>(getStoredLanguage);
+  const { language, isAr, toggle } = useJourneyLanguage();
   const text = newsCopy[language];
 
   return (
-    <div className={`jwelcome market-news-page${language === "ar" ? " jwelcome--rtl" : ""}`} dir={language === "ar" ? "rtl" : "ltr"} lang={language} data-testid="page-market-news">
+    <div className={`jwelcome market-news-page${isAr ? " jwelcome--rtl" : ""}`} dir={isAr ? "rtl" : "ltr"} lang={language} data-testid="page-market-news">
       <header className="jwelcome__header market-news-page__header">
         <Link href="/journey/welcome" className="jwelcome__brand" aria-label={text.back} data-testid="link-news-brand">
           <BrandMark className="jwelcome__logo" />
@@ -50,6 +46,9 @@ export default function NewsPage() {
             {language === "ar" ? <ArrowRight size={15} aria-hidden="true" /> : <ArrowLeft size={15} aria-hidden="true" />}
             {text.back}
           </Link>
+          <button type="button" className="market-news-page__language" onClick={toggle} aria-label={text.switchLabel} data-testid="button-news-language">
+            {text.switch}
+          </button>
         </nav>
       </header>
 

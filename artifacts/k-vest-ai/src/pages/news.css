@@ -11,7 +11,7 @@
 }
 
 .market-news-page__back {
-  min-height: 40px;
+  min-height: 44px;
   padding: 0 13px;
   display: inline-flex;
   align-items: center;
@@ -23,6 +23,24 @@
   font-size: 12px;
   font-weight: 700;
   transition: background-color .18s ease, border-color .18s ease;
+}
+
+.market-news-page__language {
+  min-width: 76px;
+  min-height: 44px;
+  padding-inline: 12px;
+  border: 1px solid rgba(76, 215, 246, .26);
+  border-radius: 999px;
+  background: rgba(76, 215, 246, .06);
+  color: #d8f7fc;
+  font: 700 12px 'Plus Jakarta Sans', sans-serif;
+  cursor: pointer;
+}
+
+.market-news-page__language:focus-visible,
+.market-news-page__back:focus-visible {
+  outline: 3px solid #4CD7F6;
+  outline-offset: 3px;
 }
 
 .market-news-page__back:hover {
@@ -93,8 +111,9 @@
   }
 
   .market-news-page__back {
-    width: 40px;
-    min-width: 40px;
+    width: 44px;
+    min-width: 44px;
+    min-height: 44px;
     padding: 0;
     justify-content: center;
     font-size: 0;

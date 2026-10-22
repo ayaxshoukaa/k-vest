@@ -5,7 +5,7 @@ import { Link, useLocation } from 'wouter';
 import { useQueryClient } from '@tanstack/react-query';
 import { getGetJourneyStateQueryKey, useGetJourneyState, useStartJourney } from '@workspace/api-client-react';
 import { MarketNewsFeed } from '@/components/market-news-feed';
-import { stepPath } from '@/lib/journey';
+import { saveLanguagePreference, stepPath } from '@/lib/journey';
 import { BrandMark } from '@/components/brand-mark';
 import { InvestmentArrows } from '@/components/investment-loader';
 import { useGuestAccess } from '@/components/guest-access';
@@ -142,11 +142,7 @@ export default function JourneyWelcomePage() {
   };
 
   useEffect(() => {
-    try {
-      window.localStorage.setItem(languageStorageKey, language);
-    } catch {
-      // The screen remains usable when browser storage is unavailable.
-    }
+    saveLanguagePreference(language);
   }, [language]);
 
   return (

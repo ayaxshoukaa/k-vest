@@ -70,7 +70,7 @@
 }
 
 .jwelcome__vision-link {
-  min-height: 40px;
+  min-height: 44px;
   padding: 0 12px;
   display: inline-flex;
   align-items: center;
@@ -95,7 +95,7 @@
 
 .jwelcome__language-button {
   min-width: 70px;
-  min-height: 40px;
+  min-height: 44px;
   padding: 0 14px;
   border: 1px solid var(--jw-line);
   border-radius: 999px;
@@ -418,7 +418,7 @@
   }
 
   .jwelcome__vision-link {
-    min-height: 38px;
+    min-height: 44px;
     padding-inline: 10px;
     font-size: 12px;
   }

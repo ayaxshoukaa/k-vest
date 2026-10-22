@@ -59,7 +59,7 @@
 }
 
 .jwelcome__section-link {
-  min-height: 42px;
+  min-height: 44px;
   padding: 0 15px;
   display: inline-flex;
   align-items: center;
@@ -82,7 +82,7 @@
 }
 
 .jwelcome__start-link {
-  min-height: 40px;
+  min-height: 44px;
   padding: 0 15px;
   display: inline-flex;
   align-items: center;
@@ -105,7 +105,7 @@
 
 .jwelcome__header-actions .jwelcome__vision-link,
 .jwelcome__header-actions .jwelcome__start-link {
-  min-height: 40px;
+  min-height: 44px;
   padding: 0 12px;
   border: 1px solid var(--jw-line);
   border-radius: 999px;
@@ -292,7 +292,7 @@
 
   .jwelcome__header-actions .jwelcome__vision-link,
   .jwelcome__header-actions .jwelcome__start-link {
-    min-height: 36px;
+    min-height: 44px;
     padding: 0 9px;
     font-size: 11px;
   }
