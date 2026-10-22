@@ -6,16 +6,19 @@
  * OpenAPI spec version: 0.1.0
  */
 import type { JourneyWeeklyChallengeChallengeId } from './journeyWeeklyChallengeChallengeId';
-import type { JourneyWeeklyChallengeGoal } from './journeyWeeklyChallengeGoal';
 
 export interface JourneyWeeklyChallenge {
   challengeId: JourneyWeeklyChallengeChallengeId;
   /**
      * @minimum 0
-     * @maximum 1
+     * @maximum 2
      */
   progress: number;
-  goal: JourneyWeeklyChallengeGoal;
+  /**
+     * @minimum 1
+     * @maximum 2
+     */
+  goal: number;
   completed: boolean;
   /** @nullable */
   badgeAwardedAt: Date | null;

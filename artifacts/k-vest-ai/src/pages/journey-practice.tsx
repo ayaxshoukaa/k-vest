@@ -172,7 +172,7 @@ function PracticeBody({ ctx }: { ctx: JourneyCtx }) {
 
       <ConfirmDialog open={confirm} testid="reset-wallet" pending={reset.isPending} error={resetError}
         title={tr('Reset the practice wallet?', 'إعادة ضبط محفظة التدريب؟')}
-        body={tr('This restores 1,000 KWD, clears your trades and this week’s challenge progress, and also clears your ROI calculator and any later progress.', 'سيعيد 1,000 دينار ويمسح صفقاتك وتقدّم التحدي لهذا الأسبوع وحاسبة العائد وأي تقدّم لاحق.')}
+        body={tr('This restores 1,000 KWD, clears your trades and this week’s challenge progress, and also clears your ROI calculator and any later progress.', 'سيعيد 1,000 دينار ويمسح صفقاتك وتقدّم تحديات هذا الأسبوع وحاسبة العائد وأي تقدّم لاحق.')}
         confirmLabel={tr('Reset', 'إعادة ضبط')} cancelLabel={tr('Cancel', 'إلغاء')}
         onConfirm={() => void doReset()} onCancel={() => setConfirm(false)} />
     </>

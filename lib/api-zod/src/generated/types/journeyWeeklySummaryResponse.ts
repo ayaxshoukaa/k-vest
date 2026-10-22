@@ -19,5 +19,5 @@ export interface JourneyWeeklySummaryResponse {
   worstHolding: JourneyWeeklyHolding | null;
   sampleData: boolean;
   delayedData: boolean;
-  challenge: JourneyWeeklyChallenge;
+  challenges: JourneyWeeklyChallenge[];
 }

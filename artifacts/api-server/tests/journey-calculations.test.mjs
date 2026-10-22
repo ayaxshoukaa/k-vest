@@ -12,6 +12,7 @@ await build({ entryPoints: ["src/services/journey-calculations.ts"], bundle: tru
 const {
   calculateLedger,
   calculateRoiScenario,
+  deriveWeeklyChallenges,
   calculateWeeklyPortfolio,
   getKuwaitWeekWindow,
 } = await import(pathToFileURL(outfile));
@@ -27,6 +28,44 @@ test("weekly summary uses Monday midnight in Kuwait as the week boundary", () =>
 
   const previousWeek = getKuwaitWeekWindow(new Date("2026-10-18T20:59:59.000Z"));
   assert.equal(previousWeek.weekStartKey, "2026-10-12");
+});
+test("weekly challenges track a first trade, a new sector, and two saved companies", () => {
+  const weekStart = new Date("2026-10-18T21:00:00.000Z");
+  const watchlistUpdatedAt = new Date("2026-10-22T10:00:00.000Z");
+  const trades = [
+    { symbol: "NBK", side: "buy", quantity: 1, notionalKwd: "10", sector: "Banking", createdAt: new Date("2026-10-16T10:00:00.000Z") },
+    { symbol: "NBK", side: "buy", quantity: 1, notionalKwd: "10", sector: "Banking", createdAt: new Date("2026-10-20T10:00:00.000Z") },
+    { symbol: "ZAIN", side: "buy", quantity: 1, notionalKwd: "10", sector: "Telecommunications", createdAt: new Date("2026-10-21T10:00:00.000Z") },
+  ];
+  const input = {
+    trades,
+    weekStart,
+    watchlistSymbols: ["NBK"],
+    watchlistUpdatedAt,
+    sectorBySymbol: new Map(),
+  };
+  const partial = deriveWeeklyChallenges(input);
+  assert.deepEqual(partial.map(({ challengeId, progress, goal }) => [challengeId, progress, goal]), [
+    ["first-practice-trade", 1, 1],
+    ["new-sector-trade", 1, 1],
+    ["two-company-watchlist", 1, 2],
+  ]);
+
+  const complete = deriveWeeklyChallenges({ ...input, watchlistSymbols: ["NBK", "ZAIN"] });
+  assert.equal(complete[2].completedAt, watchlistUpdatedAt);
+});
+test("a trade in a previously practiced sector does not complete the new-sector challenge", () => {
+  const challenges = deriveWeeklyChallenges({
+    trades: [
+      { symbol: "NBK", side: "buy", quantity: 1, notionalKwd: "10", sector: "Banking", createdAt: new Date("2026-10-16T10:00:00.000Z") },
+      { symbol: "GULF", side: "buy", quantity: 1, notionalKwd: "10", sector: "Banking", createdAt: new Date("2026-10-20T10:00:00.000Z") },
+    ],
+    weekStart: new Date("2026-10-18T21:00:00.000Z"),
+    watchlistSymbols: [],
+    watchlistUpdatedAt: null,
+    sectorBySymbol: new Map(),
+  });
+  assert.equal(challenges.find((challenge) => challenge.challengeId === "new-sector-trade").progress, 0);
 });
 test("weekly portfolio gain includes market changes without counting trades as gains", () => {
   const weekStart = new Date("2026-10-18T21:00:00.000Z");

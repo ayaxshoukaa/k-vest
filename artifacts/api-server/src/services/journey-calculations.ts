@@ -42,6 +42,7 @@ export interface WeeklyTradeEntry {
   createdAt: Date;
   sample?: boolean;
   stale?: boolean;
+  sector?: string | null;
 }
 
 export interface WeeklyQuoteEntry {
@@ -57,6 +58,67 @@ export interface WeeklyHoldingPerformance {
   symbol: string;
   companyName: string;
   profitLossKwd: number;
+}
+
+export type WeeklyChallengeId =
+  | "first-practice-trade"
+  | "new-sector-trade"
+  | "two-company-watchlist";
+
+export interface WeeklyChallengeSnapshot {
+  challengeId: WeeklyChallengeId;
+  progress: number;
+  goal: number;
+  completedAt: Date | null;
+}
+
+export function deriveWeeklyChallenges(input: {
+  trades: WeeklyTradeEntry[];
+  weekStart: Date;
+  watchlistSymbols: string[];
+  watchlistUpdatedAt: Date | null;
+  sectorBySymbol: Map<string, string | null>;
+}): WeeklyChallengeSnapshot[] {
+  const earlierTrades = input.trades.filter((trade) => trade.createdAt.getTime() < input.weekStart.getTime());
+  const thisWeekTrades = input.trades
+    .filter((trade) => trade.createdAt.getTime() >= input.weekStart.getTime())
+    .sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime());
+  const sectorForTrade = (trade: WeeklyTradeEntry) => trade.sector ?? input.sectorBySymbol.get(trade.symbol) ?? null;
+  const earlierSectors = new Set(
+    earlierTrades
+      .map(sectorForTrade)
+      .filter((sector): sector is string => typeof sector === "string" && sector.length > 0),
+  );
+  const firstNewSectorTrade = thisWeekTrades.find((trade) => {
+    const sector = sectorForTrade(trade);
+    return Boolean(sector && !earlierSectors.has(sector));
+  });
+  const firstTrade = thisWeekTrades[0] ?? null;
+  const compareGoalProgress =
+    input.watchlistUpdatedAt && input.watchlistUpdatedAt.getTime() >= input.weekStart.getTime()
+      ? Math.min(input.watchlistSymbols.length, 2)
+      : 0;
+
+  return [
+    {
+      challengeId: "first-practice-trade",
+      progress: firstTrade ? 1 : 0,
+      goal: 1,
+      completedAt: firstTrade?.createdAt ?? null,
+    },
+    {
+      challengeId: "new-sector-trade",
+      progress: firstNewSectorTrade ? 1 : 0,
+      goal: 1,
+      completedAt: firstNewSectorTrade?.createdAt ?? null,
+    },
+    {
+      challengeId: "two-company-watchlist",
+      progress: compareGoalProgress,
+      goal: 2,
+      completedAt: compareGoalProgress >= 2 ? input.watchlistUpdatedAt : null,
+    },
+  ];
 }
 
 export function calculateWeeklyPortfolio(

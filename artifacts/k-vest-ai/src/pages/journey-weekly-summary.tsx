@@ -16,6 +16,30 @@ function formatWeekStart(weekStart: string, isAr: boolean) {
   }).format(date);
 }
 
+const WEEKLY_CHALLENGE_COPY = {
+  'first-practice-trade': {
+    title: ['Make one practice trade', 'نفّذ صفقة تدريبية واحدة'],
+    description: ['Try a demo buy or sell when you feel ready. It uses no real money.', 'جرّب شراءً أو بيعًا تجريبيًا عندما تكون مستعدًا. لا يُستخدم مال حقيقي.'],
+    badge: ['Practice Starter', 'بداية التدريب'],
+    action: ['Open practice wallet', 'افتح محفظة التدريب'],
+    href: '/journey/practice',
+  },
+  'new-sector-trade': {
+    title: ['Try a different sector', 'جرّب قطاعًا مختلفًا'],
+    description: ['Make a practice trade in a sector you have not tried before.', 'نفّذ صفقة تدريبية في قطاع لم تجربه من قبل.'],
+    badge: ['Sector Explorer', 'مستكشف القطاعات'],
+    action: ['Open practice wallet', 'افتح محفظة التدريب'],
+    href: '/journey/practice',
+  },
+  'two-company-watchlist': {
+    title: ['Save two companies to compare', 'احفظ شركتين للمقارنة'],
+    description: ['Choose and save two companies in the market scan, then explore their details.', 'اختر شركتين واحفظهما في مسح السوق، ثم تعرّف على تفاصيلهما.'],
+    badge: ['Company Scout', 'مستكشف الشركات'],
+    action: ['Choose companies', 'اختر الشركات'],
+    href: '/journey/scan',
+  },
+} as const;
+
 function WeeklySummaryBody({ ctx }: { ctx: JourneyCtx }) {
   const { tr, isAr } = ctx;
   const query = useGetJourneyWeeklySummary({
@@ -48,7 +72,6 @@ function WeeklySummaryBody({ ctx }: { ctx: JourneyCtx }) {
   const summary = query.data;
   const valueUnavailable = summary.profitLossKwd === null;
   const isPositive = summary.profitLossKwd !== null && summary.profitLossKwd >= 0;
-  const challengeComplete = summary.challenge.completed;
   const na = tr('Not available', 'غير متاح');
   const holdings = [
     {
@@ -123,34 +146,48 @@ function WeeklySummaryBody({ ctx }: { ctx: JourneyCtx }) {
         ))}
       </div>
 
-      <section className="jx-card jx-weekly-challenge" aria-labelledby="weekly-challenge-title" data-testid="section-weekly-challenge">
-        <div className="jx-weekly-challenge__heading">
-          <div>
-            <span className="jx-eyebrow">{tr('A small goal for this week', 'هدف بسيط لهذا الأسبوع')}</span>
-            <h2 id="weekly-challenge-title">{tr('Make one practice trade this week', 'نفّذ صفقة تدريبية واحدة هذا الأسبوع')}</h2>
-          </div>
-          <span className="jx-weekly-challenge__count" data-testid="text-weekly-challenge-count">
-            {summary.challenge.progress}/{summary.challenge.goal}
-          </span>
+      <section className="jx-weekly-challenges" aria-labelledby="weekly-challenge-title" data-testid="section-weekly-challenges">
+        <div className="jx-weekly-challenges__heading">
+          <span className="jx-eyebrow">{tr('Small goals for this week', 'أهداف بسيطة لهذا الأسبوع')}</span>
+          <h2 id="weekly-challenge-title">{tr('Your weekly challenges', 'تحدياتك الأسبوعية')}</h2>
         </div>
-        <progress
-          className="jx-weekly-progress"
-          max={summary.challenge.goal}
-          value={summary.challenge.progress}
-          aria-label={tr('Weekly challenge progress', 'تقدّم التحدي الأسبوعي')}
-          data-testid="progress-weekly-challenge"
-        />
-        <p className="jx-muted">
-          {challengeComplete
-            ? tr('You did it. Nice work practicing at your own pace.', 'أحسنت. واصلت التدريب بالسرعة التي تناسبك.')
-            : tr('Try a demo trade when you feel ready. There is no real money involved.', 'جرّب صفقة تجريبية عندما تكون مستعدًا. لا يُستخدم مال حقيقي.')}
-        </p>
-        {challengeComplete && (
-          <div className="jx-weekly-badge" role="status" data-testid="badge-weekly-practice">
-            <Award size={18} aria-hidden="true" />
-            <span>{tr('Badge earned: Practice Starter', 'شارة مكتسبة: بداية التدريب')}</span>
-          </div>
-        )}
+        <div className="jx-weekly-challenge-grid">
+          {summary.challenges.map((challenge) => {
+            const copy = WEEKLY_CHALLENGE_COPY[challenge.challengeId];
+            return (
+              <article className="jx-card jx-weekly-challenge" key={challenge.challengeId} data-testid={`card-weekly-challenge-${challenge.challengeId}`}>
+                <div className="jx-weekly-challenge__heading">
+                  <h3>{tr(copy.title[0], copy.title[1])}</h3>
+                  <span className="jx-weekly-challenge__count" data-testid={`text-weekly-challenge-count-${challenge.challengeId}`}>
+                    {challenge.progress}/{challenge.goal}
+                  </span>
+                </div>
+                <p className="jx-muted">{tr(copy.description[0], copy.description[1])}</p>
+                <progress
+                  className="jx-weekly-progress"
+                  max={challenge.goal}
+                  value={challenge.progress}
+                  aria-label={tr(
+                    `${copy.title[0]} progress`,
+                    `تقدّم: ${copy.title[1]}`,
+                  )}
+                  data-testid={`progress-weekly-challenge-${challenge.challengeId}`}
+                />
+                {challenge.completed ? (
+                  <div className="jx-weekly-badge" role="status" data-testid={`badge-weekly-${challenge.challengeId}`}>
+                    <Award size={18} aria-hidden="true" />
+                    <span>{tr(`Badge earned: ${copy.badge[0]}`, `شارة مكتسبة: ${copy.badge[1]}`)}</span>
+                  </div>
+                ) : (
+                  <Link href={copy.href} className="jx-btn jx-btn--ghost" data-testid={`link-weekly-challenge-${challenge.challengeId}`}>
+                    {tr(copy.action[0], copy.action[1])}
+                    <ArrowRight size={16} aria-hidden="true" className="jx-flip" />
+                  </Link>
+                )}
+              </article>
+            );
+          })}
+        </div>
       </section>
 
       <p className="jx-weekly-disclaimer">

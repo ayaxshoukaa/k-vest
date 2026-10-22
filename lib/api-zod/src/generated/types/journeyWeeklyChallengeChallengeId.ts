@@ -11,4 +11,6 @@ export type JourneyWeeklyChallengeChallengeId = typeof JourneyWeeklyChallengeCha
 
 export const JourneyWeeklyChallengeChallengeId = {
   'first-practice-trade': 'first-practice-trade',
+  'new-sector-trade': 'new-sector-trade',
+  'two-company-watchlist': 'two-company-watchlist',
 } as const;

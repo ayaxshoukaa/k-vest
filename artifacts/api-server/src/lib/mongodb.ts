@@ -1,5 +1,6 @@
 import {
   MongoClient,
+  MongoServerError,
   type ClientSession,
   type Collection,
   type Db,
@@ -13,6 +14,7 @@ export interface JourneyProgressDocument extends Document {
   currentStep: string;
   furthestStep: number;
   watchlistSymbols: string[];
+  watchlistUpdatedAt?: Date | null;
   researchCompleted: boolean;
   practiceSkipped: boolean;
   roiResult: JourneyRoiResult | null;
@@ -30,15 +32,16 @@ export interface DemoTradeDocument extends Document {
   marketTime: Date | null;
   sample: boolean;
   stale: boolean;
+  sector?: string | null;
   createdAt: Date;
 }
 
 export interface WeeklyChallengeProgressDocument extends Document {
   userId: string;
   weekStart: string;
-  challengeId: "first-practice-trade";
+  challengeId: "first-practice-trade" | "new-sector-trade" | "two-company-watchlist";
   progress: number;
-  goal: 1;
+  goal: number;
   completedAt: Date | null;
   badgeAwardedAt: Date | null;
   createdAt: Date;
@@ -118,6 +121,13 @@ export async function connectMongo(): Promise<void> {
 }
 
 async function ensureMongoIndexes(database: Db): Promise<void> {
+  const weeklyChallenges = database.collection<WeeklyChallengeProgressDocument>("weekly_challenge_progress");
+  try {
+    await weeklyChallenges.dropIndex("weekly_challenge_user_week_unique");
+  } catch (error) {
+    if (!(error instanceof MongoServerError) || (error.code !== 26 && error.code !== 27)) throw error;
+  }
+
   await Promise.all([
     database.collection<JourneyProgressDocument>("journey_progress")
       .createIndex({ userId: 1 }, { unique: true, name: "journey_progress_user_id_unique" }),
@@ -125,8 +135,10 @@ async function ensureMongoIndexes(database: Db): Promise<void> {
       .createIndex({ id: 1 }, { unique: true, name: "demo_trades_id_unique" }),
     database.collection<DemoTradeDocument>("demo_trades")
       .createIndex({ userId: 1, createdAt: 1, id: 1 }, { name: "demo_trades_user_order" }),
-    database.collection<WeeklyChallengeProgressDocument>("weekly_challenge_progress")
-      .createIndex({ userId: 1, weekStart: 1 }, { unique: true, name: "weekly_challenge_user_week_unique" }),
+    weeklyChallenges.createIndex(
+      { userId: 1, weekStart: 1, challengeId: 1 },
+      { unique: true, name: "weekly_challenge_user_week_challenge_unique" },
+    ),
     database.collection<ConversationDocument>("conversations")
       .createIndex({ id: 1 }, { unique: true, name: "conversations_id_unique" }),
     database.collection<ConversationDocument>("conversations")

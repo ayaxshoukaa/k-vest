@@ -281,23 +281,22 @@ export type JourneyWeeklyChallengeChallengeId = typeof JourneyWeeklyChallengeCha
 
 export const JourneyWeeklyChallengeChallengeId = {
   'first-practice-trade': 'first-practice-trade',
-} as const;
-
-export type JourneyWeeklyChallengeGoal = typeof JourneyWeeklyChallengeGoal[keyof typeof JourneyWeeklyChallengeGoal];
-
-
-export const JourneyWeeklyChallengeGoal = {
-  NUMBER_1: 1,
+  'new-sector-trade': 'new-sector-trade',
+  'two-company-watchlist': 'two-company-watchlist',
 } as const;
 
 export interface JourneyWeeklyChallenge {
   challengeId: JourneyWeeklyChallengeChallengeId;
   /**
      * @minimum 0
-     * @maximum 1
+     * @maximum 2
      */
   progress: number;
-  goal: JourneyWeeklyChallengeGoal;
+  /**
+     * @minimum 1
+     * @maximum 2
+     */
+  goal: number;
   completed: boolean;
   /** @nullable */
   badgeAwardedAt: string | null;
@@ -314,7 +313,7 @@ export interface JourneyWeeklySummaryResponse {
   worstHolding: JourneyWeeklyHolding | null;
   sampleData: boolean;
   delayedData: boolean;
-  challenge: JourneyWeeklyChallenge;
+  challenges: JourneyWeeklyChallenge[];
 }
 
 export interface JourneyWatchlistInput {

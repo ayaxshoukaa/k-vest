@@ -5,11 +5,15 @@
 .jx-weekly-stat--change b { font-size: clamp(24px, 4vw, 34px); }
 .jx-weekly-stat--change small { max-width: 52ch; }
 .jx-weekly-data-note { margin: 0 0 14px; padding: 10px 13px; border: 1px solid rgba(248, 198, 130, .25); border-radius: 12px; background: rgba(248, 198, 130, .08); color: #f4d49e; font-size: 13px; line-height: 1.55; }
-.jx-weekly-challenge { margin-block-start: 16px; }
-.jx-weekly-challenge__heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
-.jx-weekly-challenge__heading h2 { margin: 5px 0 0; font-size: clamp(18px, 2.5vw, 23px); }
+.jx-weekly-challenges { margin-block-start: 22px; }
+.jx-weekly-challenges__heading h2 { margin: 5px 0 0; font-size: clamp(20px, 2.5vw, 25px); }
+.jx-weekly-challenge-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-block-start: 14px; }
+.jx-weekly-challenge { display: flex; flex-direction: column; align-items: stretch; gap: 12px; margin: 0; }
+.jx-weekly-challenge__heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+.jx-weekly-challenge__heading h3 { margin: 0; font-size: 17px; line-height: 1.35; }
 .jx-weekly-challenge__count { flex: none; padding: 7px 11px; border: 1px solid rgba(107, 223, 194, .28); border-radius: 999px; color: #78e5c2; font-weight: 700; }
-.jx-weekly-progress { display: block; width: 100%; height: 12px; margin-block: 18px 8px; overflow: hidden; border: 0; border-radius: 999px; background: rgba(255,255,255,.08); accent-color: #18bd8d; }
+.jx-weekly-challenge > .jx-muted { margin: 0; flex: 1; }
+.jx-weekly-challenge .jx-weekly-progress { display: block; width: 100%; height: 12px; margin-block: 2px 0; overflow: hidden; border: 0; border-radius: 999px; background: rgba(255,255,255,.08); accent-color: #18bd8d; }
 .jx-weekly-progress::-webkit-progress-bar { border-radius: 999px; background: rgba(255,255,255,.08); }
 .jx-weekly-progress::-webkit-progress-value { border-radius: 999px; background: linear-gradient(90deg,#15b887,#55dfb0); }
 .jx-weekly-progress::-moz-progress-bar { border-radius: 999px; background: linear-gradient(90deg,#15b887,#55dfb0); }
@@ -20,6 +24,7 @@
 @media (max-width: 640px) {
   .jx-weekly-stats { grid-template-columns: 1fr; }
   .jx-weekly-stat--change { grid-column: auto; }
+  .jx-weekly-challenge-grid { grid-template-columns: 1fr; }
   .jx-weekly-challenge__heading { gap: 10px; }
   .jx-weekly-challenge__count { padding: 6px 9px; }
   .jx-weekly-badge { max-width: 100%; align-items: flex-start; border-radius: 13px; }

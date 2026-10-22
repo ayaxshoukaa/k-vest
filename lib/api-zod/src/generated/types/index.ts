@@ -32,7 +32,6 @@ export * from './journeyStep';
 export * from './journeyWatchlistInput';
 export * from './journeyWeeklyChallenge';
 export * from './journeyWeeklyChallengeChallengeId';
-export * from './journeyWeeklyChallengeGoal';
 export * from './journeyWeeklyHolding';
 export * from './journeyWeeklySummaryResponse';
 export * from './listAnthropicConversationsParams';
