@@ -8,7 +8,7 @@ import {
   useGetMarketScanner,
 } from '@workspace/api-client-react';
 import { DataWarning, JourneyShell, type JourneyCtx } from '@/components/journey/shell';
-import { errMsg } from '@/lib/journey';
+import { errMsg, friendlyWarning } from '@/lib/journey';
 
 interface Msg { role: 'user' | 'ai'; text: string; sample?: boolean; stale?: boolean; warning?: string | null }
 
@@ -85,7 +85,7 @@ function ResearchBody({ ctx }: { ctx: JourneyCtx }) {
             <div key={i} className={`jx-bubble jx-bubble--${m.role}`} data-testid={`bubble-${m.role}-${i}`}>
               {m.text}
               {m.role === 'ai' && (m.sample || m.stale || m.warning) && (
-                <small>{m.sample ? tr('Based on sample data, not live prices. ', 'مبني على بيانات تجريبية وليست أسعارًا حية. ') : m.stale ? tr('Based on delayed prices. ', 'مبني على أسعار متأخرة. ') : ''}{m.warning}</small>
+                <small>{m.sample ? tr('Based on sample data, not live prices. ', 'مبني على بيانات تجريبية وليست أسعارًا حية. ') : m.stale ? tr('Based on delayed prices. ', 'مبني على أسعار متأخرة. ') : ''}{friendlyWarning(m.warning, isAr ? 'ar' : 'en')}</small>
               )}
             </div>
           ))}

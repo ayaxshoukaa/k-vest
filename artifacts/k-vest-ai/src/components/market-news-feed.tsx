@@ -1,5 +1,6 @@
 import { getGetMarketNewsQueryKey, useGetMarketNews } from "@workspace/api-client-react";
 import { ExternalLink, RefreshCw } from "lucide-react";
+import { friendlyWarning } from "@/lib/journey";
 import "./market-news-feed.css";
 
 export type NewsLanguage = "en" | "ar";
@@ -12,7 +13,7 @@ type MarketNewsFeedProps = {
 const messages = {
   en: {
     loading: "Loading the latest headlines…",
-    unavailable: "Headlines are temporarily unavailable.",
+    unavailable: "We couldn't load the headlines right now. Please try again in a moment.",
     noNews: "No headlines are available right now. Please check again soon.",
     retry: "Try again",
     refreshing: "Refreshing",
@@ -22,7 +23,7 @@ const messages = {
   },
   ar: {
     loading: "جارٍ تحميل أحدث العناوين…",
-    unavailable: "العناوين غير متاحة مؤقتًا.",
+    unavailable: "تعذّر تحميل العناوين الآن. يُرجى المحاولة مجددًا بعد قليل.",
     noNews: "لا توجد عناوين متاحة الآن. يرجى المحاولة لاحقًا.",
     retry: "إعادة المحاولة",
     refreshing: "جارٍ التحديث",
@@ -96,7 +97,17 @@ export function MarketNewsFeed({ language, limit }: MarketNewsFeedProps) {
 
           {query.data.warning && (
             <p className="market-news-feed__warning" role="status" data-testid="text-market-news-warning">
-              {query.data.warning}
+              {friendlyWarning(query.data.warning, language)}
+              <button
+                type="button"
+                className="market-news-feed__retry"
+                onClick={() => void query.refetch()}
+                disabled={query.isFetching}
+                data-testid="button-retry-market-news-warning"
+              >
+                <RefreshCw size={15} aria-hidden="true" />
+                {query.isFetching ? text.refreshing : text.retry}
+              </button>
             </p>
           )}
 

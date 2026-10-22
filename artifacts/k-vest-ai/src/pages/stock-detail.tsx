@@ -7,6 +7,7 @@ import {
   downloadCsv, formatKwd, formatMarketTime, formatPercent, LearningDisclosure, MarketFrame, SourceBadges,
   useSavedSymbols,
 } from '@/components/market-tools';
+import { friendlyWarning, readLanguage } from '@/lib/journey';
 
 const CHART_COLOR = '#10B981';
 
@@ -22,6 +23,7 @@ function formatHistoryDate(value: string) {
 }
 
 export default function StockDetailPage() {
+  const isAr = readLanguage() === 'ar';
   const params = useParams<{ symbol: string }>();
   const symbol = decodeURIComponent(params.symbol ?? '').trim();
   const query = useGetMarketStock(symbol, {
@@ -46,7 +48,7 @@ export default function StockDetailPage() {
         {query.isLoading && !query.data ? (
           <div className="market-detail-loading" role="status" data-testid="loading-stock-detail"><i /><i /><i /></div>
         ) : isError && !query.data ? (
-          <div className="market-error-card" role="alert" data-testid="alert-stock-error"><h1>Stock details unavailable</h1><p>We could not load this listing right now. No replacement values are displayed.</p><button type="button" className="market-action-btn" onClick={() => void query.refetch()} disabled={query.isFetching} data-testid="button-retry-stock"><span>Try again</span></button></div>
+          <div className="market-error-card" role="alert" data-testid="alert-stock-error"><h1>{isAr ? 'تفاصيل السهم غير متاحة' : 'Stock details are unavailable'}</h1><p>{isAr ? 'تعذّر تحميل هذا السهم الآن. يُرجى المحاولة مجددًا بعد قليل.' : "We couldn't load this stock right now. Please try again in a moment."}</p><button type="button" className="market-action-btn" onClick={() => void query.refetch()} disabled={query.isFetching} data-testid="button-retry-stock"><span>{isAr ? 'حاول مجددًا' : 'Try again'}</span></button></div>
         ) : !stock ? (
           <div className="market-empty market-detail-empty" data-testid="empty-stock-detail"><h1>Listing not found</h1><p>This symbol is not available in the current Kuwait scanner list.</p><Link href="/scanner" className="market-action-btn">Return to scanner</Link></div>
         ) : (
@@ -67,8 +69,8 @@ export default function StockDetailPage() {
                 <button type="button" className="market-action-btn" onClick={() => window.print()} data-testid="button-export-stock-pdf"><FileText size={15} /> Export PDF</button>
               </div>
             </div>
-            {query.data?.warning && <div className="market-warning" role="status" data-testid="status-stock-warning">{query.data.warning}</div>}
-            {isError && <div className="market-warning" role="alert" data-testid="alert-stock-refresh">Refresh failed. Showing the last available values, which may be stale.</div>}
+            {query.data?.warning && <div className="market-warning" role="status" data-testid="status-stock-warning">{friendlyWarning(query.data.warning, isAr ? 'ar' : 'en')}</div>}
+            {isError && <div className="market-warning" role="alert" data-testid="alert-stock-refresh">{isAr ? 'تعذّر تحديث بيانات السهم. قد تكون الأسعار المعروضة متأخرة.' : "We couldn't refresh this stock's data. The prices shown may be delayed."}</div>}
             <div className="market-detail-quote">
               <div><span>{stock.sample ? 'Published sample price' : 'Latest available price'}</span><strong>{formatKwd(stock.priceKwd)}</strong><small>{formatMarketTime(stock.marketTime)}</small></div>
               <div className={stock.changePercent === null ? '' : stock.changePercent >= 0 ? 'positive' : 'negative'}><span>Daily change</span><strong>{stock.changeKwd === null ? 'Unavailable' : `${stock.changeKwd > 0 ? '+' : ''}${stock.changeKwd.toFixed(3)} KWD`}</strong><small>{formatPercent(stock.changePercent)}</small></div>

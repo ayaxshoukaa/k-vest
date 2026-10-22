@@ -1,5 +1,5 @@
 import { useEffect, useRef, type ReactNode } from 'react';
-import { QueryClient, QueryClientProvider, useQueryClient } from '@tanstack/react-query';
+import { MutationCache, QueryCache, QueryClient, QueryClientProvider, useQueryClient } from '@tanstack/react-query';
 import {
   ClerkProvider,
   SignIn,
@@ -26,7 +26,14 @@ import NewsPage from '@/pages/news';
 import { ScanIntroPage, ResearchIntroPage, PracticeIntroPage, RoiIntroPage } from '@/pages/journey-intro';
 import NotFound from '@/pages/not-found';
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  queryCache: new QueryCache({
+    onError: (error) => console.error('[K-vest] Request failed:', error),
+  }),
+  mutationCache: new MutationCache({
+    onError: (error) => console.error('[K-vest] Action failed:', error),
+  }),
+});
 const basePath = import.meta.env.BASE_URL.replace(/\/$/, '');
 
 // Resolve the Clerk key for the actual incoming hostname, including custom domains.

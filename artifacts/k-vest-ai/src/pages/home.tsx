@@ -4,6 +4,7 @@ import { getGetMarketQuotesQueryKey, useGetMarketQuotes, type MarketQuote } from
 import { ArrowRight, Calculator, Menu, X, ScanSearch, Star, ListChecks, Sparkles, ShieldCheck, Database, RefreshCw, CircleAlert, Clock3 } from 'lucide-react';
 import { ScenarioCalculator } from '@/components/scenario-calculator';
 import { BrandMark } from '@/components/brand-mark';
+import { readLanguage } from '@/lib/journey';
 
 const links = [
   { href: '/journey/welcome', label: 'Start learning' },
@@ -66,13 +67,14 @@ function QuoteRow({ quote, isStale }: { quote: MarketQuote; isStale: boolean }) 
 
 export default function Home() {
   const [open, setOpen] = useState(false);
+  const isAr = readLanguage() === 'ar';
   const { data: quoteFeed, isLoading, isError, isRefetchError, refetch, isFetching } = useGetMarketQuotes({
     query: { queryKey: getGetMarketQuotesQueryKey(), refetchInterval: 180_000, retry: 0, refetchOnWindowFocus: false },
   });
   const requestFailed = isError || isRefetchError;
   const feedStatus = quoteFeed?.refreshStatus;
   const statusLabel = requestFailed
-    ? 'Request error'
+    ? isAr ? 'تعذّر تحديث الأسعار' : 'Prices could not be updated'
     : feedStatus === 'unavailable'
       ? 'Prices unavailable'
       : feedStatus === 'stale'
@@ -158,15 +160,17 @@ export default function Home() {
                 {requestFailed && (
                   <div className="quote-alert" role="alert" data-testid="alert-quote-error">
                     <CircleAlert size={17} aria-hidden="true" />
-                    <span>Could not refresh quotes. {quoteFeed ? 'Showing the last good values, marked as stale.' : 'Prices are unavailable until a request succeeds.'}</span>
+                    <span>{isAr
+                      ? quoteFeed ? 'تعذّر تحديث الأسعار. نعرض آخر الأسعار المتاحة وقد تكون متأخرة.' : 'تعذّر تحميل الأسعار الآن. يُرجى المحاولة مجددًا بعد قليل.'
+                      : quoteFeed ? "We couldn't refresh prices. The last available values are shown and may be delayed." : "We couldn't load prices right now. Please try again in a moment."}</span>
                     <button type="button" className="quote-retry" onClick={() => void refetch()} disabled={isFetching} data-testid="button-retry-quotes">
                       <RefreshCw size={14} className={isFetching ? 'is-rotating' : ''} aria-hidden="true" />
-                      {isFetching ? 'Retrying' : 'Retry'}
+                      {isFetching ? isAr ? 'جارٍ المحاولة' : 'Retrying' : isAr ? 'إعادة المحاولة' : 'Retry'}
                     </button>
                   </div>
                 )}
                 {feedStatus === 'unavailable' && !requestFailed && (
-                  <p className="quote-unavailable" data-testid="status-prices-unavailable">Prices are unavailable right now. No replacement or estimated prices are shown.</p>
+                  <p className="quote-unavailable" data-testid="status-prices-unavailable">{isAr ? 'الأسعار غير متاحة الآن. لا نعرض أسعارًا بديلة أو تقديرية.' : 'Prices are unavailable right now. We do not show replacement or estimated prices.'}</p>
                 )}
                 {isLoading ? (
                   <div className="quote-skeleton" role="status" aria-label="Loading delayed company quotes" data-testid="loading-quotes">

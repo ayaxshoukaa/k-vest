@@ -9,6 +9,7 @@ import {
   downloadCsv, formatKwd, formatMarketTime, formatPercent, LearningDisclosure, MarketFrame, SourceBadges,
   stockCsvRow, useSavedSymbols,
 } from '@/components/market-tools';
+import { friendlyWarning, readLanguage } from '@/lib/journey';
 
 type ViewMode = 'all' | 'gainers' | 'losers' | 'active';
 type SortKey = 'companyName' | 'priceKwd' | 'changePercent' | 'volume' | 'momentumPercent';
@@ -48,6 +49,7 @@ function MarketSkeleton() {
 }
 
 export default function ScannerPage() {
+  const isAr = readLanguage() === 'ar';
   const query = useGetMarketScanner({
     query: { queryKey: getGetMarketScannerQueryKey(), staleTime: 300_000, refetchOnWindowFocus: false, retry: 0 },
   });
@@ -154,8 +156,10 @@ export default function ScannerPage() {
           </div>
         </div>
 
-        {query.data?.warning && <div className="market-warning" role="status" data-testid="status-scanner-warning">{query.data.warning}</div>}
-        {hasError && <div className="market-warning" role="alert" data-testid="alert-scanner-error">Market data could not be refreshed. {query.data ? 'The last available values remain visible and may be stale.' : 'Try again when the service is available.'}</div>}
+        {query.data?.warning && <div className="market-warning" role="status" data-testid="status-scanner-warning">{friendlyWarning(query.data.warning, isAr ? 'ar' : 'en')}</div>}
+        {hasError && <div className="market-warning" role="alert" data-testid="alert-scanner-error">{isAr
+          ? query.data ? 'تعذّر تحديث بيانات السوق. قد تكون الأسعار المعروضة متأخرة.' : 'تعذّر تحميل بيانات السوق الآن. يُرجى المحاولة مجددًا.'
+          : query.data ? "We couldn't refresh market data. The prices shown may be delayed." : "We couldn't load market data right now. Please try again."}</div>}
 
         <section className="market-index-panel" aria-label="Premier Market index" data-testid="card-premier-index">
           <div className="market-index-copy">
@@ -214,9 +218,9 @@ export default function ScannerPage() {
                 </div>
                 {query.isError && !query.data ? (
                   <div className="market-error-card" role="alert" data-testid="error-scanner-unavailable">
-                    <h3>Market data could not be loaded</h3>
-                    <p>No current or cached scanner values are available. Try again when the service is reachable.</p>
-                    <button type="button" className="market-action-btn" onClick={() => void query.refetch()} disabled={query.isFetching} data-testid="button-retry-scanner">Try again</button>
+                    <h3>{isAr ? 'تعذّر تحميل بيانات السوق' : "We couldn't load market data"}</h3>
+                    <p>{isAr ? 'يُرجى المحاولة مجددًا بعد قليل.' : 'Please try again in a moment.'}</p>
+                    <button type="button" className="market-action-btn" onClick={() => void query.refetch()} disabled={query.isFetching} data-testid="button-retry-scanner">{isAr ? 'حاول مجددًا' : 'Try again'}</button>
                   </div>
                 ) : query.data?.refreshStatus === 'unavailable' && !allStocks.length ? (
                   <div className="market-empty" data-testid="empty-scanner-unavailable"><h3>Market data unavailable</h3><p>No replacement prices are shown. Refresh later to check for an update.</p></div>

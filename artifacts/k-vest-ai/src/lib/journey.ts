@@ -55,13 +55,22 @@ export function fmtTime(value: string | null | undefined): string | null {
 }
 
 export function errMsg(error: unknown, fallback: string): string {
-  if (error && typeof error === 'object') {
-    const e = error as { message?: unknown; data?: { error?: unknown; message?: unknown } | null };
-    const fromData = e.data?.error ?? e.data?.message;
-    if (typeof fromData === 'string' && fromData) return fromData;
-    if (typeof e.message === 'string' && e.message) return e.message;
-  }
+  // API/provider details are logged by the React Query caches, never rendered.
+  void error;
   return fallback;
+}
+
+const loggedWarnings = new Set<string>();
+
+export function friendlyWarning(warning: string | null | undefined, language: Language): string | null {
+  if (!warning) return null;
+  if (!loggedWarnings.has(warning)) {
+    console.warn('[K-vest] Market data warning:', warning);
+    loggedWarnings.add(warning);
+  }
+  return language === 'ar'
+    ? 'تعذّر تحديث بعض معلومات السوق. قد تكون البيانات متأخرة.'
+    : 'Some market information could not be refreshed. Data may be delayed.';
 }
 
 export const DISCLAIMER_EN = 'For education only. Not financial advice.';

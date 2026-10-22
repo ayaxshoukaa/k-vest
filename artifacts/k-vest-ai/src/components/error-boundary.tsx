@@ -4,6 +4,7 @@ import {
   type ErrorInfo,
   type ReactNode,
 } from 'react';
+import { readLanguage } from '@/lib/journey';
 
 export interface ErrorFallbackProps {
   error: Error;
@@ -35,29 +36,25 @@ function toError(value: unknown): Error {
   }
 }
 
-function DefaultFallback({ error, resetError }: ErrorFallbackProps) {
+function DefaultFallback({ resetError }: ErrorFallbackProps) {
+  const isAr = readLanguage() === 'ar';
   return (
-    <div className="min-h-screen w-full flex items-center justify-center bg-gray-50 p-6">
+    <div className="min-h-screen w-full flex items-center justify-center bg-gray-50 p-6" dir={isAr ? 'rtl' : 'ltr'} lang={isAr ? 'ar' : 'en'}>
       <div className="max-w-lg w-full text-center">
         <h1 className="text-xl font-semibold text-gray-900">
-          Something went wrong
+          {isAr ? 'حدث خطأ ما' : 'Something went wrong'}
         </h1>
         <p className="mt-2 text-sm text-gray-600">
-          This part of the app hit an error. The rest of the app is still
-          running.
+          {isAr
+            ? 'تعذّر تحميل هذا الجزء من التطبيق. يمكنك المحاولة مرة أخرى.'
+            : 'We could not load this part of the app. Please try again.'}
         </p>
-        {/* Dev only: messages can carry API responses and other internals. */}
-        {import.meta.env.DEV ? (
-          <pre className="mt-4 overflow-x-auto rounded bg-gray-100 p-3 text-left text-xs text-gray-800">
-            {error.message || String(error)}
-          </pre>
-        ) : null}
         <button
           type="button"
           onClick={resetError}
           className="mt-4 rounded bg-gray-900 px-4 py-2 text-sm text-white hover:bg-gray-700"
         >
-          Try again
+          {isAr ? 'حاول مجددًا' : 'Try again'}
         </button>
       </div>
     </div>

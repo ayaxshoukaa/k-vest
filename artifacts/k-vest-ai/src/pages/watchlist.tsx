@@ -6,8 +6,10 @@ import {
   downloadCsv, formatKwd, formatMarketTime, formatPercent, LearningDisclosure, MarketFrame, SourceBadges,
   stockCsvRow, useSavedSymbols,
 } from '@/components/market-tools';
+import { friendlyWarning, readLanguage } from '@/lib/journey';
 
 export default function WatchlistPage() {
+  const isAr = readLanguage() === 'ar';
   const query = useGetMarketScanner({
     query: { queryKey: getGetMarketScannerQueryKey(), staleTime: 300_000, refetchOnWindowFocus: false, retry: 0 },
   });
@@ -35,15 +37,15 @@ export default function WatchlistPage() {
             <button type="button" className="market-action-btn market-action-primary" disabled={!savedStocks.length} onClick={() => downloadCsv('k-vest-watchlist.csv', savedStocks.map(stockCsvRow))} data-testid="button-export-watchlist-csv"><Download size={15} /> CSV</button>
           </div>
         </div>
-        {query.data?.warning && <div className="market-warning" role="status" data-testid="status-watchlist-warning">{query.data.warning}</div>}
-        {hasError && <div className="market-warning" role="alert" data-testid="alert-watchlist-error">Market data could not be refreshed. Previously available values may be stale.</div>}
+        {query.data?.warning && <div className="market-warning" role="status" data-testid="status-watchlist-warning">{friendlyWarning(query.data.warning, isAr ? 'ar' : 'en')}</div>}
+        {hasError && <div className="market-warning" role="alert" data-testid="alert-watchlist-error">{isAr ? 'تعذّر تحديث بيانات السوق. قد تكون الأسعار السابقة متأخرة.' : "We couldn't refresh market data. Previously available prices may be delayed."}</div>}
         {query.isLoading && !query.data ? (
           <div className="market-detail-loading" role="status" aria-label="Loading watchlist"><i /><i /><i /></div>
         ) : query.isError && !query.data ? (
           <div className="market-error-card" role="alert" data-testid="error-watchlist-unavailable">
-            <h2>Market data could not be loaded</h2>
-            <p>Your saved symbols remain in this browser. Retry to load their latest available details.</p>
-            <button type="button" className="market-action-btn" onClick={() => void query.refetch()} disabled={query.isFetching} data-testid="button-retry-watchlist">Try again</button>
+            <h2>{isAr ? 'تعذّر تحميل بيانات السوق' : "We couldn't load market data"}</h2>
+            <p>{isAr ? 'قائمتك المحفوظة باقية في هذا المتصفح. حاول مجددًا بعد قليل.' : 'Your saved list is still in this browser. Please try again in a moment.'}</p>
+            <button type="button" className="market-action-btn" onClick={() => void query.refetch()} disabled={query.isFetching} data-testid="button-retry-watchlist">{isAr ? 'حاول مجددًا' : 'Try again'}</button>
           </div>
         ) : !symbols.length ? (
           <section className="market-watch-empty" data-testid="empty-watchlist">

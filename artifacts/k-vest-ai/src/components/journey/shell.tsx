@@ -14,7 +14,7 @@ import { BrandMark } from '@/components/brand-mark';
 import { JourneyHomeLink } from './home-link';
 import {
   DATA_NOTE_AR, DATA_NOTE_EN, DISCLAIMER_AR, DISCLAIMER_EN,
-  errMsg, phaseOf, stepIndex, stepOrder, stepPath, useJourneyLanguage,
+  errMsg, friendlyWarning, phaseOf, stepIndex, stepOrder, stepPath, useJourneyLanguage,
 } from '@/lib/journey';
 import '@/pages/journey.css';
 
@@ -154,7 +154,7 @@ export function DataWarning({ sample, stale, warning, tr }: { sample?: boolean; 
       <div>
         {sample && <strong>{tr('Sample data, not live prices. These numbers are illustrative only.', 'بيانات تجريبية وليست أسعارًا حية. الأرقام للتوضيح فقط.')}</strong>}
         {!sample && stale && <strong>{tr('Delayed or out-of-date prices.', 'أسعار متأخرة أو غير محدّثة.')}</strong>}
-        {warning && <span>{warning}</span>}
+        {warning && <span>{friendlyWarning(warning, tr('en', 'ar') === 'ar' ? 'ar' : 'en')}</span>}
       </div>
     </div>
   );
