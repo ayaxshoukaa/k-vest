@@ -29,6 +29,33 @@
 .jx .jx-saved { width: min(100% - 32px, 1120px); margin: 0 auto; color: var(--soft); font-size: 12px; padding-block: 4px; }
 .jx-footer { border-top: 1px solid var(--line); background: var(--panel); padding: 22px 16px; text-align: center; font-size: 13px; color: var(--soft); display: grid; gap: 4px; }
 .jx-footer__strong { color: var(--blue-d); font-weight: 700; }
+.jx-loading-card { position: relative; display: block; min-height: 440px; overflow: hidden; padding: 24px; }
+.jx-loading-card__placeholders { display: grid; gap: 16px; opacity: .35; }
+.jx-loading-card__placeholders i { display: block; height: 16px; border-radius: 8px; background: linear-gradient(105deg, rgba(76,215,246,.08), rgba(76,215,246,.19), rgba(16,185,129,.16)); background-size: 220% 100%; animation: kv-investment-shimmer 1.5s ease-in-out infinite; }
+.jx-loading-card__placeholders .is-heading { width: 58%; height: 32px; }
+.jx-loading-card__placeholders .is-stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+.jx-loading-card__placeholders .is-stats i { height: 100px; }
+.jx-loading-card__placeholders .is-content { width: 100%; height: 78px; }
+.jx-loading-card__overlay { position: absolute; inset: 0; background: rgba(9,13,22,.68); }
+.jx-detail-loading { position: relative; display: grid; min-height: 500px; align-content: start; gap: 16px; overflow: hidden; }
+.jx-detail-loading__placeholders { display: grid; gap: 15px; opacity: .36; }
+.jx-detail-loading__placeholders i { display: block; height: 15px; border-radius: 8px; background: linear-gradient(105deg, rgba(76,215,246,.08), rgba(76,215,246,.2), rgba(16,185,129,.12)); background-size: 220% 100%; animation: kv-investment-shimmer 1.5s ease-in-out infinite; }
+.jx-detail-loading__placeholders .is-heading { width: 56%; height: 30px; }
+.jx-detail-loading__placeholders .is-price { width: 34%; height: 38px; }
+.jx-detail-loading__placeholders .is-chart { width: 100%; height: 150px; border-radius: 14px; }
+.jx-detail-loading__placeholders .is-copy { width: 72%; }
+.jx-detail-loading__loader { position: absolute; inset: 0; background: rgba(9,13,22,.68); }
+.jx-scan-loading { position: relative; min-height: 328px; }
+.jx-scan-loading > .jx-skeleton { margin: 0; }
+.jx-scan-loading__overlay { position: absolute; inset: 0; border-radius: 16px; background: rgba(9,13,22,.68); }
+.jx-inline-loading { display: inline-flex; align-items: center; gap: 8px; }
+.jx-company-options-loading { display: block; min-height: 1.4em; padding-top: 4px; }
+.jx-chat .kv-investment-loader { min-height: 76px; padding: 4px 0; }
+.jx-chat .kv-investment-loader__message { font-size: 12px; }
+@media (max-width: 560px) {
+  .jx-loading-card { min-height: 400px; padding: 18px; }
+  .jx-loading-card__placeholders .is-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
 @keyframes jx-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
 @keyframes jx-pulse { 50% { opacity: .4; } }
 @keyframes jx-bounce { 0%, 80%, 100% { transform: translateY(0); opacity: .4; } 40% { transform: translateY(-4px); opacity: 1; } }
@@ -48,7 +75,7 @@
 .jx-field-error { color: var(--down); font-size: 14px; margin-top: 8px; }
 .jx-error { display: grid; gap: 12px; justify-items: start; max-width: 520px; margin: 40px auto; color: var(--down); }
 .jx-skeleton { display: grid; gap: 14px; margin-top: 30px; }
-.jx-skeleton i { display: block; height: 72px; border-radius: 16px; background: var(--accent); animation: jx-pulse 1.4s ease-in-out infinite; }
+.jx-skeleton i { display: block; height: 72px; border-radius: 16px; background: linear-gradient(105deg, rgba(76,215,246,.08) 20%, rgba(76,215,246,.19) 44%, rgba(16,185,129,.16) 58%, rgba(76,215,246,.08) 80%); background-size: 220% 100%; animation: kv-investment-shimmer 1.5s ease-in-out infinite; }
 .jx-warn { display: flex; gap: 10px; align-items: flex-start; padding: 14px 16px; border-radius: 12px; background: var(--amber-bg); border: 1px solid rgba(241,199,135,.35); color: var(--amber); margin-bottom: 16px; font-size: 14px; }
 .jx-warn--sample { border-width: 2px; background: rgba(245,158,11,.12); }
 .jx-warn > div { display: flex; flex: 1; flex-wrap: wrap; align-items: center; gap: 8px 12px; min-width: 0; }

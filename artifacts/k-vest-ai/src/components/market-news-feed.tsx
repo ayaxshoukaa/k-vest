@@ -1,6 +1,7 @@
 import { getGetMarketNewsQueryKey, useGetMarketNews } from "@workspace/api-client-react";
 import { ExternalLink, RefreshCw } from "lucide-react";
 import { friendlyWarning } from "@/lib/journey";
+import { InvestmentArrows, InvestmentLoader } from "@/components/investment-loader";
 import "./market-news-feed.css";
 
 export type NewsLanguage = "en" | "ar";
@@ -12,7 +13,6 @@ type MarketNewsFeedProps = {
 
 const messages = {
   en: {
-    loading: "Loading the latest headlines…",
     unavailable: "We couldn't load the headlines right now. Please try again in a moment.",
     noNews: "No headlines are available right now. Please check again soon.",
     retry: "Try again",
@@ -22,7 +22,6 @@ const messages = {
     publishedUnknown: "Publication time unavailable",
   },
   ar: {
-    loading: "جارٍ تحميل أحدث العناوين…",
     unavailable: "تعذّر تحميل العناوين الآن. يُرجى المحاولة مجددًا بعد قليل.",
     noNews: "لا توجد عناوين متاحة الآن. يرجى المحاولة لاحقًا.",
     retry: "إعادة المحاولة",
@@ -59,10 +58,13 @@ export function MarketNewsFeed({ language, limit }: MarketNewsFeedProps) {
   return (
     <div className="market-news-feed" data-testid="market-news-feed">
       {query.isLoading && !query.data && (
-        <div className="market-news-feed__grid" aria-live="polite" aria-label={text.loading}>
-          {Array.from({ length: Math.min(limit ?? 6, 6) }, (_, index) => (
-            <div className="market-news-feed__skeleton" key={index} aria-hidden="true" />
-          ))}
+        <div className="market-news-feed__loading" data-testid="status-market-news-loading">
+          <div className="market-news-feed__grid" aria-hidden="true">
+            {Array.from({ length: Math.min(limit ?? 6, 6) }, (_, index) => (
+              <div className="market-news-feed__skeleton" key={index} />
+            ))}
+          </div>
+          <InvestmentLoader size="md" language={language} message="headlines" className="market-news-feed__loader" />
         </div>
       )}
 
@@ -73,10 +75,12 @@ export function MarketNewsFeed({ language, limit }: MarketNewsFeedProps) {
             type="button"
             className="market-news-feed__retry"
             onClick={() => void query.refetch()}
+            disabled={query.isFetching}
+            aria-busy={query.isFetching}
             data-testid="button-retry-market-news"
           >
-            <RefreshCw size={15} aria-hidden="true" />
-            {text.retry}
+            {query.isFetching ? <InvestmentArrows size="sm" className="kv-investment-arrows--button" /> : <RefreshCw size={15} aria-hidden="true" />}
+            {query.isFetching ? text.refreshing : text.retry}
           </button>
         </div>
       )}

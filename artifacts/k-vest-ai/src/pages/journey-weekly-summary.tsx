@@ -5,6 +5,7 @@ import {
   useGetJourneyWeeklySummary,
 } from '@workspace/api-client-react';
 import { JourneyShell, type JourneyCtx } from '@/components/journey/shell';
+import { InvestmentArrows, InvestmentLoader } from '@/components/investment-loader';
 import { fmtKwd } from '@/lib/journey';
 import './journey-weekly-summary.css';
 
@@ -52,7 +53,13 @@ function WeeklySummaryBody({ ctx }: { ctx: JourneyCtx }) {
   if (query.isLoading) {
     return (
       <div className="jx-card jx-weekly-loading" aria-busy="true" data-testid="status-weekly-loading">
-        {tr('Loading your weekly summary…', 'جارٍ تحميل ملخصك الأسبوعي…')}
+        <div className="jx-weekly-loading__placeholders" aria-hidden="true">
+          <i className="is-heading" />
+          <div className="is-stats"><i /><i /><i /><i /></div>
+          <i className="is-chart" />
+          <div className="is-challenges"><i /><i /><i /></div>
+        </div>
+        <InvestmentLoader size="lg" language={isAr ? 'ar' : 'en'} message="summary" className="jx-weekly-loading__overlay" />
       </div>
     );
   }
@@ -61,9 +68,9 @@ function WeeklySummaryBody({ ctx }: { ctx: JourneyCtx }) {
     return (
       <div className="jx-card jx-error" role="alert" data-testid="status-weekly-error">
         <p>{tr('We could not load your weekly summary. Please try again.', 'تعذّر تحميل ملخصك الأسبوعي. حاول مجددًا.')}</p>
-        <button type="button" className="jx-btn jx-btn--ghost" onClick={() => void query.refetch()} disabled={query.isFetching} data-testid="button-retry-weekly-summary">
-          <RefreshCw size={16} aria-hidden="true" />
-          {tr('Try again', 'حاول مجددًا')}
+        <button type="button" className="jx-btn jx-btn--ghost" onClick={() => void query.refetch()} disabled={query.isFetching} aria-busy={query.isFetching} data-testid="button-retry-weekly-summary">
+          {query.isFetching ? <InvestmentArrows size="sm" className="kv-investment-arrows--button" /> : <RefreshCw size={16} aria-hidden="true" />}
+          {query.isFetching ? tr('Retrying', 'جارٍ إعادة المحاولة') : tr('Try again', 'حاول مجددًا')}
         </button>
       </div>
     );

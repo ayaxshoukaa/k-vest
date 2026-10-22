@@ -8,6 +8,7 @@ import {
   useSavedSymbols,
 } from '@/components/market-tools';
 import { RatingInfo, RatingPresentation } from '@/components/rating-presentation';
+import { InvestmentLoader } from '@/components/investment-loader';
 import { friendlyWarning, readLanguage } from '@/lib/journey';
 
 const CHART_COLOR = '#10B981';
@@ -47,7 +48,15 @@ export default function StockDetailPage() {
       <div className="market-wrap market-detail-wrap">
         <div className="market-detail-backline"><Link href="/scanner" className="market-back-link" data-testid="link-back-scanner"><ArrowLeft size={15} /> Back to scanner</Link><Link href="/watchlist" className="market-back-link" data-testid="link-detail-watchlist">Watchlist</Link></div>
         {query.isLoading && !query.data ? (
-          <div className="market-detail-loading" role="status" data-testid="loading-stock-detail"><i /><i /><i /></div>
+          <div className="market-detail-loading" aria-busy="true" data-testid="loading-stock-detail">
+            <div className="market-detail-loading__skeleton market-detail-loading__skeleton--stock" aria-hidden="true">
+              <div className="market-stock-skeleton__head"><i /><i /><i /></div>
+              <div className="market-stock-skeleton__quotes">{[0, 1, 2, 3].map((item) => <i key={item} />)}</div>
+              <div className="market-stock-skeleton__chart"><i /></div>
+              <div className="market-stock-skeleton__lower"><i /><i /></div>
+            </div>
+            <InvestmentLoader size="lg" language={isAr ? 'ar' : 'en'} message="company" className="market-detail-loading__loader" />
+          </div>
         ) : isError && !query.data ? (
           <div className="market-error-card" role="alert" data-testid="alert-stock-error"><h1>{isAr ? 'تفاصيل السهم غير متاحة' : 'Stock details are unavailable'}</h1><p>{isAr ? 'تعذّر تحميل هذا السهم الآن. يُرجى المحاولة مجددًا بعد قليل.' : "We couldn't load this stock right now. Please try again in a moment."}</p><button type="button" className="market-action-btn" onClick={() => void query.refetch()} disabled={query.isFetching} data-testid="button-retry-stock"><span>{isAr ? 'حاول مجددًا' : 'Try again'}</span></button></div>
         ) : !stock ? (

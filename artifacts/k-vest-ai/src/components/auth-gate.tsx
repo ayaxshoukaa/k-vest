@@ -1,12 +1,15 @@
 import type { ReactNode } from 'react';
 import { useAuth } from '@clerk/react';
 import { Redirect, useLocation } from 'wouter';
+import { InvestmentLoader } from '@/components/investment-loader';
+import { readLanguage } from '@/lib/journey';
 import { useGuestAccess } from './guest-access';
 
 export function AuthLoading() {
+  const language = readLanguage();
   return (
-    <main className="kv-auth" aria-busy="true" aria-live="polite" data-testid="status-auth-loading">
-      <span className="jx-sr">Loading…</span>
+    <main className="kv-auth" data-testid="status-auth-loading">
+      <InvestmentLoader size="lg" language={language} message="journey" className="kv-auth-loading" />
     </main>
   );
 }

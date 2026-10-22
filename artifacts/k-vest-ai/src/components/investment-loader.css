@@ -1,0 +1,227 @@
+.kv-investment-loader {
+  display: flex;
+  min-width: 0;
+  min-height: 112px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px;
+  color: #BBCABF;
+  text-align: center;
+}
+
+.kv-investment-loader--sm { min-height: 76px; }
+.kv-investment-loader--lg { min-height: 176px; }
+
+.kv-investment-arrows {
+  display: block;
+  flex: none;
+  width: 72px;
+  height: 48px;
+  overflow: visible;
+}
+
+.kv-investment-arrows--sm { width: 42px; height: 28px; }
+.kv-investment-arrows--lg { width: 108px; height: 72px; }
+.kv-investment-arrows--button { width: 32px; height: 22px; }
+
+.kv-investment-arrows__baseline {
+  fill: none;
+  stroke: rgba(76, 215, 246, .22);
+  stroke-linecap: round;
+  stroke-width: 2;
+}
+
+.kv-investment-arrows__arrow {
+  fill: none;
+  stroke-width: 5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: .35;
+  animation: kv-investment-rise 1.35s cubic-bezier(.35, .05, .25, 1) infinite;
+}
+
+.kv-investment-arrows__arrow--two { animation-delay: .16s; }
+.kv-investment-arrows__arrow--three { animation-delay: .32s; }
+
+.kv-investment-loader__message {
+  max-width: 32ch;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.45;
+}
+
+.kv-investment-skeleton {
+  display: inline-block;
+  flex: none;
+  overflow: hidden;
+  vertical-align: middle;
+  border-radius: 7px;
+  background: linear-gradient(
+    105deg,
+    rgba(76, 215, 246, .08) 20%,
+    rgba(76, 215, 246, .19) 44%,
+    rgba(16, 185, 129, .16) 58%,
+    rgba(76, 215, 246, .08) 80%
+  );
+  background-size: 220% 100%;
+  animation: kv-investment-shimmer 1.5s ease-in-out infinite;
+}
+
+.kv-investment-skeleton--price { width: 6.2ch; height: 1em; }
+.kv-investment-skeleton--price-large { width: 7.4ch; height: 1.08em; border-radius: 8px; }
+.kv-investment-skeleton--text { width: 7.5rem; height: .8em; }
+.kv-investment-skeleton--badge { width: 4.7rem; height: 1.5rem; border-radius: 999px; }
+.kv-investment-skeleton--sparkline { width: 3.4rem; height: 1.4rem; border-radius: 5px; }
+.kv-investment-skeleton--circle { width: 2rem; height: 2rem; border-radius: 50%; }
+
+.kv-market-row-skeleton {
+  display: grid;
+  min-width: 760px;
+  min-height: 49px;
+  grid-template-columns: minmax(140px, 1.7fr) minmax(70px, .8fr) minmax(90px, .9fr) minmax(62px, .8fr) minmax(62px, .7fr) minmax(76px, .9fr) 22px;
+  align-items: center;
+  gap: 12px;
+  padding: 0 12px;
+  border-bottom: 1px solid rgba(89, 65, 57, .3);
+}
+
+.kv-market-row-skeleton__company { width: min(80%, 11rem); }
+.kv-market-row-skeleton__change { width: 4.2rem; }
+.kv-market-row-skeleton__volume { width: 3.8rem; }
+
+.kv-learning-stock-row-skeleton {
+  display: grid;
+  min-height: 76px;
+  grid-template-columns: 2rem minmax(0, 1fr) 3.4rem 6.2ch;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border-bottom: 1px solid rgba(255,255,255,.08);
+}
+
+.kv-learning-stock-row-skeleton__copy { display: grid; min-width: 0; gap: 9px; }
+.kv-learning-stock-row-skeleton__copy > span { display: flex; align-items: center; gap: 8px; }
+.kv-learning-stock-row-skeleton__copy .kv-investment-skeleton--text:last-child { width: 4rem; }
+
+.kv-watchlist-row-skeleton {
+  display: grid;
+  min-height: 82px;
+  grid-template-columns: minmax(150px, 1.6fr) minmax(70px, .7fr) minmax(78px, .75fr) minmax(80px, .85fr) 32px;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 12px;
+}
+
+.kv-watchlist-row-skeleton__company { display: flex; min-width: 0; align-items: center; gap: 10px; }
+.kv-watchlist-row-skeleton__company > span { display: grid; min-width: 0; gap: 8px; }
+.kv-watchlist-row-skeleton__company .kv-watchlist-row-skeleton__meta { width: 4.5rem; }
+.kv-watchlist-row-skeleton__value { display: flex; align-items: center; }
+.kv-watchlist-row-skeleton__change { width: 4rem; }
+
+.kv-auth-loading { width: 100%; min-height: 100dvh; }
+.jwelcome__cta-pending { display: inline-flex; align-items: center; gap: 8px; }
+
+.market-skeleton { position: relative; }
+.market-skeleton__content { min-width: 0; }
+.market-skeleton-table { overflow-x: auto; }
+.market-skeleton__charts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin-block: 16px; }
+.market-skeleton__charts i { display: block; min-height: 245px; border: 1px solid rgba(255,255,255,.07); border-radius: 14px; background: linear-gradient(105deg,rgba(76,215,246,.07) 20%,rgba(76,215,246,.16) 45%,rgba(16,185,129,.12) 62%,rgba(76,215,246,.07) 80%); background-size: 220% 100%; animation: kv-investment-shimmer 1.5s ease-in-out infinite; }
+.market-skeleton__loader {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  border-radius: 14px;
+  background: rgba(9, 13, 22, .76);
+}
+
+.market-detail-loading {
+  position: relative;
+  display: block;
+  min-height: 310px;
+  overflow: hidden;
+}
+
+.market-detail-loading__skeleton { display: grid; gap: 12px; opacity: .3; }
+.market-detail-loading__skeleton--rows { gap: 10px; }
+.market-detail-loading__skeleton--stock { gap: 16px; }
+.market-stock-skeleton__head { display: grid; max-width: 480px; gap: 10px; }
+.market-stock-skeleton__head i:nth-child(1) { width: min(78%, 28rem); height: 30px; }
+.market-stock-skeleton__head i:nth-child(2) { width: 38%; height: 16px; }
+.market-stock-skeleton__head i:nth-child(3) { width: 68%; height: 16px; }
+.market-stock-skeleton__quotes { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+.market-stock-skeleton__quotes i { min-height: 90px; }
+.market-stock-skeleton__chart i { min-height: 300px; }
+.market-stock-skeleton__lower { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.market-stock-skeleton__lower i { min-height: 100px; }
+.market-detail-loading__loader {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  border-radius: 14px;
+  background: rgba(9, 13, 22, .76);
+}
+
+.market-news-feed__loading { position: relative; }
+.market-news-feed__loader {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  border-radius: 14px;
+  background: rgba(9, 13, 22, .78);
+}
+
+.market-light .kv-investment-loader { color: #52647D; }
+.market-light .market-skeleton__loader,
+.market-light .market-detail-loading__loader,
+.market-light .market-news-feed__loader { background: rgba(248,250,252,.82); }
+
+@keyframes kv-investment-rise {
+  0%, 100% { opacity: .28; transform: translateY(4px); }
+  38%, 72% { opacity: 1; transform: translateY(-3px); }
+}
+
+@keyframes kv-investment-shimmer {
+  to { background-position-x: -220%; }
+}
+
+@media (max-width: 560px) {
+  .kv-investment-loader--lg { min-height: 148px; }
+  .kv-investment-loader__message { font-size: 12px; }
+  .market-skeleton__charts { grid-template-columns: 1fr; }
+  .market-skeleton__charts i { min-height: 190px; }
+  .market-stock-skeleton__quotes { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .market-stock-skeleton__chart i { min-height: 220px; }
+  .market-stock-skeleton__lower { grid-template-columns: 1fr; }
+  .kv-learning-stock-row-skeleton { grid-template-columns: 2rem minmax(0, 1fr) 6.2ch; gap: 9px; }
+  .kv-learning-stock-row-skeleton > .kv-investment-skeleton--sparkline { display: none; }
+  .kv-watchlist-row-skeleton { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 10px; }
+  .kv-watchlist-row-skeleton__company { grid-column: 1 / -1; }
+  .kv-watchlist-row-skeleton__value:nth-child(5) { justify-content: end; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kv-investment-arrows__arrow {
+    animation: none;
+    opacity: .88;
+    transform: none;
+  }
+
+  .kv-investment-skeleton {
+    animation: none;
+    background-position: 50% 0;
+  }
+
+  .quote-skeleton-row i,
+  .market-skeleton-hero,
+  .market-skeleton-stats i,
+  .market-skeleton-table i,
+  .market-skeleton__charts i,
+  .market-detail-loading i,
+  .market-spinning {
+    animation: none !important;
+  }
+}

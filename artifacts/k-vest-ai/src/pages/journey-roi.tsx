@@ -8,6 +8,7 @@ import {
   useGetMarketStock,
 } from '@workspace/api-client-react';
 import { DataWarning, JourneyShell, type JourneyCtx } from '@/components/journey/shell';
+import { InvestmentArrows, InvestmentSkeleton } from '@/components/investment-loader';
 import { errMsg, fmtKwd, fmtPct, mergeSymbols } from '@/lib/journey';
 
 function useCountUp(target: number, run: boolean) {
@@ -130,7 +131,16 @@ function RoiBody({ ctx }: { ctx: JourneyCtx }) {
             <button type="button" className="jx-btn jx-btn--ghost jx-btn--sm" disabled={!canUseDemo} onClick={useDemo} data-testid="button-use-demo-results">{tr('Use my demo results', 'استخدم نتائجي التجريبية')}</button>
             {!canUseDemo && <p className="jx-muted" style={{ marginTop: 6 }} data-testid="text-demo-disabled-reason">{tr('Make a practice trade first, then your holding can fill this form.', 'أجرِ صفقة تدريب أولًا ليملأ سهمك هذا النموذج.')}</p>}
           </div>
-          <p className="jx-muted" data-testid="text-roi-market-price">{tr('Latest price', 'آخر سعر')}: {quote.isLoading ? '…' : fmtKwd(price, na)}</p>
+          <p className="jx-muted" data-testid="text-roi-market-price">{tr('Latest price', 'آخر سعر')}: {quote.isLoading ? <InvestmentSkeleton variant="price" label={tr('Loading price', 'جارٍ تحميل السعر')} /> : fmtKwd(price, na)}</p>
+          {quote.isError && (
+            <p className="jx-field-error" role="alert" data-testid="status-roi-price-error">
+              {tr("We couldn't load the latest price. You can enter one yourself, or try again.", 'تعذّر تحميل أحدث سعر. يمكنك إدخاله بنفسك أو المحاولة مجددًا.')}
+              {' '}
+              <button type="button" className="jx-chip" onClick={() => void quote.refetch()} disabled={quote.isFetching} data-testid="button-retry-roi-price">
+                {tr('Try again', 'حاول مجددًا')}
+              </button>
+            </p>
+          )}
           <div className="jx-form-row">
             {fld(tr('Budget (KWD)', 'الميزانية (د.ك)'), budget, setBudget, 'budget')}
             {fld(tr('Buy price (KWD)', 'سعر الشراء (د.ك)'), buy, setBuy, 'buy', price === null ? tr('Price unavailable. Enter your own.', 'السعر غير متاح. أدخل سعرك.') : tr('Filled from the latest price', 'معبأ من آخر سعر'))}
@@ -142,8 +152,8 @@ function RoiBody({ ctx }: { ctx: JourneyCtx }) {
           {fld(tr('Annual dividend per share (KWD, optional)', 'توزيعات سنوية للسهم (د.ك، اختياري)'), div, setDiv, 'dividend', tr('Enter the yearly dividend for ONE share, not your total. Leave blank for none.', 'أدخل التوزيعات السنوية لسهم واحد وليس إجماليها. اتركه فارغًا إن لم يوجد.'))}
           <p className="jx-muted" data-testid="text-roi-assumption">{tr('Assumption: your whole budget buys shares at the buy price, including fractions of a share. Practice trades use whole shares only.', 'افتراض: كامل ميزانيتك تشتري أسهمًا بسعر الشراء، بما في ذلك أجزاء من السهم. صفقات التدريب بأسهم كاملة فقط.')}</p>
           {error && <p className="jx-field-error" role="alert" data-testid="text-roi-error">{error}</p>}
-          <button type="submit" className="jx-btn" disabled={calc.isPending} data-testid="button-roi-calculate">
-            {calc.isPending ? tr('Calculating…', 'جارٍ الحساب…') : tr('Calculate', 'احسب')}
+          <button type="submit" className="jx-btn" disabled={calc.isPending} aria-busy={calc.isPending} data-testid="button-roi-calculate">
+            {calc.isPending ? <><InvestmentArrows size="sm" className="kv-investment-arrows--button" />{tr('Calculating', 'جارٍ الحساب')}</> : tr('Calculate', 'احسب')}
           </button>
         </form>
         <section className="jx-card" aria-live="polite" data-testid="section-roi-result">

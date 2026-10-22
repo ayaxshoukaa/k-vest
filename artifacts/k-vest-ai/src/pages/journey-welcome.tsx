@@ -7,6 +7,7 @@ import { getGetJourneyStateQueryKey, useGetJourneyState, useStartJourney } from 
 import { MarketNewsFeed } from '@/components/market-news-feed';
 import { stepPath } from '@/lib/journey';
 import { BrandMark } from '@/components/brand-mark';
+import { InvestmentArrows } from '@/components/investment-loader';
 import { useGuestAccess } from '@/components/guest-access';
 import './journey-welcome.css';
 import './journey-welcome-sections.css';
@@ -36,7 +37,7 @@ const copy = {
     learningTitle: 'Start with the learning steps.',
     learningDescription: 'Move at your own pace. Your practice uses demo money, not real trades.',
     action: 'Start learning',
-    starting: 'Starting…',
+    starting: 'Starting',
     weeklySummary: 'View your weekly practice summary',
     error: 'Could not start the journey. Please try again.',
     newsNote: 'Broader global market headlines from Yahoo Finance; these are not Kuwait-specific. For educational use only.',
@@ -63,7 +64,7 @@ const copy = {
     learningTitle: 'ابدأ بخطوات التعلّم.',
     learningDescription: 'تقدّم بالسرعة التي تناسبك. التدريب بأموال افتراضية وليس تداولًا حقيقيًا.',
     action: 'ابدأ التعلّم',
-    starting: 'جارٍ البدء…',
+    starting: 'جارٍ البدء',
     weeklySummary: 'عرض ملخص التدريب الأسبوعي',
     error: 'تعذّر بدء الرحلة. حاول مجددًا.',
     newsNote: 'عناوين من الأسواق العالمية عبر Yahoo Finance، وليست خاصة بالكويت. للاستخدام التثقيفي فقط.',
@@ -166,7 +167,7 @@ export default function JourneyWelcomePage() {
             </a>
           {isSignedIn ? (
             <button type="button" className="jwelcome__language-button" disabled={signingOut} onClick={() => void leaveAccount()} data-testid="button-sign-out">
-              {signingOut ? (isArabic ? 'جارٍ الخروج…' : 'Signing out…') : (isArabic ? 'تسجيل الخروج' : 'Sign out')}
+              {signingOut ? (isArabic ? 'جارٍ الخروج' : 'Signing out') : (isArabic ? 'تسجيل الخروج' : 'Sign out')}
             </button>
           ) : (
             <button type="button" className="jwelcome__language-button" onClick={() => {
@@ -262,8 +263,11 @@ export default function JourneyWelcomePage() {
             ))}
           </ol>
           <div className="jwelcome__action-area">
-            <button type="button" className="jwelcome__cta" disabled={start.isPending} onClick={() => start.mutate()} data-testid="link-journey-get-started">
-              <span>{start.isPending ? text.starting : text.action}</span>
+            <button type="button" className="jwelcome__cta" disabled={start.isPending} aria-busy={start.isPending} onClick={() => start.mutate()} data-testid="link-journey-get-started">
+              <span className={start.isPending ? 'jwelcome__cta-pending' : undefined}>
+                {start.isPending && <InvestmentArrows size="sm" className="kv-investment-arrows--button" />}
+                {start.isPending ? text.starting : text.action}
+              </span>
               <ArrowRight size={19} aria-hidden="true" className="jwelcome__cta-arrow" />
             </button>
             {(journey.data?.furthestStep ?? -1) >= 5 && (

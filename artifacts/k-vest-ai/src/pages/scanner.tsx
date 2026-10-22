@@ -10,6 +10,7 @@ import {
   stockCsvRow, useSavedSymbols,
 } from '@/components/market-tools';
 import { RatingInfo, RatingPresentation } from '@/components/rating-presentation';
+import { InvestmentLoader, InvestmentSkeleton, MarketRowSkeleton } from '@/components/investment-loader';
 import { friendlyWarning, readLanguage } from '@/lib/journey';
 
 type ViewMode = 'all' | 'gainers' | 'losers' | 'active';
@@ -34,12 +35,16 @@ function Sparkline({ stock }: { stock: MarketScannerStock }) {
   );
 }
 
-function MarketSkeleton() {
+function MarketSkeleton({ isAr }: { isAr: boolean }) {
   return (
-    <div className="market-skeleton" role="status" aria-label="Loading Kuwait stock scanner" data-testid="loading-market-scanner">
-      <div className="market-skeleton-hero" />
-      <div className="market-skeleton-stats">{[0, 1, 2, 3].map((item) => <i key={item} />)}</div>
-      <div className="market-skeleton-table">{[0, 1, 2, 3, 4, 5].map((item) => <i key={item} />)}</div>
+    <div className="market-skeleton" data-testid="loading-market-scanner">
+      <div className="market-skeleton__content" aria-hidden="true">
+        <div className="market-skeleton-hero" />
+        <div className="market-skeleton-stats">{[0, 1, 2, 3].map((item) => <i key={item} />)}</div>
+        <div className="market-skeleton-table">{Array.from({ length: 11 }, (_, item) => <MarketRowSkeleton key={item} />)}</div>
+        <div className="market-skeleton__charts"><i /><i /></div>
+      </div>
+      <InvestmentLoader size="lg" language={isAr ? 'ar' : 'en'} message="market" className="market-skeleton__loader" />
     </div>
   );
 }
@@ -160,7 +165,7 @@ export default function ScannerPage() {
         <section className="market-index-panel" aria-label="Premier Market index" data-testid="card-premier-index">
           <div className="market-index-copy">
             <span className="market-index-label">Premier Market index</span>
-            <strong>{query.data?.index ? query.data.index.name : query.isLoading ? 'Loading index' : 'Index unavailable'}</strong>
+            <strong>{query.data?.index ? query.data.index.name : query.isLoading ? <InvestmentSkeleton variant="text" label={isAr ? 'جارٍ تحميل المؤشر' : 'Loading index'} /> : 'Index unavailable'}</strong>
             <span className="market-index-symbol">{query.data?.index?.symbol ?? 'Kuwait market benchmark'}</span>
           </div>
           {query.data?.index ? (
@@ -172,10 +177,10 @@ export default function ScannerPage() {
               </div>
               <span className="market-index-time">{formatMarketTime(query.data.index.marketTime)}</span>
             </>
-          ) : <span className="market-index-time">No index value available</span>}
+          ) : <span className="market-index-time">{query.isLoading ? <InvestmentSkeleton variant="price" label={isAr ? 'جارٍ تحميل قيمة المؤشر' : 'Loading index value'} /> : 'No index value available'}</span>}
         </section>
 
-        {query.isLoading && !query.data ? <MarketSkeleton /> : (
+        {query.isLoading && !query.data ? <MarketSkeleton isAr={isAr} /> : (
           <>
             <div className="market-stat-grid" aria-live="polite">
               <div className="market-stat"><span>Filtered listings</span><strong>{filtered.length}<small> / {allStocks.length}</small></strong><em>Current view</em></div>

@@ -10,6 +10,7 @@ import {
   useResetJourneyWallet,
 } from '@workspace/api-client-react';
 import { ConfirmDialog, DataWarning, JourneyShell, type JourneyCtx } from '@/components/journey/shell';
+import { InvestmentSkeleton } from '@/components/investment-loader';
 import { errMsg, fmtKwd, fmtTime, mergeSymbols } from '@/lib/journey';
 
 function PracticeBody({ ctx }: { ctx: JourneyCtx }) {
@@ -101,12 +102,12 @@ function PracticeBody({ ctx }: { ctx: JourneyCtx }) {
               <select className="jx-input" value={symbol} onChange={(e) => setSymbol(e.target.value)} data-testid="select-trade-company">
                 {allSymbols.map((s) => <option key={s} value={s}>{nameOf(s)} ({s}){symbols.includes(s) ? ` - ${tr('selected', 'مختارة')}` : ''}</option>)}
               </select>
-              {scanner.isLoading && <small data-testid="status-practice-scanner-loading">{tr('Loading all companies…', 'جارٍ تحميل كل الشركات…')}</small>}
+              {scanner.isLoading && <small className="jx-company-options-loading" data-testid="status-practice-scanner-loading"><InvestmentSkeleton variant="text" label={tr('Loading companies', 'جارٍ تحميل الشركات')} /></small>}
               {scanner.isError && <small className="jx-field-error" role="alert" data-testid="status-practice-scanner-error">{tr('Full company list unavailable; showing your selection.', 'قائمة الشركات الكاملة غير متاحة؛ تظهر شركاتك المختارة.')} <button type="button" className="jx-chip" onClick={() => void scanner.refetch()} data-testid="button-retry-practice-scanner">{tr('Retry', 'إعادة')}</button></small>}
             </label>
             <div data-testid="text-trade-price">
               <span className="jx-muted">{tr('Latest price', 'آخر سعر')}</span>
-              <p className="jx-result-big" style={{ fontSize: 28 }}>{quote.isLoading ? '…' : fmtKwd(stock?.priceKwd, na)}</p>
+              <p className="jx-result-big" style={{ fontSize: 28 }}>{quote.isLoading ? <InvestmentSkeleton variant="price-large" label={tr('Loading price', 'جارٍ تحميل السعر')} /> : fmtKwd(stock?.priceKwd, na)}</p>
               {fmtTime(stock?.marketTime) && <span className="jx-muted">{fmtTime(stock?.marketTime)}</span>}
               {quote.isError && <p className="jx-field-error" role="alert">{errMsg(quote.error, tr('Price could not be loaded.', 'تعذّر تحميل السعر.'))} <button type="button" className="jx-chip" onClick={() => void quote.refetch()} data-testid="button-retry-price">{tr('Retry', 'إعادة')}</button></p>}
             </div>

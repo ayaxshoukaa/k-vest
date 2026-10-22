@@ -80,7 +80,7 @@ export default function Home() {
       : feedStatus === 'stale'
         ? 'Showing delayed · stale'
         : isLoading
-          ? 'Loading quotes'
+          ? isAr ? 'جارٍ جلب الأسعار' : 'Fetching prices'
           : 'Delayed quotes';
   return (
     <div className="kv">
@@ -173,7 +173,7 @@ export default function Home() {
                   <p className="quote-unavailable" data-testid="status-prices-unavailable">{isAr ? 'الأسعار غير متاحة الآن. لا نعرض أسعارًا بديلة أو تقديرية.' : 'Prices are unavailable right now. We do not show replacement or estimated prices.'}</p>
                 )}
                 {isLoading ? (
-                  <div className="quote-skeleton" role="status" aria-label="Loading delayed company quotes" data-testid="loading-quotes">
+                  <div className="quote-skeleton" role="status" aria-label={isAr ? 'جارٍ تحميل أسعار الشركات المتأخرة' : 'Loading delayed company quotes'} data-testid="loading-quotes">
                     {[0, 1, 2, 3].map((row) => <div className="quote-skeleton-row" key={row}><i /><i /><i /><i /></div>)}
                   </div>
                 ) : quoteFeed?.quotes.length ? (

@@ -11,6 +11,7 @@ import {
   type JourneyStep,
 } from '@workspace/api-client-react';
 import { BrandMark } from '@/components/brand-mark';
+import { InvestmentLoader } from '@/components/investment-loader';
 import { JourneyHomeLink } from './home-link';
 import {
   DATA_NOTE_AR, DATA_NOTE_EN, DISCLAIMER_AR, DISCLAIMER_EN,
@@ -54,9 +55,18 @@ export function JourneyShell({ step, children }: { step: JourneyStep; children: 
   let body: ReactNode;
   if (!isLoaded || (query.isLoading)) {
     body = (
-      <div className="jx-skeleton" aria-busy="true" data-testid="status-journey-loading">
-        <i /><i /><i />
-        <span className="jx-sr">{tr('Loading your journey', 'جارٍ تحميل رحلتك')}</span>
+      <div className="jx-card jx-loading-card" aria-busy="true" data-testid="status-journey-loading">
+        <div className="jx-loading-card__placeholders" aria-hidden="true">
+          <i className="is-heading" />
+          <div className="is-stats"><i /><i /><i /><i /></div>
+          <i className="is-content" /><i className="is-content" />
+        </div>
+        <InvestmentLoader
+          size="lg"
+          language={isAr ? 'ar' : 'en'}
+          message={step === 'practice' ? 'portfolio' : 'journey'}
+          className="jx-loading-card__overlay"
+        />
       </div>
     );
   } else if (query.isError || !state) {
@@ -172,7 +182,7 @@ export function DataWarning({
         {warning && onRetry && (
           <button type="button" className="jx-btn jx-btn--ghost jx-btn--sm" onClick={onRetry} disabled={retrying} data-testid="button-retry-data-warning">
             <RefreshCw size={14} aria-hidden="true" className={retrying ? 'market-spinning' : undefined} />
-            {retrying ? tr('Retrying…', 'جارٍ إعادة المحاولة…') : tr('Retry', 'إعادة المحاولة')}
+            {retrying ? tr('Retrying', 'جارٍ إعادة المحاولة') : tr('Retry', 'إعادة المحاولة')}
           </button>
         )}
       </div>

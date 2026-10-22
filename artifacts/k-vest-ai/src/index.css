@@ -540,7 +540,7 @@ body{margin:0;min-width:320px;background:var(--navy0);color:var(--ink);font-fami
 .quote-empty p{margin:0;color:var(--ink2);font-size:11px;line-height:1.5}
 .quote-skeleton{padding:0 12px}
 .quote-skeleton-row{height:46px;display:grid;grid-template-columns:1.4fr 1fr 1fr .8fr;align-items:center;gap:10px;border-bottom:1px solid rgba(89,65,57,.3)}
-.quote-skeleton-row i{display:block;height:8px;border-radius:6px;background:rgba(201,184,179,.12);animation:quote-pulse 1.4s ease-in-out infinite alternate}
+.quote-skeleton-row i{display:block;height:8px;border-radius:6px;background:linear-gradient(105deg,rgba(76,215,246,.08) 20%,rgba(76,215,246,.19) 44%,rgba(16,185,129,.16) 58%,rgba(76,215,246,.08) 80%);background-size:220% 100%;animation:kv-investment-shimmer 1.5s ease-in-out infinite}
 .quote-skeleton-row i:nth-child(2){width:75%}
 .quote-skeleton-row i:nth-child(3){width:65%}
 .quote-skeleton-row i:nth-child(4){width:80%}
@@ -700,7 +700,7 @@ body{margin:0;min-width:320px;background:var(--navy0);color:var(--ink);font-fami
 .market-disclosure{margin:21px 0 0;color:#aaaebf;font-size:10px;line-height:1.6}
 .market-spinning{animation:market-spin .8s linear infinite}@keyframes market-spin{to{transform:rotate(360deg)}}
 .market-skeleton{margin-top:20px}
-.market-skeleton-hero,.market-skeleton-stats i,.market-skeleton-table i,.market-detail-loading i{display:block;border-radius:8px;background:rgba(201,184,179,.1);animation:market-shimmer 1.3s ease-in-out infinite alternate}
+.market-skeleton-hero,.market-skeleton-stats i,.market-skeleton-table i,.market-detail-loading i{display:block;border-radius:8px;background:linear-gradient(105deg,rgba(76,215,246,.07) 20%,rgba(76,215,246,.16) 45%,rgba(16,185,129,.12) 62%,rgba(76,215,246,.07) 80%);background-size:220% 100%;animation:kv-investment-shimmer 1.5s ease-in-out infinite}
 .market-skeleton-hero{height:92px;margin-bottom:14px}
 .market-skeleton-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}
 .market-skeleton-stats i{height:90px}

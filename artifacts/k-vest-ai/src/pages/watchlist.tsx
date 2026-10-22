@@ -7,6 +7,7 @@ import {
   stockCsvRow, useSavedSymbols,
 } from '@/components/market-tools';
 import { RatingInfo, RatingPresentation } from '@/components/rating-presentation';
+import { InvestmentLoader, WatchlistRowSkeleton } from '@/components/investment-loader';
 import { friendlyWarning, readLanguage } from '@/lib/journey';
 
 export default function WatchlistPage() {
@@ -41,7 +42,12 @@ export default function WatchlistPage() {
         {query.data?.warning && <div className="market-warning" role="status" data-testid="status-watchlist-warning">{friendlyWarning(query.data.warning, isAr ? 'ar' : 'en')}</div>}
         {hasError && <div className="market-warning" role="alert" data-testid="alert-watchlist-error">{isAr ? 'تعذّر تحديث بيانات السوق. قد تكون الأسعار السابقة متأخرة.' : "We couldn't refresh market data. Previously available prices may be delayed."}</div>}
         {query.isLoading && !query.data ? (
-          <div className="market-detail-loading" role="status" aria-label="Loading watchlist"><i /><i /><i /></div>
+          <div className="market-detail-loading" aria-busy="true" data-testid="loading-watchlist">
+            <div className="market-detail-loading__skeleton market-detail-loading__skeleton--rows" aria-hidden="true">
+              {[0, 1, 2].map((item) => <WatchlistRowSkeleton key={item} />)}
+            </div>
+            <InvestmentLoader size="lg" language={isAr ? 'ar' : 'en'} message="market" className="market-detail-loading__loader" />
+          </div>
         ) : query.isError && !query.data ? (
           <div className="market-error-card" role="alert" data-testid="error-watchlist-unavailable">
             <h2>{isAr ? 'تعذّر تحميل بيانات السوق' : "We couldn't load market data"}</h2>

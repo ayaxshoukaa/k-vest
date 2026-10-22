@@ -13,6 +13,7 @@ import {
 } from '@workspace/api-client-react';
 import { DataWarning, JourneyShell, Sparkline, type JourneyCtx } from '@/components/journey/shell';
 import { CompanyLogo } from '@/components/company-logo';
+import { InvestmentArrows, InvestmentLoader, LearningStockRowSkeleton } from '@/components/investment-loader';
 import { RatingInfo, RatingPresentation } from '@/components/rating-presentation';
 import { errMsg, fmtKwd, fmtPct, fmtTime } from '@/lib/journey';
 
@@ -71,7 +72,16 @@ function Detail({ symbol, ctx }: { symbol: string; ctx: JourneyCtx }) {
   const trendColor = historyData.length > 1 && historyData[historyData.length - 1].price >= historyData[0].price
     ? '#45DFA4'
     : '#4CD7F6';
-  if (q.isLoading) return <div className="jx-card jx-skeleton" aria-busy="true"><i /><i /></div>;
+  if (q.isLoading) {
+    return (
+      <div className="jx-card jx-detail-loading" aria-busy="true" data-testid={`status-company-loading-${symbol}`}>
+        <div className="jx-detail-loading__placeholders" aria-hidden="true">
+          <i className="is-heading" /><i className="is-price" /><i className="is-chart" /><i className="is-copy" />
+        </div>
+        <InvestmentLoader size="md" language={isAr ? 'ar' : 'en'} message="company" className="jx-detail-loading__loader" />
+      </div>
+    );
+  }
   if (q.isError || !q.data) {
     return (
       <div className="jx-card" role="alert" data-testid="status-detail-error">
@@ -310,7 +320,12 @@ function ScanBody({ ctx }: { ctx: JourneyCtx }) {
               <button key={k} type="button" className="jx-tab" aria-pressed={tab === k} onClick={() => setTab(k)} data-testid={`button-tab-${k}`}>{label}</button>
             ))}
           </div>
-          {scanner.isLoading && <div className="jx-skeleton" aria-busy="true" data-testid="status-scan-loading"><i /><i /><i /><i /></div>}
+          {scanner.isLoading && (
+            <div className="jx-scan-loading" aria-busy="true" data-testid="status-scan-loading">
+              <div aria-hidden="true">{Array.from({ length: 11 }, (_, item) => <LearningStockRowSkeleton key={item} />)}</div>
+              <InvestmentLoader size="md" language={ctx.isAr ? 'ar' : 'en'} message="market" className="jx-scan-loading__overlay" />
+            </div>
+          )}
           {scanner.isError && (
             <div className="jx-card jx-error" role="alert" data-testid="status-scan-error">
               <p>{errMsg(scanner.error, tr('Market data could not be loaded.', 'تعذّر تحميل بيانات السوق.'))}</p>
@@ -362,8 +377,9 @@ function ScanBody({ ctx }: { ctx: JourneyCtx }) {
           <button type="button" className="jx-btn jx-btn--ghost" disabled={busy || !stocks?.length} onClick={pickForMe} data-testid="button-pick-for-me">
             <Sparkles size={16} aria-hidden="true" /> {tr('Pick for me', 'اختر لي')}
           </button>
-          <button type="button" className="jx-btn" disabled={busy || selected.length < 1} onClick={() => void saveAndGo(selected)} data-testid="button-scan-continue">
-            {busy ? tr('Saving…', 'جارٍ الحفظ…') : tr('Continue', 'متابعة')} <ArrowRight size={18} aria-hidden="true" className="jx-flip" />
+          <button type="button" className="jx-btn" disabled={busy || selected.length < 1} aria-busy={busy} onClick={() => void saveAndGo(selected)} data-testid="button-scan-continue">
+            {busy ? <span className="jx-inline-loading"><InvestmentArrows size="sm" className="kv-investment-arrows--button" />{tr('Saving', 'جارٍ الحفظ')}</span> : tr('Continue', 'متابعة')}
+            {!busy && <ArrowRight size={18} aria-hidden="true" className="jx-flip" />}
           </button>
         </div>
       </div>

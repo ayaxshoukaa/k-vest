@@ -9,6 +9,7 @@ import {
   useGetMarketScanner,
 } from '@workspace/api-client-react';
 import { DataWarning, JourneyShell, type JourneyCtx } from '@/components/journey/shell';
+import { InvestmentLoader } from '@/components/investment-loader';
 import { errMsg, friendlyWarning } from '@/lib/journey';
 
 interface Msg { role: 'user' | 'ai'; text: string; sample?: boolean; stale?: boolean; warning?: string | null }
@@ -95,9 +96,8 @@ function ResearchBody({ ctx }: { ctx: JourneyCtx }) {
             </div>
           ))}
           {analyze.isPending && (
-            <div className="jx-bubble jx-bubble--ai" role="status" data-testid="status-typing">
-              <span className="jx-typing" aria-hidden="true"><i /><i /><i /></span>
-              <span className="jx-sr">{tr('The AI helper is writing', 'المساعد يكتب')}</span>
+            <div className="jx-bubble jx-bubble--ai" aria-busy="true" data-testid="status-typing">
+              <InvestmentLoader size="sm" language={isAr ? 'ar' : 'en'} message="ai" />
             </div>
           )}
           <div ref={endRef} />
