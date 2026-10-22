@@ -21,6 +21,12 @@ Ensure runtime dependencies externalized by esbuild are installed in the Vercel 
 
 **How to apply:** Review esbuild's `external` list for required runtime packages and confirm each external package is present in the deployment artifact.
 
+For Vercel's TypeScript build, prefer named imports for CommonJS packages whose default import can resolve as a non-callable module namespace (for example, `pino-http`).
+
+**Why:** Vercel's compiler reported that the `pino-http` default import had no call signatures even though the local workspace typecheck passed.
+
+**How to apply:** When Vercel rejects a default import as non-callable, verify the package's declared named exports and import the callable by name; keep route parameter types explicit if Vercel reports emit/type errors.
+
 K-Vest deployment decision: the user chose to deploy the website and API as separate Vercel projects rather than as one multi-service project.
 
 **Why:** The user wants to keep the website deployment separate and deploy the API independently.
