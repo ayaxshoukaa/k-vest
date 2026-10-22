@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { ArrowRight, RefreshCw, Search, Sparkles, Star } from 'lucide-react';
 import {
-  Bar, BarChart, CartesianGrid, Cell, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis,
+  Bar, BarChart, CartesianGrid, Cell, Line, LineChart, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis,
 } from 'recharts';
 import {
   getGetMarketStockQueryKey,
@@ -12,6 +12,7 @@ import {
   type MarketScannerStock,
 } from '@workspace/api-client-react';
 import { DataWarning, JourneyShell, Sparkline, type JourneyCtx } from '@/components/journey/shell';
+import { CompanyLogo } from '@/components/company-logo';
 import { RatingInfo, RatingPresentation } from '@/components/rating-presentation';
 import { errMsg, fmtKwd, fmtPct, fmtTime } from '@/lib/journey';
 
@@ -30,7 +31,10 @@ function StockRow({ s, selected, active, onStar, onOpen, ctx }: {
         <Star size={20} aria-hidden="true" />
       </button>
       <button type="button" className="jx-row__main" onClick={onOpen} aria-expanded={active} aria-controls="journey-company-details" data-testid={`button-open-${s.symbol}`}>
-        <strong>{s.companyName}</strong>
+        <div className="jx-row__company-brand">
+          <CompanyLogo key={s.symbol} symbol={s.symbol} companyName={s.companyName} />
+          <strong>{s.companyName}</strong>
+        </div>
         <div className="jx-row__meta">
           <span>{s.symbol}{s.sample ? ` · ${tr('Sample', 'تجريبي')}` : ''}</span>
         </div>
@@ -46,10 +50,27 @@ function StockRow({ s, selected, active, onStar, onOpen, ctx }: {
 }
 
 function Detail({ symbol, ctx }: { symbol: string; ctx: JourneyCtx }) {
-  const { tr } = ctx;
+  const { tr, isAr } = ctx;
   const language = ctx.isAr ? 'ar' : 'en';
   const q = useGetMarketStock(symbol, { query: { queryKey: getGetMarketStockQueryKey(symbol), retry: false } });
   const na = tr('Unavailable', 'غير متاح');
+  const historyData = useMemo(() => {
+    const dateFormatter = new Intl.DateTimeFormat(isAr ? 'ar-KW' : 'en-KW', {
+      day: 'numeric',
+      month: 'short',
+      timeZone: 'Asia/Kuwait',
+    });
+    return (q.data?.stock.sparkline ?? [])
+      .filter((point) => Number.isFinite(Date.parse(point.date)) && Number.isFinite(point.closeKwd) && point.closeKwd > 0)
+      .map((point) => {
+        const date = new Date(point.date);
+        return { time: date.getTime(), label: dateFormatter.format(date), price: point.closeKwd };
+      })
+      .sort((a, b) => a.time - b.time);
+  }, [isAr, q.data?.stock.sparkline]);
+  const trendColor = historyData.length > 1 && historyData[historyData.length - 1].price >= historyData[0].price
+    ? '#45DFA4'
+    : '#4CD7F6';
   if (q.isLoading) return <div className="jx-card jx-skeleton" aria-busy="true"><i /><i /></div>;
   if (q.isError || !q.data) {
     return (
@@ -73,15 +94,58 @@ function Detail({ symbol, ctx }: { symbol: string; ctx: JourneyCtx }) {
         onRetry={() => void q.refetch()}
         retrying={q.isFetching}
       />
-      <h2>{stock.companyName}</h2>
-      <p className="jx-muted">{stock.symbol}{stock.sector ? ` · ${stock.sector}` : ''}</p>
+      <div className="jx-detail-company-heading">
+        <CompanyLogo key={stock.symbol} symbol={stock.symbol} companyName={stock.companyName} />
+        <div>
+          <h2>{stock.companyName}</h2>
+          <p className="jx-muted">{stock.symbol}{stock.sector ? ` · ${stock.sector}` : ''}</p>
+        </div>
+      </div>
       <p className="jx-result-big" style={{ marginTop: 10 }} data-testid="text-detail-price">{fmtKwd(stock.priceKwd, na)}</p>
-      <div className="jx-detail-chart">
-        <p className="jx-muted">{tr('One-month price trend', 'الاتجاه السعري لشهر')}</p>
-        {stock.sparkline.length > 1 ? <Sparkline points={stock.sparkline} /> : (
+      <section className="jx-detail-chart" aria-labelledby="company-price-chart-title" aria-describedby="company-price-chart-caption">
+        <h3 id="company-price-chart-title">{tr('Price over the last 30 days', 'السعر خلال آخر 30 يومًا')}</h3>
+        <p id="company-price-chart-caption" className="jx-muted">
+          {tr('This chart shows how the price changed over the last 30 days.', 'يوضح هذا الرسم كيف تغيّر السعر خلال آخر 30 يومًا.')}
+        </p>
+        {historyData.length > 1 ? (
+          <div className="jx-detail-chart__plot" data-testid="chart-company-month-price">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={historyData} margin={{ top: 8, right: 8, bottom: 0, left: 8 }}>
+                <CartesianGrid stroke="rgba(255,255,255,.08)" vertical={false} />
+                <XAxis
+                  dataKey="label"
+                  reversed={isAr}
+                  tick={{ fill: '#BBCABF', fontSize: 11 }}
+                  tickLine={false}
+                  axisLine={false}
+                  minTickGap={24}
+                  interval="preserveStartEnd"
+                />
+                <YAxis hide domain={['dataMin', 'dataMax']} />
+                <Tooltip
+                  cursor={{ stroke: 'rgba(76,215,246,.25)' }}
+                  contentStyle={{ background: '#090D16', border: '1px solid rgba(255,255,255,.12)', borderRadius: 10 }}
+                  labelStyle={{ color: '#BBCABF' }}
+                  itemStyle={{ color: '#E1E2E9' }}
+                  labelFormatter={(label) => String(label)}
+                  formatter={(value) => [fmtKwd(Number(value), na), tr('Price', 'السعر')]}
+                />
+                <Line
+                  type="monotone"
+                  dataKey="price"
+                  stroke={trendColor}
+                  strokeWidth={2.5}
+                  dot={false}
+                  activeDot={{ r: 4, fill: trendColor, stroke: '#090D16', strokeWidth: 2 }}
+                  isAnimationActive={false}
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+        ) : (
           <p className="jx-muted" role="status">{tr('Price history is temporarily unavailable.', 'التاريخ السعري غير متاح مؤقتًا.')}</p>
         )}
-      </div>
+      </section>
       <dl className="jx-kv">
         <div><dt>{tr('Change', 'التغيّر')}</dt><dd>{fmtKwd(stock.changeKwd, na)} ({fmtPct(stock.changePercent, na)})</dd></div>
         <div><dt>{tr('Volume', 'حجم التداول')}</dt><dd>{stock.volume === null ? na : stock.volume.toLocaleString('en-US')}</dd></div>
