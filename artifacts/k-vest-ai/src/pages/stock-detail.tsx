@@ -7,6 +7,7 @@ import {
   downloadCsv, formatKwd, formatMarketTime, formatPercent, LearningDisclosure, MarketFrame, SourceBadges,
   useSavedSymbols,
 } from '@/components/market-tools';
+import { RatingInfo, RatingPresentation } from '@/components/rating-presentation';
 import { friendlyWarning, readLanguage } from '@/lib/journey';
 
 const CHART_COLOR = '#10B981';
@@ -75,7 +76,7 @@ export default function StockDetailPage() {
               <div><span>{stock.sample ? 'Published sample price' : 'Latest available price'}</span><strong>{formatKwd(stock.priceKwd)}</strong><small>{formatMarketTime(stock.marketTime)}</small></div>
               <div className={stock.changePercent === null ? '' : stock.changePercent >= 0 ? 'positive' : 'negative'}><span>Daily change</span><strong>{stock.changeKwd === null ? 'Unavailable' : `${stock.changeKwd > 0 ? '+' : ''}${stock.changeKwd.toFixed(3)} KWD`}</strong><small>{formatPercent(stock.changePercent)}</small></div>
               <div><span>1-month history</span><strong>{history.length ? `${history.length} data points` : 'Unavailable'}</strong><small>{oneMonthChange === null ? 'Change unavailable' : `${formatPercent(oneMonthChange)} across available history`}</small></div>
-              <div><span>Learning signal</span><strong><span className={`market-rating rating-${stock.rating.toLowerCase()}`}>{stock.rating}</span></strong><small>Educational signal only</small></div>
+              <div><span>Learning signal</span><RatingPresentation rating={stock.rating} language={isAr ? 'ar' : 'en'} /></div>
             </div>
             <section className="market-detail-chart-panel">
               <div className="market-chart-head">
@@ -98,7 +99,7 @@ export default function StockDetailPage() {
               ) : <div className="market-chart-empty market-history-empty">One-month history is not available for this listing. No estimated values are shown.</div>}
             </section>
             <div className="market-detail-footnote">
-              <div><span className="market-note-mark">i</span><p><strong>How to read this:</strong> the learning signal is a simplified description of recent momentum, not a valuation or recommendation. Delayed data can differ from live market prices.</p></div>
+              <RatingInfo language={isAr ? 'ar' : 'en'} />
               {marketQuery.data?.index && <small>Premier Market index: {marketQuery.data.index.name} · {marketQuery.data.index.value.toLocaleString('en-KW', { maximumFractionDigits: 3 })}</small>}
             </div>
           </>

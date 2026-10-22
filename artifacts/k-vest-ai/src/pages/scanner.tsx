@@ -9,6 +9,7 @@ import {
   downloadCsv, formatKwd, formatMarketTime, formatPercent, LearningDisclosure, MarketFrame, SourceBadges,
   stockCsvRow, useSavedSymbols,
 } from '@/components/market-tools';
+import { RatingInfo, RatingPresentation } from '@/components/rating-presentation';
 import { friendlyWarning, readLanguage } from '@/lib/journey';
 
 type ViewMode = 'all' | 'gainers' | 'losers' | 'active';
@@ -17,11 +18,6 @@ const CHART_COLORS = { main: '#10B981', positive: '#4EDEA3', negative: '#FB7185'
 
 function formatCompact(value: number | null) {
   return value === null ? 'Unavailable' : new Intl.NumberFormat('en-KW', { notation: 'compact', maximumFractionDigits: 1 }).format(value);
-}
-
-function RatingBadge({ rating }: { rating: MarketScannerStock['rating'] }) {
-  const className = rating.toLowerCase();
-  return <span className={`market-rating rating-${className}`}>{rating}</span>;
 }
 
 function Sparkline({ stock }: { stock: MarketScannerStock }) {
@@ -216,6 +212,7 @@ export default function ScannerPage() {
                    <div><span className="market-eyebrow">Oanor screened listings</span><h2>{view === 'all' ? 'Company overview' : views.find((item) => item.key === view)?.label}</h2><p>Views compare the largest market-cap listings returned by Oanor.</p></div>
                   <span className="market-row-count">{filtered.length} of {allStocks.length} companies</span>
                 </div>
+                <RatingInfo language={isAr ? 'ar' : 'en'} />
                 {query.isError && !query.data ? (
                   <div className="market-error-card" role="alert" data-testid="error-scanner-unavailable">
                     <h3>{isAr ? 'تعذّر تحميل بيانات السوق' : "We couldn't load market data"}</h3>
@@ -251,7 +248,7 @@ export default function ScannerPage() {
                             </td>
                             <td><Link className="market-spark-link" href={`/stocks/${encodeURIComponent(stock.symbol)}`} aria-label={`View ${stock.companyName} one-month chart`}><Sparkline stock={stock} /></Link></td>
                             <td className="market-number">{formatCompact(stock.volume)}</td>
-                            <td><RatingBadge rating={stock.rating} />{stock.momentumPercent !== null && <small className="market-momentum">{formatPercent(stock.momentumPercent)} momentum</small>}</td>
+                            <td><RatingPresentation rating={stock.rating} language={isAr ? 'ar' : 'en'} /></td>
                             <td><button type="button" className={`market-star ${symbols.includes(stock.symbol) ? 'saved' : ''}`} onClick={() => toggle(stock.symbol)} aria-label={`${symbols.includes(stock.symbol) ? 'Remove' : 'Add'} ${stock.companyName} ${symbols.includes(stock.symbol) ? 'from' : 'to'} watchlist`} aria-pressed={symbols.includes(stock.symbol)} data-testid={`button-watchlist-${stock.symbol}`}><Star size={17} fill={symbols.includes(stock.symbol) ? 'currentColor' : 'none'} /></button></td>
                           </tr>
                         ))}

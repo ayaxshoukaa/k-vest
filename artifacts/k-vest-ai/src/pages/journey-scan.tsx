@@ -12,6 +12,7 @@ import {
   type MarketScannerStock,
 } from '@workspace/api-client-react';
 import { DataWarning, JourneyShell, Sparkline, type JourneyCtx } from '@/components/journey/shell';
+import { RatingInfo, RatingPresentation } from '@/components/rating-presentation';
 import { errMsg, fmtKwd, fmtPct, fmtTime } from '@/lib/journey';
 
 type Tab = 'all' | 'gainers' | 'losers' | 'active';
@@ -20,6 +21,7 @@ function StockRow({ s, selected, active, onStar, onOpen, ctx }: {
   s: MarketScannerStock; selected: boolean; active: boolean; onStar: () => void; onOpen: () => void; ctx: JourneyCtx;
 }) {
   const { tr } = ctx;
+  const language = ctx.isAr ? 'ar' : 'en';
   const na = tr('Unavailable', 'غير متاح');
   return (
     <li className={`jx-row${active ? ' is-active' : ''}`} data-testid={`row-stock-${s.symbol}`}>
@@ -31,8 +33,8 @@ function StockRow({ s, selected, active, onStar, onOpen, ctx }: {
         <strong>{s.companyName}</strong>
         <div className="jx-row__meta">
           <span>{s.symbol}{s.sample ? ` · ${tr('Sample', 'تجريبي')}` : ''}</span>
-          <b className={`jx-badge jx-badge--${s.rating}`}>{ratingLabel(s.rating, tr)}</b>
         </div>
+        <RatingPresentation rating={s.rating} language={language} />
       </button>
       <Sparkline points={s.sparkline} />
       <div className="jx-price">
@@ -45,6 +47,7 @@ function StockRow({ s, selected, active, onStar, onOpen, ctx }: {
 
 function Detail({ symbol, ctx }: { symbol: string; ctx: JourneyCtx }) {
   const { tr } = ctx;
+  const language = ctx.isAr ? 'ar' : 'en';
   const q = useGetMarketStock(symbol, { query: { queryKey: getGetMarketStockQueryKey(symbol), retry: false } });
   const na = tr('Unavailable', 'غير متاح');
   if (q.isLoading) return <div className="jx-card jx-skeleton" aria-busy="true"><i /><i /></div>;
@@ -83,18 +86,11 @@ function Detail({ symbol, ctx }: { symbol: string; ctx: JourneyCtx }) {
         <div><dt>{tr('Change', 'التغيّر')}</dt><dd>{fmtKwd(stock.changeKwd, na)} ({fmtPct(stock.changePercent, na)})</dd></div>
         <div><dt>{tr('Volume', 'حجم التداول')}</dt><dd>{stock.volume === null ? na : stock.volume.toLocaleString('en-US')}</dd></div>
         <div><dt>{tr('Momentum', 'الزخم')}</dt><dd>{fmtPct(stock.momentumPercent, na)}</dd></div>
-        <div><dt>{tr('Rating', 'التقييم')}</dt><dd><span className={`jx-badge jx-badge--${stock.rating}`}>{ratingLabel(stock.rating, tr)}</span></dd></div>
+        <div><dt>{tr('Rating', 'التقييم')}</dt><dd><RatingPresentation rating={stock.rating} language={language} /></dd></div>
       </dl>
       {time && <p className="jx-muted" style={{ marginTop: 10 }}>{tr('Quote time', 'وقت السعر')}: {time}</p>}
     </div>
   );
-}
-
-function ratingLabel(r: string, tr: JourneyCtx['tr']) {
-  if (r === 'Strong') return tr('Strong', 'قوي');
-  if (r === 'Neutral') return tr('Neutral', 'محايد');
-  if (r === 'Weak') return tr('Weak', 'ضعيف');
-  return tr('Unavailable', 'غير متاح');
 }
 
 function ScanBody({ ctx }: { ctx: JourneyCtx }) {
@@ -287,8 +283,7 @@ function ScanBody({ ctx }: { ctx: JourneyCtx }) {
             </div>
           )}
           <div className="jx-card" data-testid="text-rating-explainer">
-            <h3>{tr('What do the ratings mean?', 'ماذا تعني التقييمات؟')}</h3>
-            <p className="jx-muted">{tr('Strong, Neutral and Weak combine recent price momentum and relative volume. They are a learning aid, not a prediction or advice.', 'قوي ومحايد وضعيف تجمع زخم السعر الأخير وحجم التداول النسبي. هي أداة تعليمية وليست توقعًا أو نصيحة.')}</p>
+            <RatingInfo language={ctx.isAr ? 'ar' : 'en'} className="rating-info--embedded" />
           </div>
         </aside>
       </div>

@@ -6,6 +6,7 @@ import {
   downloadCsv, formatKwd, formatMarketTime, formatPercent, LearningDisclosure, MarketFrame, SourceBadges,
   stockCsvRow, useSavedSymbols,
 } from '@/components/market-tools';
+import { RatingInfo, RatingPresentation } from '@/components/rating-presentation';
 import { friendlyWarning, readLanguage } from '@/lib/journey';
 
 export default function WatchlistPage() {
@@ -61,6 +62,7 @@ export default function WatchlistPage() {
               <div><span className="market-eyebrow">Saved on this device</span><h2>{symbols.length} {symbols.length === 1 ? 'company' : 'companies'}</h2><p>Quote values are delayed and may be stale or unavailable.</p></div>
               <Link href="/scanner" className="market-inline-link" data-testid="link-watchlist-scanner">Browse scanner <ArrowRight size={14} /></Link>
             </div>
+            <RatingInfo language={isAr ? 'ar' : 'en'} />
             {savedStocks.length ? (
               <div className="market-watch-list">
                 {savedStocks.map((stock) => (
@@ -70,7 +72,7 @@ export default function WatchlistPage() {
                     </Link>
                     <div className="market-watch-value"><span>Price</span><strong>{formatKwd(stock.priceKwd)}</strong></div>
                     <div className={`market-watch-value ${stock.changePercent === null ? '' : stock.changePercent >= 0 ? 'positive' : 'negative'}`}><span>Daily change</span><strong>{formatPercent(stock.changePercent)}</strong></div>
-                    <div className="market-watch-signal"><span className={`market-rating rating-${stock.rating.toLowerCase()}`}>{stock.rating}</span>{(stock.stale || stock.sample) && <small>{stock.sample ? 'Sample data' : 'Stale data'}</small>}</div>
+                    <div className="market-watch-signal"><RatingPresentation rating={stock.rating} language={isAr ? 'ar' : 'en'} />{(stock.stale || stock.sample) && <small>{stock.sample ? 'Sample data' : 'Stale data'}</small>}</div>
                     <div className="market-watch-controls"><Link href={`/stocks/${encodeURIComponent(stock.symbol)}`} className="market-watch-open" data-testid={`link-watch-detail-${stock.symbol}`}>Details <ArrowRight size={14} /></Link><button type="button" onClick={() => remove(stock.symbol)} className="market-star market-remove" aria-label={`Remove ${stock.companyName} from watchlist`} data-testid={`button-remove-watchlist-${stock.symbol}`}><Trash2 size={16} /></button></div>
                   </article>
                 ))}
