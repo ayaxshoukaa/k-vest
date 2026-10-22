@@ -1,5 +1,5 @@
 import { MarketQuotesResponseRefreshStatus, type MarketQuote, type MarketQuotesResponse } from "@workspace/api-zod";
-import YahooFinance from "yahoo-finance2";
+import * as YahooFinanceModule from "yahoo-finance2";
 import { logger } from "../lib/logger";
 
 const CACHE_TTL_MS = 3 * 60 * 1000;
@@ -35,7 +35,7 @@ export interface MarketQuoteProvider {
 }
 
 class YahooFinanceQuoteProvider implements MarketQuoteProvider {
-  private readonly yahooFinance = new YahooFinance({
+  private readonly yahooFinance = new YahooFinanceModule.default({
     suppressNotices: ["yahooSurvey"],
   });
 
