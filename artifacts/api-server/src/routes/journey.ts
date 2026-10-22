@@ -23,6 +23,7 @@ import {
   updateJourneyWatchlist,
 } from "../services/journey";
 import { analyzeCompany, checkResearchLimit } from "../services/research";
+import { getMarketStock } from "../services/market-scanner";
 import { journeyOwner, resolveJourneyOwner, sameOriginLearningApi } from "../middlewares/journeyOwner";
 
 const router: IRouter = Router();
@@ -130,7 +131,10 @@ router.post("/journey/calculator", async (req, res, next) => {
     return;
   }
   try {
-    await getCompanyResearchContext(parsed.data.symbol);
+    const company = await getMarketStock(parsed.data.symbol);
+    if (!company?.stock) {
+      throw new JourneyError("Company is not available in the market scanner.", 404);
+    }
     res.json(GetJourneyStateResponse.parse(await saveRoiResult(userId(req), parsed.data)));
   } catch (error) {
     handleError(error, res, next);

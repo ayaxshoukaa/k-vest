@@ -4,6 +4,23 @@ import { logger } from "../lib/logger";
 const OANOR_BASE_URL = "https://api.oanor.com/kuwait-stock-api/v1";
 const REQUEST_TIMEOUT_MS = 12_000;
 const HISTORY_CACHE_TTL_MS = 5 * 60 * 1000;
+const COMPANY_PROFILE_CACHE_TTL_MS = 24 * 60 * 60 * 1000;
+const COMPANY_PROFILE_FAILURE_CACHE_TTL_MS = 5 * 60 * 1000;
+
+export interface YahooCompanyProfile {
+  sector: string | null;
+  description: string | null;
+}
+
+function shortenCompanyDescription(value: string | undefined): string | null {
+  const normalized = value?.replace(/\s+/g, " ").trim();
+  if (!normalized) return null;
+  if (normalized.length <= 360) return normalized;
+
+  const excerpt = normalized.slice(0, 360);
+  const lastSpace = excerpt.lastIndexOf(" ");
+  return `${excerpt.slice(0, lastSpace > 240 ? lastSpace : excerpt.length).trimEnd()}…`;
+}
 
 export interface OanorListing {
   symbol: string;
@@ -189,6 +206,51 @@ export class YahooHistoryProvider {
     queue: { concurrency: 3, interval: 250 },
   });
   private readonly historyCache = new Map<string, { points: MarketHistoryPoint[]; cachedAt: number }>();
+  private readonly companyProfileCache = new Map<
+    string,
+    { profile: YahooCompanyProfile; expiresAt: number }
+  >();
+
+  async fetchCompanyProfile(symbol: string): Promise<YahooCompanyProfile> {
+    const normalizedSymbol = symbol.endsWith(".KW") ? symbol : `${symbol}.KW`;
+    const cached = this.companyProfileCache.get(normalizedSymbol);
+    if (cached && Date.now() < cached.expiresAt) return cached.profile;
+
+    try {
+      const result = await this.yahooFinance.quoteSummary(
+        normalizedSymbol,
+        { modules: ["assetProfile"] },
+        {
+          validateResult: true,
+          fetchOptions: { signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS) },
+        },
+      );
+      const assetProfile = result.assetProfile;
+      const profile: YahooCompanyProfile = {
+        sector: assetProfile?.sectorDisp ?? assetProfile?.sector ?? null,
+        description: shortenCompanyDescription(
+          assetProfile?.longBusinessSummary ?? assetProfile?.description,
+        ),
+      };
+      this.companyProfileCache.set(normalizedSymbol, {
+        profile,
+        expiresAt:
+          Date.now()
+          + (profile.sector || profile.description
+            ? COMPANY_PROFILE_CACHE_TTL_MS
+            : COMPANY_PROFILE_FAILURE_CACHE_TTL_MS),
+      });
+      return profile;
+    } catch (error) {
+      logger.warn({ err: error, symbol: normalizedSymbol }, "Yahoo Finance company profile refresh failed");
+      const profile = cached?.profile ?? { sector: null, description: null };
+      this.companyProfileCache.set(normalizedSymbol, {
+        profile,
+        expiresAt: Date.now() + COMPANY_PROFILE_FAILURE_CACHE_TTL_MS,
+      });
+      return profile;
+    }
+  }
 
   async fetchOneMonth(symbol: string, currency: string): Promise<MarketHistoryPoint[]> {
     const normalizedSymbol = symbol.endsWith(".KW") ? symbol : `${symbol}.KW`;

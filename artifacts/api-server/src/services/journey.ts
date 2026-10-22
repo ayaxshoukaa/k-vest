@@ -11,8 +11,14 @@ import {
   nextMongoId,
   type JourneyProgressDocument,
 } from "../lib/mongodb";
-import { getMarketScanner, getMarketStock } from "./market-scanner";
+import {
+  getMarketScanner,
+  getMarketStock,
+  getRatingReason,
+  getYahooCompanyProfile,
+} from "./market-scanner";
 import { calculateLedger as calculateAccount, calculateRoiScenario, roundKwd, roundPercent } from "./journey-calculations";
+import type { CompanyResearchContext } from "./research";
 
 export const JOURNEY_STEPS: JourneyStep[] = [
   "scan-intro",
@@ -432,11 +438,22 @@ export async function markResearchComplete(userId: string | undefined): Promise<
   );
 }
 
-export async function getCompanyResearchContext(symbol: string) {
+export async function getCompanyResearchContext(
+  symbol: string,
+): Promise<CompanyResearchContext> {
   const result = await getMarketStock(symbol);
   if (!result?.stock) {
     throw new JourneyError("Company is not available in the market scanner.", 404);
   }
-  return result;
+  const [profile, scanner] = await Promise.all([
+    getYahooCompanyProfile(symbol),
+    getMarketScanner(),
+  ]);
+  return {
+    ...result,
+    companySector: result.stock.sector ?? profile.sector,
+    companyDescription: profile.description,
+    ratingReason: getRatingReason(result.stock, scanner.stocks),
+  };
 }
 

@@ -12,6 +12,7 @@ import {
   OanorMarketDataProvider,
   YahooHistoryProvider,
   toKwd,
+  type YahooCompanyProfile,
   type MarketHistoryPoint,
   type OanorIndex,
   type OanorListing,
@@ -53,6 +54,42 @@ function getRating(
   if (momentumPercent > 0) return "Strong";
   if (momentumPercent < 0) return "Weak";
   return "Neutral";
+}
+
+export function getRatingReason(
+  stock: Pick<MarketScannerStock, "rating" | "momentumPercent" | "volume">,
+  universe: MarketScannerStock[],
+): string {
+  const medianVolume = median(
+    universe
+      .map((candidate) => candidate.volume ?? 0)
+      .filter((volume) => volume > 0),
+  );
+  const calculatedRating = getRating(stock.momentumPercent, stock.volume, medianVolume);
+  const currentVolume = stock.volume?.toLocaleString("en-US") ?? "unavailable";
+  const medianVolumeText = medianVolume?.toLocaleString("en-US") ?? "unavailable";
+
+  if (calculatedRating !== stock.rating) {
+    return `The displayed rating is ${stock.rating}, but the current inputs would produce ${calculatedRating}; the quote and scanner may be from different refreshes.`;
+  }
+  if (calculatedRating === "Unavailable") {
+    const missing = [
+      stock.momentumPercent === null ? "one-month price momentum" : null,
+      stock.volume === null ? "current trading volume" : null,
+      medianVolume === null ? "scanner median volume" : null,
+    ].filter((item): item is string => item !== null);
+    return `Unavailable because ${missing.join(", ") || "the market inputs are incomplete"}.`;
+  }
+  if (stock.volume !== null && medianVolume !== null && stock.volume < medianVolume) {
+    return `Neutral because current trading volume (${stock.volume.toLocaleString("en-US")}) is below the scanner median (${medianVolume.toLocaleString("en-US")}).`;
+  }
+  if (stock.momentumPercent !== null && stock.momentumPercent > 0) {
+    return `Strong because one-month price momentum is positive (${stock.momentumPercent.toFixed(2)}%) and current volume (${currentVolume}) is at or above the scanner median (${medianVolumeText}).`;
+  }
+  if (stock.momentumPercent !== null && stock.momentumPercent < 0) {
+    return `Weak because one-month price momentum is negative (${stock.momentumPercent.toFixed(2)}%) while current volume (${currentVolume}) is at or above the scanner median (${medianVolumeText}).`;
+  }
+  return `Neutral because one-month price momentum is flat while current volume (${currentVolume}) is at or above the scanner median (${medianVolumeText}).`;
 }
 
 function toMarketStock(
@@ -283,6 +320,10 @@ class MarketScannerService {
     return refresh;
   }
 
+  async getCompanyProfile(symbol: string): Promise<YahooCompanyProfile> {
+    return this.yahooHistory.fetchCompanyProfile(symbol);
+  }
+
   private async refreshStock(
     symbol: string,
     previous: MarketStockDetailResponse | null,
@@ -343,4 +384,8 @@ export function getMarketScanner(): Promise<MarketScannerResponse> {
 
 export function getMarketStock(symbol: string): Promise<MarketStockDetailResponse | null> {
   return marketScannerService.getStock(symbol);
+}
+
+export function getYahooCompanyProfile(symbol: string): Promise<YahooCompanyProfile> {
+  return marketScannerService.getCompanyProfile(symbol);
 }
