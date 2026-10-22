@@ -62,7 +62,14 @@ function Detail({ symbol, ctx }: { symbol: string; ctx: JourneyCtx }) {
   const time = fmtTime(stock.marketTime ?? lastUpdatedAt);
   return (
     <div className="jx-card" data-testid={`panel-detail-${symbol}`}>
-      <DataWarning sample={stock.sample || refreshStatus === 'sample'} stale={stock.stale || refreshStatus === 'stale'} warning={warning} tr={tr} />
+      <DataWarning
+        sample={stock.sample || refreshStatus === 'sample'}
+        stale={stock.stale || refreshStatus === 'stale'}
+        warning={warning}
+        tr={tr}
+        onRetry={() => void q.refetch()}
+        retrying={q.isFetching}
+      />
       <h2>{stock.companyName}</h2>
       <p className="jx-muted">{stock.symbol}{stock.sector ? ` · ${stock.sector}` : ''}</p>
       <p className="jx-result-big" style={{ marginTop: 10 }} data-testid="text-detail-price">{fmtKwd(stock.priceKwd, na)}</p>
@@ -168,7 +175,14 @@ function ScanBody({ ctx }: { ctx: JourneyCtx }) {
         <h1>{tr('Scan the Kuwait market', 'استكشف سوق الكويت')}</h1>
         <p className="jx-muted">{tr('Star the companies you want to learn about. Open a name for details.', 'ضع نجمة على الشركات التي تريد التعرف عليها. افتح أي اسم لرؤية التفاصيل.')}</p>
       </div>
-      {scanner.data && <DataWarning sample={scanner.data.refreshStatus === 'sample' || (stocks ?? []).some((s) => s.sample)} stale={scanner.data.refreshStatus === 'stale'} warning={scanner.data.warning} tr={tr} />}
+      {scanner.data && <DataWarning
+        sample={scanner.data.refreshStatus === 'sample' || (stocks ?? []).some((s) => s.sample)}
+        stale={scanner.data.refreshStatus === 'stale'}
+        warning={scanner.data.warning}
+        tr={tr}
+        onRetry={() => void scanner.refetch()}
+        retrying={scanner.isFetching}
+      />}
 
       <section className="jx-card jx-change-chart" aria-labelledby="scan-change-heading" data-testid="chart-kuwait-stock-changes">
         <div>

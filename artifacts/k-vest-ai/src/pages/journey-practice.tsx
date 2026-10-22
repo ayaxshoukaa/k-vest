@@ -86,7 +86,14 @@ function PracticeBody({ ctx }: { ctx: JourneyCtx }) {
         <h1>{tr('Practice wallet', 'محفظة التدريب')}</h1>
         <p className="jx-muted">{tr('Demo money only. Trades happen at the latest price our feed has.', 'مال تجريبي فقط. تتم الصفقات بآخر سعر لدى مصدر البيانات.')}</p>
       </div>
-      <DataWarning sample={anySample} stale={anyStale} warning={state.marketDataNote || quote.data?.warning} tr={tr} />
+      <DataWarning
+        sample={anySample}
+        stale={anyStale}
+        warning={state.marketDataNote || quote.data?.warning}
+        tr={tr}
+        onRetry={() => void Promise.all([scanner.refetch(), quote.refetch()])}
+        retrying={scanner.isFetching || quote.isFetching}
+      />
       <div className="jx-stats" data-testid="section-wallet-stats">
         <div className="jx-stat"><span>{tr('Cash', 'النقد')}</span><b data-testid="text-cash">{fmtKwd(state.cashKwd, na)}</b></div>
         <div className="jx-stat"><span>{tr('Holdings value', 'قيمة الأسهم')}</span><b data-testid="text-market-value">{fmtKwd(state.marketValueKwd, na)}</b></div>

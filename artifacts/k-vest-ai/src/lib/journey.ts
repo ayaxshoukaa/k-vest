@@ -69,8 +69,8 @@ export function friendlyWarning(warning: string | null | undefined, language: La
     loggedWarnings.add(warning);
   }
   return language === 'ar'
-    ? 'تعذّر تحديث بعض معلومات السوق. قد تكون البيانات متأخرة.'
-    : 'Some market information could not be refreshed. Data may be delayed.';
+    ? 'قد تكون أسعار السوق متأخرة. أعد المحاولة للتحقق من وجود تحديث.'
+    : 'Market prices may be delayed. Retry to check for an update.';
 }
 
 export const DISCLAIMER_EN = 'For education only. Not financial advice.';

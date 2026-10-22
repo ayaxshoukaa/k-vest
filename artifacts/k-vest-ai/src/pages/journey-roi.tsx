@@ -117,7 +117,8 @@ function RoiBody({ ctx }: { ctx: JourneyCtx }) {
         <h1>{tr('What if? ROI scenarios', 'ماذا لو؟ سيناريوهات العائد')}</h1>
         <p className="jx-muted">{tr('Try a budget, a buy price and a target. Results are demo numbers.', 'جرّب ميزانية وسعر شراء وهدفًا. النتائج أرقام تجريبية.')}</p>
       </div>
-      <DataWarning sample={!!stock?.sample} stale={!!stock?.stale} warning={quote.data?.warning} tr={tr} />
+      <DataWarning sample={!!stock?.sample} stale={!!stock?.stale} warning={quote.data?.warning} tr={tr}
+        onRetry={() => void quote.refetch()} retrying={quote.isFetching} />
       <div className="jx-grid jx-grid--even">
         <form className="jx-card jx-form" onSubmit={(e) => void submit(e)} data-testid="form-roi">
           <label className="jx-label">{tr('Company', 'الشركة')}

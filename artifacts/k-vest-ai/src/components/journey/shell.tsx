@@ -146,7 +146,21 @@ export function JourneyShell({ step, children }: { step: JourneyStep; children: 
   );
 }
 
-export function DataWarning({ sample, stale, warning, tr }: { sample?: boolean; stale?: boolean; warning?: string | null; tr: JourneyCtx['tr'] }) {
+export function DataWarning({
+  sample,
+  stale,
+  warning,
+  tr,
+  onRetry,
+  retrying = false,
+}: {
+  sample?: boolean;
+  stale?: boolean;
+  warning?: string | null;
+  tr: JourneyCtx['tr'];
+  onRetry?: () => void;
+  retrying?: boolean;
+}) {
   if (!sample && !stale && !warning) return null;
   return (
     <div className={`jx-warn${sample ? ' jx-warn--sample' : ''}`} role="status" data-testid="alert-data-warning">
@@ -155,6 +169,12 @@ export function DataWarning({ sample, stale, warning, tr }: { sample?: boolean; 
         {sample && <strong>{tr('Sample data, not live prices. These numbers are illustrative only.', 'بيانات تجريبية وليست أسعارًا حية. الأرقام للتوضيح فقط.')}</strong>}
         {!sample && stale && <strong>{tr('Delayed or out-of-date prices.', 'أسعار متأخرة أو غير محدّثة.')}</strong>}
         {warning && <span>{friendlyWarning(warning, tr('en', 'ar') === 'ar' ? 'ar' : 'en')}</span>}
+        {warning && onRetry && (
+          <button type="button" className="jx-btn jx-btn--ghost jx-btn--sm" onClick={onRetry} disabled={retrying} data-testid="button-retry-data-warning">
+            <RefreshCw size={14} aria-hidden="true" className={retrying ? 'market-spinning' : undefined} />
+            {retrying ? tr('Retrying…', 'جارٍ إعادة المحاولة…') : tr('Retry', 'إعادة المحاولة')}
+          </button>
+        )}
       </div>
     </div>
   );
