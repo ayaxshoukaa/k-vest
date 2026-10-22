@@ -27,6 +27,12 @@ For Vercel's TypeScript build, prefer named imports for CommonJS packages whose 
 
 **How to apply:** When Vercel rejects a default import as non-callable, verify the package's declared named exports and import the callable by name; keep route parameter types explicit if Vercel reports emit/type errors.
 
+Standalone Vercel API builds must emit shared workspace project-reference declarations before compiling the API bundle.
+
+**Why:** The API imports source-exported workspace schemas whose TypeScript project emits declarations only; Vercel's isolated build reported `Emit skipped` on importing API routes when the shared libraries had not been built first.
+
+**How to apply:** Run the workspace library build step (the root `typecheck:libs` script) before bundling the standalone API project.
+
 K-Vest deployment decision: the user chose to deploy the website and API as separate Vercel projects rather than as one multi-service project.
 
 **Why:** The user wants to keep the website deployment separate and deploy the API independently.

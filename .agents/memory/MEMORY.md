@@ -1,4 +1,4 @@
 - [K-vest AI scope](kvest-ai-scope.md) — build the MVP incrementally; do not invent stock data or extend beyond the stated features.
 - [MongoDB driver v7 IDs](mongodb-driver-v7-ids.md) — declare string `_id` fields in collection types; driver v7 accepts only one schema generic.
 - [MongoDB URI database default](mongodb-uri-database-default.md) — this app's URI omits a database path, so `MongoClient.db()` selects MongoDB's `test` database.
-- [Vercel service entrypoints](vercel-service-entrypoints.md) — use tracked entrypoints; Vercel’s TypeScript pass may resolve CommonJS default imports differently from local checks.
+- [Vercel service entrypoints](vercel-service-entrypoints.md) — use tracked entrypoints; prepare workspace declarations and watch for Vercel-only TypeScript import differences.
