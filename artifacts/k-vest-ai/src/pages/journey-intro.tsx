@@ -47,6 +47,7 @@ const defs: Record<string, IntroDef> = {
     lines: [
       ['Try what-if numbers: a budget, a buy price and a target.', 'جرّب أرقامًا افتراضية: ميزانية وسعر شراء وسعر مستهدف.'],
       ['See profit, loss and yearly return, calculated for you.', 'شاهد الربح والخسارة والعائد السنوي محسوبة لك.'],
+      ['The calculator is optional. You can finish the journey without it.', 'الحاسبة اختيارية. يمكنك إنهاء الرحلة دون استخدامها.'],
     ],
     cta: ['Open the calculator', 'افتح الحاسبة'],
   },

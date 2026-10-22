@@ -168,10 +168,12 @@ function RoiBody({ ctx }: { ctx: JourneyCtx }) {
         </section>
       </div>
       <div className="jx-sticky-bar">
-        <span className="jx-muted">{r ? tr('Calculation saved.', 'تم حفظ الحساب.') : tr('Calculate once to continue.', 'احسب مرة للمتابعة.')}</span>
+        <span className="jx-muted">{r
+          ? tr('Calculation saved.', 'تم حفظ الحساب.')
+          : tr('Try a calculation to see how it works, or finish whenever you’re ready.', 'جرّب الحساب لترى كيف يعمل، أو أنهِ الرحلة متى شئت.')}</span>
         <div>
           {ctx.advanceError && <p className="jx-field-error" role="alert">{ctx.advanceError}</p>}
-          <button type="button" className="jx-btn" disabled={!r || ctx.advancing} onClick={() => void ctx.advance('roi', 'finish')} data-testid="button-roi-next">
+          <button type="button" className="jx-btn" disabled={calc.isPending || ctx.advancing} onClick={() => void ctx.advance('roi', 'finish')} data-testid="button-roi-next">
             {tr('Finish', 'إنهاء')} <ArrowRight size={18} aria-hidden="true" className="jx-flip" />
           </button>
         </div>

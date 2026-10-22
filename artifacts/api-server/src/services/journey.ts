@@ -219,10 +219,6 @@ export async function advanceJourney(
     );
     practiceSkipped = !trade;
   }
-  if (fromStep === "roi" && !progress.roiResult) {
-    throw new JourneyError("Calculate your scenario before finishing.");
-  }
-
   await getMongoCollections().journeyProgress.updateOne(
     { userId },
     {
