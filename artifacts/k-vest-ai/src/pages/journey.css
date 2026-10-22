@@ -51,7 +51,10 @@
 .jx-skeleton i { display: block; height: 72px; border-radius: 16px; background: var(--accent); animation: jx-pulse 1.4s ease-in-out infinite; }
 .jx-warn { display: flex; gap: 10px; align-items: flex-start; padding: 14px 16px; border-radius: 12px; background: var(--amber-bg); border: 1px solid rgba(241,199,135,.35); color: var(--amber); margin-bottom: 16px; font-size: 14px; }
 .jx-warn--sample { border-width: 2px; background: rgba(245,158,11,.12); }
-.jx-warn > div { display: grid; gap: 2px; } .jx-warn svg { flex: none; margin-top: 2px; }
+.jx-warn > div { display: flex; flex: 1; flex-wrap: wrap; align-items: center; gap: 8px 12px; min-width: 0; }
+.jx-warn > div > span { flex: 1 1 320px; }
+.jx-warn > div > button { flex: 0 0 auto; }
+.jx-warn > svg { flex: none; margin-top: 2px; }
 
 /* intro */
 .jx-intro { max-width: 640px; margin: clamp(24px, 8vh, 80px) auto 0; display: grid; gap: 22px; }
