@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { ArrowRight, RotateCcw } from 'lucide-react';
+import { ArrowRight, CalendarDays, RotateCcw } from 'lucide-react';
+import { Link } from 'wouter';
 import {
   getGetMarketStockQueryKey,
   useCreateJourneyTrade,
@@ -159,6 +160,9 @@ function PracticeBody({ ctx }: { ctx: JourneyCtx }) {
           <RotateCcw size={16} aria-hidden="true" /> {tr('Reset wallet', 'إعادة ضبط المحفظة')}
         </button>
         <div className="jx-btn-row">
+          <Link href="/journey/weekly" className="jx-btn jx-btn--ghost" data-testid="link-weekly-summary">
+            <CalendarDays size={16} aria-hidden="true" /> {tr('This week', 'هذا الأسبوع')}
+          </Link>
           <button type="button" className="jx-btn" disabled={busy} onClick={() => void ctx.advance('practice', 'roi-intro')} data-testid="button-practice-next">
             {tr('Next', 'التالي')} <ArrowRight size={18} aria-hidden="true" className="jx-flip" />
           </button>
@@ -168,7 +172,7 @@ function PracticeBody({ ctx }: { ctx: JourneyCtx }) {
 
       <ConfirmDialog open={confirm} testid="reset-wallet" pending={reset.isPending} error={resetError}
         title={tr('Reset the practice wallet?', 'إعادة ضبط محفظة التدريب؟')}
-        body={tr('This restores 1,000 KWD, clears your trades, and also clears your ROI calculator and any later progress.', 'سيعيد 1,000 دينار ويمسح صفقاتك وحاسبة العائد وأي تقدّم لاحق.')}
+        body={tr('This restores 1,000 KWD, clears your trades and this week’s challenge progress, and also clears your ROI calculator and any later progress.', 'سيعيد 1,000 دينار ويمسح صفقاتك وتقدّم التحدي لهذا الأسبوع وحاسبة العائد وأي تقدّم لاحق.')}
         confirmLabel={tr('Reset', 'إعادة ضبط')} cancelLabel={tr('Cancel', 'إلغاء')}
         onConfirm={() => void doReset()} onCancel={() => setConfirm(false)} />
     </>

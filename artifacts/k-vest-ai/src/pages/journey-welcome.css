@@ -285,6 +285,35 @@
   transition: transform .18s ease, background-color .18s ease, box-shadow .18s ease;
 }
 
+.jwelcome__weekly-link {
+  display: inline-flex;
+  width: fit-content;
+  min-height: 42px;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  padding: 0 14px;
+  border: 1px solid rgba(107, 223, 194, .25);
+  border-radius: 12px;
+  background: rgba(15, 185, 139, .07);
+  color: var(--jw-text);
+  font-size: 13px;
+  font-weight: 650;
+  text-decoration: none;
+  transition: border-color .18s ease, background-color .18s ease, transform .18s ease;
+}
+
+.jwelcome__weekly-link:hover {
+  transform: translateY(-1px);
+  border-color: rgba(107, 223, 194, .48);
+  background: rgba(15, 185, 139, .13);
+}
+
+.jwelcome__weekly-link:focus-visible {
+  outline: 2px solid var(--jw-blue, #6bdcc2);
+  outline-offset: 3px;
+}
+
 .jwelcome__cta:hover {
   transform: translateY(-2px);
   background: var(--jw-blue-dark);

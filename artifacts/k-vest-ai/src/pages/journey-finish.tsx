@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'wouter';
-import { RotateCcw } from 'lucide-react';
+import { CalendarDays, RotateCcw } from 'lucide-react';
 import { useResetJourney } from '@workspace/api-client-react';
 import { ConfirmDialog, JourneyShell, type JourneyCtx } from '@/components/journey/shell';
 import { errMsg, fmtKwd, fmtPct, stepPath } from '@/lib/journey';
@@ -48,13 +48,16 @@ function FinishBody({ ctx }: { ctx: JourneyCtx }) {
         {links.map(([i, label]) => <Link key={i} href={stepPath(i)} className="jx-chip" data-testid={`link-revisit-${i}`}>{label}</Link>)}
       </div>
       <div className="jx-intro__actions">
+        <Link href="/journey/weekly" className="jx-btn jx-btn--ghost" data-testid="link-finish-weekly-summary">
+          <CalendarDays size={16} aria-hidden="true" /> {tr('View this week', 'عرض هذا الأسبوع')}
+        </Link>
         <button type="button" className="jx-btn jx-btn--ghost" onClick={() => { setError(null); setConfirm(true); }} data-testid="button-start-again">
           <RotateCcw size={16} aria-hidden="true" /> {tr('Start again', 'ابدأ من جديد')}
         </button>
       </div>
       <ConfirmDialog open={confirm} testid="start-again" pending={reset.isPending} error={error}
         title={tr('Start the journey again?', 'البدء من جديد؟')}
-        body={tr('This clears your selections, practice wallet and calculator result.', 'سيمسح اختياراتك ومحفظة التدريب ونتيجة الحاسبة.')}
+        body={tr('This clears your selections, practice wallet, calculator result and weekly challenge badges.', 'سيمسح اختياراتك ومحفظة التدريب ونتيجة الحاسبة وشارات التحديات الأسبوعية.')}
         confirmLabel={tr('Start again', 'ابدأ من جديد')} cancelLabel={tr('Cancel', 'إلغاء')}
         onConfirm={() => void restart()} onCancel={() => setConfirm(false)} />
     </section>

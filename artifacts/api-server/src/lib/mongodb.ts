@@ -33,6 +33,18 @@ export interface DemoTradeDocument extends Document {
   createdAt: Date;
 }
 
+export interface WeeklyChallengeProgressDocument extends Document {
+  userId: string;
+  weekStart: string;
+  challengeId: "first-practice-trade";
+  progress: number;
+  goal: 1;
+  completedAt: Date | null;
+  badgeAwardedAt: Date | null;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 export interface ConversationDocument extends Document {
   id: number;
   userId: string;
@@ -69,6 +81,7 @@ interface MigrationDocument extends Document {
 export interface MongoCollections {
   journeyProgress: Collection<JourneyProgressDocument>;
   demoTrades: Collection<DemoTradeDocument>;
+  weeklyChallenges: Collection<WeeklyChallengeProgressDocument>;
   conversations: Collection<ConversationDocument>;
   messages: Collection<MessageDocument>;
   apiCache: Collection<ApiCacheDocument>;
@@ -112,6 +125,8 @@ async function ensureMongoIndexes(database: Db): Promise<void> {
       .createIndex({ id: 1 }, { unique: true, name: "demo_trades_id_unique" }),
     database.collection<DemoTradeDocument>("demo_trades")
       .createIndex({ userId: 1, createdAt: 1, id: 1 }, { name: "demo_trades_user_order" }),
+    database.collection<WeeklyChallengeProgressDocument>("weekly_challenge_progress")
+      .createIndex({ userId: 1, weekStart: 1 }, { unique: true, name: "weekly_challenge_user_week_unique" }),
     database.collection<ConversationDocument>("conversations")
       .createIndex({ id: 1 }, { unique: true, name: "conversations_id_unique" }),
     database.collection<ConversationDocument>("conversations")
@@ -142,6 +157,7 @@ export function getMongoCollections(): MongoCollections {
   return {
     journeyProgress: database.collection<JourneyProgressDocument>("journey_progress"),
     demoTrades: database.collection<DemoTradeDocument>("demo_trades"),
+    weeklyChallenges: database.collection<WeeklyChallengeProgressDocument>("weekly_challenge_progress"),
     conversations: database.collection<ConversationDocument>("conversations"),
     messages: database.collection<MessageDocument>("messages"),
     apiCache: database.collection<ApiCacheDocument>("api_cache"),

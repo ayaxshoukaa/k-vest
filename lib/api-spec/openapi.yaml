@@ -102,6 +102,19 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/JourneyStateResponse"
+  /journey/weekly-summary:
+    get:
+      operationId: getJourneyWeeklySummary
+      tags: [journey]
+      security: [{ ClerkSession: [] }, {}]
+      summary: Get this week's demo portfolio summary and challenge progress
+      responses:
+        "200":
+          description: Weekly portfolio summary and per-user challenge progress
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JourneyWeeklySummaryResponse"
   /journey/start:
     post:
       operationId: startJourney
@@ -736,6 +749,61 @@ components:
         marketDataNote:
           type: string
       required: [currentStep, furthestStep, watchlistSymbols, researchCompleted, practiceSkipped, trades, holdings, cashKwd, marketValueKwd, portfolioValueKwd, profitLossKwd, roiPercent, roiResult, marketDataNote]
+    JourneyWeeklyHolding:
+      type: object
+      properties:
+        symbol:
+          type: string
+        companyName:
+          type: string
+        profitLossKwd:
+          type: number
+      required: [symbol, companyName, profitLossKwd]
+    JourneyWeeklyChallenge:
+      type: object
+      properties:
+        challengeId:
+          type: string
+          enum: [first-practice-trade]
+        progress:
+          type: integer
+          minimum: 0
+          maximum: 1
+        goal:
+          type: integer
+          enum: [1]
+        completed:
+          type: boolean
+        badgeAwardedAt:
+          type: ["string", "null"]
+          format: date-time
+      required: [challengeId, progress, goal, completed, badgeAwardedAt]
+    JourneyWeeklySummaryResponse:
+      type: object
+      properties:
+        weekStart:
+          type: string
+          pattern: "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+        profitLossKwd:
+          type: ["number", "null"]
+        tradeCount:
+          type: integer
+          minimum: 0
+        bestHolding:
+          oneOf:
+            - $ref: "#/components/schemas/JourneyWeeklyHolding"
+            - type: "null"
+        worstHolding:
+          oneOf:
+            - $ref: "#/components/schemas/JourneyWeeklyHolding"
+            - type: "null"
+        sampleData:
+          type: boolean
+        delayedData:
+          type: boolean
+        challenge:
+          $ref: "#/components/schemas/JourneyWeeklyChallenge"
+      required: [weekStart, profitLossKwd, tradeCount, bestHolding, worstHolding, sampleData, delayedData, challenge]
     JourneyWatchlistInput:
       type: object
       properties:

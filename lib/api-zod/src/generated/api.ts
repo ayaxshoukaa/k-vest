@@ -191,6 +191,43 @@ export const GetJourneyStateResponse = zod.object({
 
 
 /**
+ * @summary Get this week's demo portfolio summary and challenge progress
+ */
+export const getJourneyWeeklySummaryResponseWeekStartRegExp = new RegExp('^[0-9]{4}-[0-9]{2}-[0-9]{2}$');
+export const getJourneyWeeklySummaryResponseTradeCountMin = 0;
+
+export const getJourneyWeeklySummaryResponseChallengeProgressMin = 0;
+export const getJourneyWeeklySummaryResponseChallengeProgressMax = 1;
+
+
+
+export const GetJourneyWeeklySummaryResponse = zod.object({
+  "weekStart": zod.string().regex(getJourneyWeeklySummaryResponseWeekStartRegExp),
+  "profitLossKwd": zod.number().nullable(),
+  "tradeCount": zod.number().int().min(getJourneyWeeklySummaryResponseTradeCountMin),
+  "bestHolding": zod.union([zod.object({
+  "symbol": zod.string(),
+  "companyName": zod.string(),
+  "profitLossKwd": zod.number()
+}),zod.null()]),
+  "worstHolding": zod.union([zod.object({
+  "symbol": zod.string(),
+  "companyName": zod.string(),
+  "profitLossKwd": zod.number()
+}),zod.null()]),
+  "sampleData": zod.boolean(),
+  "delayedData": zod.boolean(),
+  "challenge": zod.object({
+  "challengeId": zod.enum(['first-practice-trade']),
+  "progress": zod.number().int().min(getJourneyWeeklySummaryResponseChallengeProgressMin).max(getJourneyWeeklySummaryResponseChallengeProgressMax),
+  "goal": zod.literal(1),
+  "completed": zod.boolean(),
+  "badgeAwardedAt": zod.coerce.date().nullable()
+})
+})
+
+
+/**
  * @summary Start or resume the guided journey
  */
 export const startJourneyResponseFurthestStepMin = 0;

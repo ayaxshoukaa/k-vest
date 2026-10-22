@@ -33,6 +33,7 @@ import type {
   JourneyResearchResponse,
   JourneyStateResponse,
   JourneyWatchlistInput,
+  JourneyWeeklySummaryResponse,
   ListAnthropicConversationsParams,
   MarketNewsResponse,
   MarketQuotesResponse,
@@ -519,6 +520,83 @@ export function useGetJourneyState<TData = Awaited<ReturnType<typeof getJourneyS
  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
 
   const queryOptions = getGetJourneyStateQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getGetJourneyWeeklySummaryUrl = () => {
+
+
+
+
+  return `/api/journey/weekly-summary`
+}
+
+/**
+ * @summary Get this week's demo portfolio summary and challenge progress
+ */
+export const getJourneyWeeklySummary = async ( options?: Parameters<typeof customFetch>[1]): Promise<JourneyWeeklySummaryResponse> => {
+
+  return customFetch<JourneyWeeklySummaryResponse>(getGetJourneyWeeklySummaryUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetJourneyWeeklySummaryQueryKey = () => {
+    return [
+    `/api/journey/weekly-summary`
+    ] as const;
+    }
+
+
+export const getGetJourneyWeeklySummaryQueryOptions = <TData = Awaited<ReturnType<typeof getJourneyWeeklySummary>>, TError = ErrorType<unknown>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getJourneyWeeklySummary>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetJourneyWeeklySummaryQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getJourneyWeeklySummary>>> = ({ signal }) => getJourneyWeeklySummary({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getJourneyWeeklySummary>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetJourneyWeeklySummaryQueryResult = NonNullable<Awaited<ReturnType<typeof getJourneyWeeklySummary>>>
+export type GetJourneyWeeklySummaryQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary Get this week's demo portfolio summary and challenge progress
+ */
+
+export function useGetJourneyWeeklySummary<TData = Awaited<ReturnType<typeof getJourneyWeeklySummary>>, TError = ErrorType<unknown>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getJourneyWeeklySummary>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetJourneyWeeklySummaryQueryOptions(options)
 
   const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
 

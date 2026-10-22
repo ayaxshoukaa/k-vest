@@ -5,6 +5,7 @@ import {
   CalculateJourneyRoiBody,
   CreateJourneyTradeBody,
   GetJourneyStateResponse,
+  GetJourneyWeeklySummaryResponse,
   SaveJourneyWatchlistBody,
   SkipJourneyPracticeBody,
 } from "@workspace/api-zod";
@@ -13,6 +14,7 @@ import {
   advanceJourney,
   getCompanyResearchContext,
   getJourneyState,
+  getJourneyWeeklySummary,
   JourneyError,
   markResearchComplete,
   placeDemoTrade,
@@ -46,6 +48,14 @@ const userId = (req: Request): string => journeyOwner(req);
 router.get("/journey/state", async (req, res, next) => {
   try {
     res.json(GetJourneyStateResponse.parse(await getJourneyState(userId(req))));
+  } catch (error) {
+    handleError(error, res, next);
+  }
+});
+
+router.get("/journey/weekly-summary", async (req, res, next) => {
+  try {
+    res.json(GetJourneyWeeklySummaryResponse.parse(await getJourneyWeeklySummary(userId(req))));
   } catch (error) {
     handleError(error, res, next);
   }

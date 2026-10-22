@@ -9,11 +9,78 @@ import { build } from "esbuild";
 const dir = await mkdtemp(path.join(tmpdir(), "kvest-math-"));
 const outfile = path.join(dir, "math.mjs");
 await build({ entryPoints: ["src/services/journey-calculations.ts"], bundle: true, platform: "node", format: "esm", outfile, logLevel: "silent" });
-const { calculateLedger, calculateRoiScenario } = await import(pathToFileURL(outfile));
+const {
+  calculateLedger,
+  calculateRoiScenario,
+  calculateWeeklyPortfolio,
+  getKuwaitWeekWindow,
+} = await import(pathToFileURL(outfile));
 after(() => rm(dir, { recursive: true, force: true }));
 
 test("demo wallet starts with exactly 1,000 KWD", () => {
   assert.equal(calculateLedger([]).cashKwd, 1000);
+});
+test("weekly summary uses Monday midnight in Kuwait as the week boundary", () => {
+  const currentWeek = getKuwaitWeekWindow(new Date("2026-10-22T10:00:00.000Z"));
+  assert.equal(currentWeek.weekStartKey, "2026-10-19");
+  assert.equal(currentWeek.weekStart.toISOString(), "2026-10-18T21:00:00.000Z");
+
+  const previousWeek = getKuwaitWeekWindow(new Date("2026-10-18T20:59:59.000Z"));
+  assert.equal(previousWeek.weekStartKey, "2026-10-12");
+});
+test("weekly portfolio gain includes market changes without counting trades as gains", () => {
+  const weekStart = new Date("2026-10-18T21:00:00.000Z");
+  const result = calculateWeeklyPortfolio([
+    { symbol: "NBK", side: "buy", quantity: 10, notionalKwd: "100.000", createdAt: new Date("2026-10-16T10:00:00.000Z") },
+    { symbol: "NBK", side: "buy", quantity: 2, notionalKwd: "22.000", createdAt: new Date("2026-10-20T10:00:00.000Z") },
+    { symbol: "NBK", side: "sell", quantity: 1, notionalKwd: "12.000", createdAt: new Date("2026-10-21T10:00:00.000Z") },
+  ], [{
+    symbol: "NBK",
+    companyName: "National Bank of Kuwait",
+    priceKwd: 12,
+    sparkline: [{ date: "2026-10-16T10:00:00.000Z", closeKwd: 10.5 }],
+    sample: false,
+    stale: false,
+  }], weekStart);
+
+  assert.equal(result.profitLossKwd, 17);
+  assert.equal(result.tradeCount, 2);
+  assert.deepEqual(result.bestHolding, { symbol: "NBK", companyName: "National Bank of Kuwait", profitLossKwd: 17 });
+  assert.deepEqual(result.worstHolding, result.bestHolding);
+});
+test("weekly summary includes realized gains when a holding is sold", () => {
+  const result = calculateWeeklyPortfolio([
+    { symbol: "NBK", side: "buy", quantity: 10, notionalKwd: "100.000", createdAt: new Date("2026-10-16T10:00:00.000Z") },
+    { symbol: "NBK", side: "sell", quantity: 10, notionalKwd: "110.000", createdAt: new Date("2026-10-20T10:00:00.000Z") },
+  ], [{
+    symbol: "NBK",
+    companyName: "National Bank of Kuwait",
+    priceKwd: 11,
+    sparkline: [{ date: "2026-10-16T10:00:00.000Z", closeKwd: 10 }],
+    sample: false,
+    stale: false,
+  }], new Date("2026-10-18T21:00:00.000Z"));
+
+  assert.equal(result.profitLossKwd, 10);
+  assert.equal(result.tradeCount, 1);
+  assert.equal(result.bestHolding, null);
+  assert.equal(result.worstHolding, null);
+});
+test("weekly summary does not invent a change when start-of-week prices are missing", () => {
+  const result = calculateWeeklyPortfolio([
+    { symbol: "NBK", side: "buy", quantity: 10, notionalKwd: "100.000", createdAt: new Date("2026-10-16T10:00:00.000Z") },
+  ], [{
+    symbol: "NBK",
+    companyName: "National Bank of Kuwait",
+    priceKwd: 11,
+    sparkline: [],
+    sample: false,
+    stale: false,
+  }], new Date("2026-10-18T21:00:00.000Z"));
+
+  assert.equal(result.profitLossKwd, null);
+  assert.equal(result.bestHolding, null);
+  assert.equal(result.worstHolding, null);
 });
 test("partial sales preserve average cost and realize proceeds as cash", () => {
   const account = calculateLedger([

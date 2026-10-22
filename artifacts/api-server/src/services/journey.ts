@@ -4,12 +4,14 @@ import type {
   JourneyRoiResult,
   JourneyStateResponse,
   JourneyStep,
+  JourneyWeeklySummaryResponse,
 } from "@workspace/api-zod";
 import {
   getMongoClient,
   getMongoCollections,
   nextMongoId,
   type JourneyProgressDocument,
+  type WeeklyChallengeProgressDocument,
 } from "../lib/mongodb";
 import {
   getMarketScanner,
@@ -17,8 +19,16 @@ import {
   getRatingReason,
   getYahooCompanyProfile,
 } from "./market-scanner";
-import { calculateLedger as calculateAccount, calculateRoiScenario, roundKwd, roundPercent } from "./journey-calculations";
+import {
+  calculateLedger as calculateAccount,
+  calculateRoiScenario,
+  calculateWeeklyPortfolio,
+  getKuwaitWeekWindow,
+  roundKwd,
+  roundPercent,
+} from "./journey-calculations";
 import type { CompanyResearchContext } from "./research";
+import { logger } from "../lib/logger";
 
 export const JOURNEY_STEPS: JourneyStep[] = [
   "scan-intro",
@@ -173,6 +183,109 @@ export async function getJourneyState(userId: string): Promise<JourneyStateRespo
   return buildJourneyState(userId);
 }
 
+async function ensureWeeklyChallengeProgress(
+  userId: string,
+  weekStart: string,
+  completedAt: Date | null,
+): Promise<WeeklyChallengeProgressDocument> {
+  const { weeklyChallenges } = getMongoCollections();
+  const now = new Date();
+  try {
+    await weeklyChallenges.updateOne(
+      { userId, weekStart },
+      {
+        $setOnInsert: {
+          userId,
+          weekStart,
+          challengeId: "first-practice-trade",
+          progress: 0,
+          goal: 1,
+          completedAt: null,
+          badgeAwardedAt: null,
+          createdAt: now,
+          updatedAt: now,
+        },
+      },
+      { upsert: true },
+    );
+  } catch (error) {
+    const existing = await weeklyChallenges.findOne({ userId, weekStart });
+    if (!existing) throw error;
+  }
+
+  if (completedAt) {
+    await weeklyChallenges.updateOne(
+      { userId, weekStart, progress: { $lt: 1 } },
+      {
+        $set: {
+          progress: 1,
+          completedAt,
+          badgeAwardedAt: completedAt,
+          updatedAt: now,
+        },
+      },
+    );
+  }
+
+  const progress = await weeklyChallenges.findOne({ userId, weekStart });
+  if (!progress) {
+    throw new Error("Weekly challenge progress could not be initialized.");
+  }
+  return progress;
+}
+
+export async function getJourneyWeeklySummary(
+  userId: string,
+): Promise<JourneyWeeklySummaryResponse> {
+  await ensureJourneyProgress(userId);
+  const now = new Date();
+  const { weekStart, weekStartKey } = getKuwaitWeekWindow(now);
+  const trades = await getMongoCollections().demoTrades
+    .find({ userId })
+    .sort({ createdAt: 1, id: 1 })
+    .toArray();
+  const weeklyTrades = trades
+    .filter((trade) => trade.createdAt.getTime() >= weekStart.getTime())
+    .sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime() || a.id - b.id);
+
+  const symbols = [...new Set([
+    ...trades.map((trade) => trade.symbol),
+  ])];
+  let stocks: Awaited<ReturnType<typeof getMarketScanner>>["stocks"] = [];
+  if (symbols.length > 0) {
+    try {
+      const market = await getMarketScanner();
+      stocks = market.stocks.filter((stock) => symbols.includes(stock.symbol));
+    } catch (error) {
+      logger.warn({ err: error }, "Weekly practice portfolio could not refresh market prices");
+    }
+  }
+
+  const performance = calculateWeeklyPortfolio(trades, stocks, weekStart);
+  const challengeProgress = await ensureWeeklyChallengeProgress(
+    userId,
+    weekStartKey,
+    weeklyTrades[0]?.createdAt ?? null,
+  );
+
+  return {
+    weekStart: weekStartKey,
+    profitLossKwd: performance.profitLossKwd,
+    tradeCount: performance.tradeCount,
+    bestHolding: performance.bestHolding,
+    worstHolding: performance.worstHolding,
+    sampleData: performance.sampleData,
+    delayedData: performance.delayedData,
+    challenge: {
+      challengeId: challengeProgress.challengeId,
+      progress: Math.min(challengeProgress.progress, challengeProgress.goal),
+      goal: challengeProgress.goal,
+      completed: challengeProgress.progress >= challengeProgress.goal,
+      badgeAwardedAt: challengeProgress.badgeAwardedAt ?? null,
+    },
+  };
+}
+
 export async function updateJourneyWatchlist(
   userId: string,
   symbols: string[],
@@ -279,6 +392,7 @@ export async function placeDemoTrade(
 
   const { demoTrades, journeyProgress } = getMongoCollections();
   const session = getMongoClient().startSession();
+  const createdAt = new Date();
   try {
     await session.withTransaction(async () => {
       const lockedProgress = await journeyProgress.findOne({ userId }, { session });
@@ -317,13 +431,23 @@ export async function placeDemoTrade(
           marketTime: stock?.stock.marketTime ?? null,
           sample: stock?.stock.sample ?? true,
           stale: stock?.stock.stale ?? true,
-          createdAt: new Date(),
+          createdAt,
         },
         { session },
       );
     });
   } finally {
     await session.endSession();
+  }
+
+  try {
+    await ensureWeeklyChallengeProgress(
+      userId,
+      getKuwaitWeekWindow(createdAt).weekStartKey,
+      createdAt,
+    );
+  } catch (error) {
+    logger.warn({ err: error }, "Weekly practice challenge progress will be refreshed on the next summary view");
   }
 
   return getJourneyState(userId);
@@ -337,7 +461,8 @@ export async function resetPracticeWallet(
     throw new JourneyError("Reach the practice phase before resetting the wallet.");
   }
 
-  const { demoTrades, journeyProgress } = getMongoCollections();
+  const { demoTrades, journeyProgress, weeklyChallenges } = getMongoCollections();
+  const currentWeekStart = getKuwaitWeekWindow(new Date()).weekStartKey;
   const session = getMongoClient().startSession();
   try {
     await session.withTransaction(async () => {
@@ -346,6 +471,7 @@ export async function resetPracticeWallet(
         throw new JourneyError("Reach the practice phase before resetting the wallet.");
       }
       await demoTrades.deleteMany({ userId }, { session });
+      await weeklyChallenges.deleteOne({ userId, weekStart: currentWeekStart }, { session });
       await journeyProgress.updateOne(
         { userId },
         {
@@ -401,11 +527,12 @@ export async function resetJourney(
   userId: string,
 ): Promise<JourneyStateResponse> {
   await ensureJourneyProgress(userId);
-  const { demoTrades, journeyProgress } = getMongoCollections();
+  const { demoTrades, journeyProgress, weeklyChallenges } = getMongoCollections();
   const session = getMongoClient().startSession();
   try {
     await session.withTransaction(async () => {
       await demoTrades.deleteMany({ userId }, { session });
+      await weeklyChallenges.deleteMany({ userId }, { session });
       await journeyProgress.updateOne(
         { userId },
         {

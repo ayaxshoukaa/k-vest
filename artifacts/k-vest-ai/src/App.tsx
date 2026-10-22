@@ -19,6 +19,7 @@ import JourneyWelcomePage from '@/pages/journey-welcome';
 import JourneyScanPage from '@/pages/journey-scan';
 import JourneyResearchPage from '@/pages/journey-research';
 import JourneyPracticePage from '@/pages/journey-practice';
+import JourneyWeeklySummaryPage from '@/pages/journey-weekly-summary';
 import JourneyRoiPage from '@/pages/journey-roi';
 import JourneyFinishPage from '@/pages/journey-finish';
 import VisionPage from '@/pages/vision';
@@ -205,6 +206,7 @@ function ClerkRoutes() {
           <Route path="/journey/research" component={JourneyResearchPage} />
           <Route path="/journey/practice-intro" component={PracticeIntroPage} />
           <Route path="/journey/practice" component={JourneyPracticePage} />
+          <Route path="/journey/weekly" component={JourneyWeeklySummaryPage} />
           <Route path="/journey/roi-intro" component={RoiIntroPage} />
           <Route path="/journey/roi" component={JourneyRoiPage} />
           <Route path="/journey/finish" component={JourneyFinishPage} />

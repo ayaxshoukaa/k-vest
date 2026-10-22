@@ -1,6 +1,163 @@
 export const roundKwd = (value: number): number => Math.round((value + Number.EPSILON) * 1000) / 1000;
 export const roundPercent = (value: number): number => Math.round((value + Number.EPSILON) * 100) / 100;
 
+const KUWAIT_OFFSET_MS = 3 * 60 * 60 * 1000;
+const DAY_MS = 24 * 60 * 60 * 1000;
+
+export function getKuwaitWeekWindow(now: Date): { weekStart: Date; weekStartKey: string } {
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone: "Asia/Kuwait",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).formatToParts(now);
+  const getPart = (type: string) => parts.find((part) => part.type === type)?.value;
+  const year = Number(getPart("year"));
+  const month = Number(getPart("month"));
+  const day = Number(getPart("day"));
+  if (![year, month, day].every(Number.isInteger)) {
+    throw new RangeError("A valid date is required to calculate the Kuwait week.");
+  }
+
+  const localCalendarDate = new Date(Date.UTC(year, month - 1, day));
+  const daysSinceMonday = (localCalendarDate.getUTCDay() + 6) % 7;
+  const mondayCalendarDate = new Date(localCalendarDate.getTime() - daysSinceMonday * DAY_MS);
+  const weekStartKey = [
+    mondayCalendarDate.getUTCFullYear(),
+    String(mondayCalendarDate.getUTCMonth() + 1).padStart(2, "0"),
+    String(mondayCalendarDate.getUTCDate()).padStart(2, "0"),
+  ].join("-");
+
+  return {
+    weekStartKey,
+    weekStart: new Date(mondayCalendarDate.getTime() - KUWAIT_OFFSET_MS),
+  };
+}
+
+export interface WeeklyTradeEntry {
+  symbol: string;
+  side: string;
+  quantity: number;
+  notionalKwd: string | number;
+  createdAt: Date;
+  sample?: boolean;
+  stale?: boolean;
+}
+
+export interface WeeklyQuoteEntry {
+  symbol: string;
+  companyName: string;
+  priceKwd: number | null;
+  sparkline: { date: string | Date; closeKwd: number }[];
+  sample: boolean;
+  stale: boolean;
+}
+
+export interface WeeklyHoldingPerformance {
+  symbol: string;
+  companyName: string;
+  profitLossKwd: number;
+}
+
+export function calculateWeeklyPortfolio(
+  trades: WeeklyTradeEntry[],
+  quotes: WeeklyQuoteEntry[],
+  weekStart: Date,
+) {
+  const openingTrades = trades.filter((trade) => trade.createdAt.getTime() < weekStart.getTime());
+  const weekTrades = trades.filter((trade) => trade.createdAt.getTime() >= weekStart.getTime());
+  const opening = calculateLedger(openingTrades);
+  const ending = calculateLedger(trades);
+  const quoteBySymbol = new Map(quotes.map((quote) => [quote.symbol, quote]));
+  const tradeCashFlowBySymbol = new Map<string, number>();
+
+  for (const trade of weekTrades) {
+    const signedNotional = Number(trade.notionalKwd) * (trade.side === "sell" ? 1 : -1);
+    tradeCashFlowBySymbol.set(
+      trade.symbol,
+      (tradeCashFlowBySymbol.get(trade.symbol) ?? 0) + signedNotional,
+    );
+  }
+
+  const priceAtWeekStart = (symbol: string): number | null => {
+    const quote = quoteBySymbol.get(symbol);
+    if (!quote) return null;
+    const priorPoints = quote.sparkline
+      .map((point) => ({ time: new Date(point.date).getTime(), price: point.closeKwd }))
+      .filter((point) => Number.isFinite(point.time) && point.time < weekStart.getTime()
+        && Number.isFinite(point.price) && point.price > 0)
+      .sort((a, b) => a.time - b.time);
+    return priorPoints.at(-1)?.price ?? null;
+  };
+
+  let openingValueKwd = opening.cashKwd;
+  let currentValueKwd = ending.cashKwd;
+  let performanceAvailable = true;
+
+  for (const [symbol, position] of opening.positions) {
+    const priorPrice = priceAtWeekStart(symbol);
+    if (priorPrice === null) {
+      performanceAvailable = false;
+    } else {
+      openingValueKwd += position.quantity * priorPrice;
+    }
+  }
+
+  for (const [symbol, position] of ending.positions) {
+    const currentPrice = quoteBySymbol.get(symbol)?.priceKwd;
+    if (currentPrice == null || !Number.isFinite(currentPrice) || currentPrice <= 0) {
+      performanceAvailable = false;
+    } else {
+      currentValueKwd += position.quantity * currentPrice;
+    }
+  }
+
+  const holdings: WeeklyHoldingPerformance[] = [];
+  for (const [symbol, position] of ending.positions) {
+    const startPosition = opening.positions.get(symbol);
+    const startQuantity = startPosition?.quantity ?? 0;
+    const startPrice = startQuantity > 0 ? priceAtWeekStart(symbol) : 0;
+    const currentPrice = quoteBySymbol.get(symbol)?.priceKwd;
+    if (startPrice === null || currentPrice == null || !Number.isFinite(currentPrice) || currentPrice <= 0) {
+      continue;
+    }
+    const startValue = startQuantity * startPrice;
+    const currentHoldingValue = position.quantity * currentPrice;
+    const tradeCashFlow = tradeCashFlowBySymbol.get(symbol) ?? 0;
+    const profitLossKwd = roundKwd(currentHoldingValue - startValue + tradeCashFlow);
+    const quote = quoteBySymbol.get(symbol);
+    holdings.push({
+      symbol,
+      companyName: quote?.companyName ?? symbol,
+      profitLossKwd,
+    });
+  }
+
+  const relevantSymbols = new Set([
+    ...opening.positions.keys(),
+    ...ending.positions.keys(),
+    ...weekTrades.map((trade) => trade.symbol),
+  ]);
+  const relevantQuotes = [...relevantSymbols].map((symbol) => quoteBySymbol.get(symbol)).filter(Boolean);
+  const sampleData =
+    weekTrades.some((trade) => trade.sample) || relevantQuotes.some((quote) => quote?.sample);
+  const delayedData =
+    weekTrades.some((trade) => trade.stale) || relevantQuotes.some((quote) => quote?.stale);
+
+  return {
+    profitLossKwd: performanceAvailable ? roundKwd(currentValueKwd - openingValueKwd) : null,
+    tradeCount: weekTrades.length,
+    bestHolding: holdings.length
+      ? [...holdings].sort((a, b) => b.profitLossKwd - a.profitLossKwd)[0]
+      : null,
+    worstHolding: holdings.length
+      ? [...holdings].sort((a, b) => a.profitLossKwd - b.profitLossKwd)[0]
+      : null,
+    sampleData: Boolean(sampleData),
+    delayedData: Boolean(delayedData),
+  };
+}
+
 export function calculateLedger(
   trades: { symbol: string; side: string; quantity: number; notionalKwd: string | number }[],
 ) {

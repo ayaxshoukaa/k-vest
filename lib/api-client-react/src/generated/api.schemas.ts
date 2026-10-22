@@ -270,6 +270,53 @@ export interface JourneyStateResponse {
   marketDataNote: string;
 }
 
+export interface JourneyWeeklyHolding {
+  symbol: string;
+  companyName: string;
+  profitLossKwd: number;
+}
+
+export type JourneyWeeklyChallengeChallengeId = typeof JourneyWeeklyChallengeChallengeId[keyof typeof JourneyWeeklyChallengeChallengeId];
+
+
+export const JourneyWeeklyChallengeChallengeId = {
+  'first-practice-trade': 'first-practice-trade',
+} as const;
+
+export type JourneyWeeklyChallengeGoal = typeof JourneyWeeklyChallengeGoal[keyof typeof JourneyWeeklyChallengeGoal];
+
+
+export const JourneyWeeklyChallengeGoal = {
+  NUMBER_1: 1,
+} as const;
+
+export interface JourneyWeeklyChallenge {
+  challengeId: JourneyWeeklyChallengeChallengeId;
+  /**
+     * @minimum 0
+     * @maximum 1
+     */
+  progress: number;
+  goal: JourneyWeeklyChallengeGoal;
+  completed: boolean;
+  /** @nullable */
+  badgeAwardedAt: string | null;
+}
+
+export interface JourneyWeeklySummaryResponse {
+  /** @pattern ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ */
+  weekStart: string;
+  /** @nullable */
+  profitLossKwd: number | null;
+  /** @minimum 0 */
+  tradeCount: number;
+  bestHolding: JourneyWeeklyHolding | null;
+  worstHolding: JourneyWeeklyHolding | null;
+  sampleData: boolean;
+  delayedData: boolean;
+  challenge: JourneyWeeklyChallenge;
+}
+
 export interface JourneyWatchlistInput {
   /**
      * @minItems 0

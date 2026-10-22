@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useAuth, useClerk } from '@clerk/react';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, CalendarDays } from 'lucide-react';
 import { Link, useLocation } from 'wouter';
 import { useQueryClient } from '@tanstack/react-query';
-import { getGetJourneyStateQueryKey, useStartJourney } from '@workspace/api-client-react';
+import { getGetJourneyStateQueryKey, useGetJourneyState, useStartJourney } from '@workspace/api-client-react';
 import { MarketNewsFeed } from '@/components/market-news-feed';
 import { stepPath } from '@/lib/journey';
 import { BrandMark } from '@/components/brand-mark';
@@ -37,6 +37,7 @@ const copy = {
     learningDescription: 'Move at your own pace. Your practice uses demo money, not real trades.',
     action: 'Start learning',
     starting: 'Starting…',
+    weeklySummary: 'View your weekly practice summary',
     error: 'Could not start the journey. Please try again.',
     newsNote: 'Broader global market headlines from Yahoo Finance; these are not Kuwait-specific. For educational use only.',
     signOutError: 'Could not sign out. Please try again.',
@@ -63,6 +64,7 @@ const copy = {
     learningDescription: 'تقدّم بالسرعة التي تناسبك. التدريب بأموال افتراضية وليس تداولًا حقيقيًا.',
     action: 'ابدأ التعلّم',
     starting: 'جارٍ البدء…',
+    weeklySummary: 'عرض ملخص التدريب الأسبوعي',
     error: 'تعذّر بدء الرحلة. حاول مجددًا.',
     newsNote: 'عناوين من الأسواق العالمية عبر Yahoo Finance، وليست خاصة بالكويت. للاستخدام التثقيفي فقط.',
     signOutError: 'تعذّر تسجيل الخروج. حاول مجددًا.',
@@ -73,11 +75,18 @@ const copy = {
 export default function JourneyWelcomePage() {
   const { signOut } = useClerk();
   const { isSignedIn } = useAuth();
-  const { leaveGuest } = useGuestAccess();
+  const { guestAccess, leaveGuest } = useGuestAccess();
   const [signingOut, setSigningOut] = useState(false);
   const [signOutError, setSignOutError] = useState(false);
   const queryClient = useQueryClient();
   const [, setLocation] = useLocation();
+  const journey = useGetJourneyState({
+    query: {
+      enabled: isSignedIn === true || guestAccess,
+      queryKey: getGetJourneyStateQueryKey(),
+      retry: false,
+    },
+  });
   const start = useStartJourney({
     mutation: {
       onSuccess: (res) => {
@@ -257,6 +266,13 @@ export default function JourneyWelcomePage() {
               <span>{start.isPending ? text.starting : text.action}</span>
               <ArrowRight size={19} aria-hidden="true" className="jwelcome__cta-arrow" />
             </button>
+            {(journey.data?.furthestStep ?? -1) >= 5 && (
+              <Link href="/journey/weekly" className="jwelcome__weekly-link" data-testid="link-welcome-weekly-summary">
+                <CalendarDays size={17} aria-hidden="true" />
+                <span>{text.weeklySummary}</span>
+                <ArrowRight size={16} aria-hidden="true" className="jwelcome__cta-arrow" />
+              </Link>
+            )}
             {start.isError && <span role="alert" data-testid="text-journey-start-error">{text.error}</span>}
             {signOutError && <span role="alert" data-testid="text-sign-out-error">{text.signOutError}</span>}
           </div>
