@@ -22,6 +22,7 @@
   color: #b8f4df;
   font-size: 12px;
   font-weight: 700;
+  white-space: nowrap;
   transition: background-color .18s ease, border-color .18s ease;
 }
 
@@ -80,6 +81,11 @@
   text-wrap: balance;
 }
 
+.market-news-page.jwelcome--rtl .market-news-page__intro h1 {
+  font-family: 'Plus Jakarta Sans', 'Noto Sans Arabic', sans-serif;
+  letter-spacing: 0;
+}
+
 .market-news-page__intro p {
   max-width: 650px;
   margin: 15px 0 0;
@@ -111,12 +117,11 @@
   }
 
   .market-news-page__back {
-    width: 44px;
     min-width: 44px;
     min-height: 44px;
-    padding: 0;
+    padding-inline: 10px;
     justify-content: center;
-    font-size: 0;
+    font-size: 12px;
   }
 
   .market-news-page__main {

@@ -8,6 +8,7 @@ import {
   useGetMarketStock,
 } from '@workspace/api-client-react';
 import { DataWarning, JourneyShell, type JourneyCtx } from '@/components/journey/shell';
+import { BidiValue } from '@/components/bidi-value';
 import { InvestmentArrows, InvestmentSkeleton } from '@/components/investment-loader';
 import { errMsg, fmtKwd, fmtPct, mergeSymbols } from '@/lib/journey';
 
@@ -124,14 +125,14 @@ function RoiBody({ ctx }: { ctx: JourneyCtx }) {
         <form className="jx-card jx-form" onSubmit={(e) => void submit(e)} data-testid="form-roi">
           <label className="jx-label">{tr('Company', 'الشركة')}
             <select className="jx-input" value={symbol} onChange={(e) => { touched.current = false; setSymbol(e.target.value); }} data-testid="select-roi-company">
-              {symbols.map((s) => <option key={s} value={s}>{nameOf(s)} ({s})</option>)}
+              {symbols.map((s) => <option key={s} value={s} dir="auto">{nameOf(s)} ({s})</option>)}
             </select>
           </label>
           <div>
             <button type="button" className="jx-btn jx-btn--ghost jx-btn--sm" disabled={!canUseDemo} onClick={useDemo} data-testid="button-use-demo-results">{tr('Use my demo results', 'استخدم نتائجي التجريبية')}</button>
-            {!canUseDemo && <p className="jx-muted" style={{ marginTop: 6 }} data-testid="text-demo-disabled-reason">{tr('Make a practice trade first, then your holding can fill this form.', 'أجرِ صفقة تدريب أولًا ليملأ سهمك هذا النموذج.')}</p>}
+            {!canUseDemo && <p className="jx-muted" style={{ marginBlockStart: 6 }} data-testid="text-demo-disabled-reason">{tr('Make a practice trade first, then your holding can fill this form.', 'أجرِ صفقة تدريب أولًا ليملأ سهمك هذا النموذج.')}</p>}
           </div>
-          <p className="jx-muted" data-testid="text-roi-market-price">{tr('Latest price', 'آخر سعر')}: {quote.isLoading ? <InvestmentSkeleton variant="price" label={tr('Loading price', 'جارٍ تحميل السعر')} /> : fmtKwd(price, na)}</p>
+          <p className="jx-muted" data-testid="text-roi-market-price">{tr('Latest price', 'آخر سعر')}: {quote.isLoading ? <InvestmentSkeleton variant="price" label={tr('Loading price', 'جارٍ تحميل السعر')} /> : <BidiValue>{fmtKwd(price, na)}</BidiValue>}</p>
           {quote.isError && (
             <p className="jx-field-error" role="alert" data-testid="status-roi-price-error">
               {tr("We couldn't load the latest price. You can enter one yourself, or try again.", 'تعذّر تحميل أحدث سعر. يمكنك إدخاله بنفسك أو المحاولة مجددًا.')}
@@ -161,15 +162,15 @@ function RoiBody({ ctx }: { ctx: JourneyCtx }) {
             <><h2>{tr('Your result', 'نتيجتك')}</h2><p className="jx-muted" data-testid="status-roi-placeholder">{tr('Fill in the form and press Calculate.', 'املأ النموذج واضغط احسب.')}</p></>
           ) : (
             <>
-              <span className="jx-eyebrow">{nameOf(r.symbol)}</span>
-              <p className="jx-result-big" data-testid="text-roi-final">{fmtKwd(finalV)}</p>
+              <span className="jx-eyebrow" dir="auto">{nameOf(r.symbol)}</span>
+              <p className="jx-result-big" data-testid="text-roi-final"><BidiValue>{fmtKwd(finalV)}</BidiValue></p>
               <p className="jx-muted">{tr('Final value', 'القيمة النهائية')}</p>
               <dl className="jx-kv">
-                <div><dt>{tr('Profit / loss', 'الربح / الخسارة')}</dt><dd className={r.profitLossKwd >= 0 ? 'is-pos' : 'is-neg'} data-testid="text-roi-pl">{fmtKwd(plV)}</dd></div>
-                <div><dt>ROI</dt><dd data-testid="text-roi-percent">{fmtPct(roiV)}</dd></div>
-                <div><dt>{tr('Per year', 'سنويًا')}</dt><dd>{fmtPct(r.annualizedReturnPercent)}</dd></div>
-                <div><dt>{tr('Shares', 'الأسهم')}</dt><dd>{r.shares.toLocaleString('en-US', { maximumFractionDigits: 3 })}</dd></div>
-                <div><dt>{tr('Dividends', 'التوزيعات')}</dt><dd>{fmtKwd(r.dividendTotalKwd)}</dd></div>
+                <div><dt>{tr('Profit / loss', 'الربح / الخسارة')}</dt><dd className={r.profitLossKwd >= 0 ? 'is-pos' : 'is-neg'} data-testid="text-roi-pl"><BidiValue>{fmtKwd(plV)}</BidiValue></dd></div>
+                <div><dt>ROI</dt><dd data-testid="text-roi-percent"><BidiValue>{fmtPct(roiV)}</BidiValue></dd></div>
+                <div><dt>{tr('Per year', 'سنويًا')}</dt><dd><BidiValue>{fmtPct(r.annualizedReturnPercent)}</BidiValue></dd></div>
+                <div><dt>{tr('Shares', 'الأسهم')}</dt><dd><BidiValue>{r.shares.toLocaleString('en-US', { maximumFractionDigits: 3 })}</BidiValue></dd></div>
+                <div><dt>{tr('Dividends', 'التوزيعات')}</dt><dd><BidiValue>{fmtKwd(r.dividendTotalKwd)}</BidiValue></dd></div>
                 <div><dt>{tr('Target-move level', 'مستوى حركة الهدف')}</dt><dd data-testid="text-roi-risk">{r.riskLabel === 'Low' ? tr('Low', 'منخفض') : r.riskLabel === 'Medium' ? tr('Medium', 'متوسط') : tr('High', 'مرتفع')}</dd></div>
               </dl>
               <p className="jx-risk">{riskText} {tr('This label is a simple heuristic based on how far the target is from the buy price. It is not investment advice.', 'هذا التصنيف قاعدة مبسطة تعتمد على بعد الهدف عن سعر الشراء، وليس نصيحة استثمارية.')}</p>

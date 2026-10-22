@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { ArrowRight, CalendarDays, PartyPopper, RotateCcw } from 'lucide-react';
 import { Link } from 'wouter';
+import { BidiValue } from '@/components/bidi-value';
 import {
   getGetMarketStockQueryKey,
   useCreateJourneyTrade,
@@ -94,14 +95,14 @@ function PracticeBody({ ctx }: { ctx: JourneyCtx }) {
         retrying={scanner.isFetching || quote.isFetching}
       />
       <div className="jx-stats" data-testid="section-wallet-stats">
-        <div className="jx-stat"><span>{tr('Cash', 'النقد')}</span><b data-testid="text-cash">{fmtKwd(state.cashKwd, na)}</b></div>
-        <div className="jx-stat"><span>{tr('Holdings value', 'قيمة الأسهم')}</span><b data-testid="text-market-value">{fmtKwd(state.marketValueKwd, na)}</b></div>
-        <div className="jx-stat"><span>{tr('Portfolio total', 'إجمالي المحفظة')}</span><b data-testid="text-portfolio-value">{fmtKwd(state.portfolioValueKwd, na)}</b></div>
+        <div className="jx-stat"><span>{tr('Cash', 'النقد')}</span><b data-testid="text-cash"><BidiValue>{fmtKwd(state.cashKwd, na)}</BidiValue></b></div>
+        <div className="jx-stat"><span>{tr('Holdings value', 'قيمة الأسهم')}</span><b data-testid="text-market-value"><BidiValue>{fmtKwd(state.marketValueKwd, na)}</BidiValue></b></div>
+        <div className="jx-stat"><span>{tr('Portfolio total', 'إجمالي المحفظة')}</span><b data-testid="text-portfolio-value"><BidiValue>{fmtKwd(state.portfolioValueKwd, na)}</BidiValue></b></div>
         <div className="jx-stat"><span>{tr('Profit / loss', 'الربح / الخسارة')}</span>
-          <b className={(state.profitLossKwd ?? 0) >= 0 ? 'is-pos' : 'is-neg'} data-testid="text-profit-loss">{fmtKwd(state.profitLossKwd, na)}</b></div>
+          <b className={(state.profitLossKwd ?? 0) >= 0 ? 'is-pos' : 'is-neg'} data-testid="text-profit-loss"><BidiValue>{fmtKwd(state.profitLossKwd, na)}</BidiValue></b></div>
       </div>
 
-      <div className="jx-grid jx-grid--even" style={{ marginTop: 16 }}>
+      <div className="jx-grid jx-grid--even" style={{ marginBlockStart: 16 }}>
         <section className="jx-card" aria-labelledby="trade-h">
           <h2 id="trade-h">{tr('Place a demo trade', 'نفّذ صفقة تجريبية')}</h2>
           <p className="jx-tip" data-testid="text-first-trade-tip">{hasTrades
@@ -110,20 +111,20 @@ function PracticeBody({ ctx }: { ctx: JourneyCtx }) {
           <div className="jx-form">
             <label className="jx-label">{tr('Company', 'الشركة')}
               <select className="jx-input" value={symbol} onChange={(e) => setSymbol(e.target.value)} data-testid="select-trade-company">
-                {allSymbols.map((s) => <option key={s} value={s}>{nameOf(s)} ({s}){symbols.includes(s) ? ` - ${tr('selected', 'مختارة')}` : ''}</option>)}
+                {allSymbols.map((s) => <option key={s} value={s} dir="auto">{nameOf(s)} ({s}){symbols.includes(s) ? ` - ${tr('selected', 'مختارة')}` : ''}</option>)}
               </select>
               {scanner.isLoading && <small className="jx-company-options-loading" data-testid="status-practice-scanner-loading"><InvestmentSkeleton variant="text" label={tr('Loading companies', 'جارٍ تحميل الشركات')} /></small>}
               {scanner.isError && <small className="jx-field-error" role="alert" data-testid="status-practice-scanner-error">{tr('Full company list unavailable; showing your selection.', 'قائمة الشركات الكاملة غير متاحة؛ تظهر شركاتك المختارة.')} <button type="button" className="jx-chip" onClick={() => void scanner.refetch()} data-testid="button-retry-practice-scanner">{tr('Retry', 'إعادة')}</button></small>}
             </label>
             <div data-testid="text-trade-price">
               <span className="jx-muted">{tr('Latest price', 'آخر سعر')}</span>
-              <p className="jx-result-big" style={{ fontSize: 28 }}>{quote.isLoading ? <InvestmentSkeleton variant="price-large" label={tr('Loading price', 'جارٍ تحميل السعر')} /> : fmtKwd(stock?.priceKwd, na)}</p>
-              {fmtTime(stock?.marketTime) && <span className="jx-muted">{fmtTime(stock?.marketTime)}</span>}
+              <p className="jx-result-big" style={{ fontSize: 28 }}>{quote.isLoading ? <InvestmentSkeleton variant="price-large" label={tr('Loading price', 'جارٍ تحميل السعر')} /> : <BidiValue>{fmtKwd(stock?.priceKwd, na)}</BidiValue>}</p>
+              {fmtTime(stock?.marketTime, ctx.isAr ? 'ar' : 'en') && <span className="jx-muted"><BidiValue>{fmtTime(stock?.marketTime, ctx.isAr ? 'ar' : 'en')}</BidiValue></span>}
               {quote.isError && <p className="jx-field-error" role="alert">{errMsg(quote.error, tr('Price could not be loaded.', 'تعذّر تحميل السعر.'))} <button type="button" className="jx-chip" onClick={() => void quote.refetch()} data-testid="button-retry-price">{tr('Retry', 'إعادة')}</button></p>}
             </div>
             <label className="jx-label">{tr('Shares (whole numbers)', 'عدد الأسهم (أرقام صحيحة)')}
               <input className="jx-input" type="number" inputMode="numeric" min={1} step={1} value={qty} onChange={(e) => setQty(e.target.value)} data-testid="input-trade-quantity" />
-              <small>{tr('Estimated value', 'القيمة التقديرية')}: {fmtKwd(estimate, na)}</small>
+              <small>{tr('Estimated value', 'القيمة التقديرية')}: <BidiValue>{fmtKwd(estimate, na)}</BidiValue></small>
             </label>
             <div className="jx-btn-row">
               <button type="button" className="jx-btn" disabled={busy || stock?.priceKwd == null} onClick={() => void place('buy')} data-testid="button-buy">{tr('Buy', 'شراء')}</button>
@@ -142,9 +143,9 @@ function PracticeBody({ ctx }: { ctx: JourneyCtx }) {
               <thead><tr><th>{tr('Company', 'الشركة')}</th><th>{tr('Qty', 'الكمية')}</th><th>{tr('Avg cost', 'متوسط التكلفة')}</th><th>{tr('Value', 'القيمة')}</th><th>{tr('P/L', 'ر/خ')}</th></tr></thead>
               <tbody>{state.holdings.map((h) => (
                 <tr key={h.symbol} data-testid={`row-holding-${h.symbol}`}>
-                  <td>{h.companyName}{h.sample ? ` (${tr('sample', 'تجريبي')})` : ''}</td><td>{h.quantity}</td>
-                  <td>{fmtKwd(h.averageCostKwd, na)}</td><td>{fmtKwd(h.marketValueKwd, na)}</td>
-                  <td className={(h.profitLossKwd ?? 0) >= 0 ? 'is-pos' : 'is-neg'}>{fmtKwd(h.profitLossKwd, na)}</td>
+                  <td dir="auto">{h.companyName}{h.sample ? ` (${tr('sample', 'تجريبي')})` : ''}</td><td><BidiValue>{h.quantity}</BidiValue></td>
+                  <td><BidiValue>{fmtKwd(h.averageCostKwd, na)}</BidiValue></td><td><BidiValue>{fmtKwd(h.marketValueKwd, na)}</BidiValue></td>
+                  <td className={(h.profitLossKwd ?? 0) >= 0 ? 'is-pos' : 'is-neg'}><BidiValue>{fmtKwd(h.profitLossKwd, na)}</BidiValue></td>
                 </tr>))}</tbody>
             </table></div>
           )}
@@ -158,9 +159,9 @@ function PracticeBody({ ctx }: { ctx: JourneyCtx }) {
             <thead><tr><th>{tr('Time', 'الوقت')}</th><th>{tr('Company', 'الشركة')}</th><th>{tr('Side', 'النوع')}</th><th>{tr('Qty', 'الكمية')}</th><th>{tr('Price', 'السعر')}</th><th>{tr('Total', 'الإجمالي')}</th></tr></thead>
             <tbody>{[...state.trades].reverse().map((t) => (
               <tr key={t.id} data-testid={`row-trade-${t.id}`}>
-                <td>{fmtTime(t.createdAt) ?? na}</td><td>{t.companyName}{t.sample ? ` (${tr('sample', 'تجريبي')})` : t.stale ? ` (${tr('delayed', 'متأخر')})` : ''}</td>
-                <td>{t.side === 'buy' ? tr('Buy', 'شراء') : tr('Sell', 'بيع')}</td><td>{t.quantity}</td>
-                <td>{fmtKwd(t.priceKwd, na)}</td><td>{fmtKwd(t.notionalKwd, na)}</td>
+                <td><BidiValue>{fmtTime(t.createdAt, ctx.isAr ? 'ar' : 'en') ?? na}</BidiValue></td><td dir="auto">{t.companyName}{t.sample ? ` (${tr('sample', 'تجريبي')})` : t.stale ? ` (${tr('delayed', 'متأخر')})` : ''}</td>
+                <td>{t.side === 'buy' ? tr('Buy', 'شراء') : tr('Sell', 'بيع')}</td><td><BidiValue>{t.quantity}</BidiValue></td>
+                <td><BidiValue>{fmtKwd(t.priceKwd, na)}</BidiValue></td><td><BidiValue>{fmtKwd(t.notionalKwd, na)}</BidiValue></td>
               </tr>))}</tbody>
           </table></div>
         )}

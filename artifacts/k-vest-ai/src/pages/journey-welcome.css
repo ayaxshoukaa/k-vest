@@ -288,7 +288,7 @@
 .jwelcome__weekly-link {
   display: inline-flex;
   width: fit-content;
-  min-height: 42px;
+  min-height: 44px;
   align-items: center;
   justify-content: center;
   gap: 9px;
@@ -335,6 +335,17 @@
 
 .jwelcome--rtl .jwelcome__cta-arrow {
   transform: rotate(180deg);
+}
+
+.jwelcome--rtl h1,
+.jwelcome--rtl h2,
+.jwelcome--rtl h3 {
+  font-family: 'Plus Jakarta Sans', 'Noto Sans Arabic', sans-serif;
+  letter-spacing: 0;
+}
+
+.jwelcome--rtl .jwelcome__eyebrow {
+  letter-spacing: 0;
 }
 
 .jwelcome--rtl .jwelcome__cta:hover .jwelcome__cta-arrow {

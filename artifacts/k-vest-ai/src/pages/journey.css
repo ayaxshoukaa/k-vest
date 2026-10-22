@@ -7,10 +7,13 @@
 .jx *, .jx *::before, .jx *::after { box-sizing: border-box; }
 .jx :where(a) { color: inherit; text-decoration: none; }
 .jx h1, .jx h2, .jx h3 { font-family: 'Syne', sans-serif; color: #F8FAFC; margin: 0; letter-spacing: -.01em; }
+.jx--rtl h1, .jx--rtl h2, .jx--rtl h3 { font-family: 'Plus Jakarta Sans', 'Noto Sans Arabic', sans-serif; letter-spacing: 0; }
+.jx--rtl .jx-eyebrow { letter-spacing: 0; }
 .jx h1 { font-size: clamp(28px, 4.5vw, 44px); line-height: 1.15; }
 .jx h2 { font-size: 22px; } .jx h3 { font-size: 17px; }
 .jx p { margin: 0; }
 .jx :where(button, input, select) { font: inherit; color: inherit; }
+.jx input[type="number"] { direction: ltr; text-align: start; }
 .jx :focus-visible { outline: 3px solid #4CD7F6; outline-offset: 2px; }
 .jx-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
 .jx-header { width: min(100% - 32px, 1120px); margin: 0 auto; min-height: 84px; display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 16px; }
@@ -137,6 +140,7 @@
 .jx-detail-chart h3 { margin: 0 0 4px; font-size: 16px; }
 .jx-detail-chart__plot { width: 100%; height: 148px; min-width: 0; margin-block-start: 12px; }
 .jx-detail-chart__plot .recharts-wrapper { max-width: 100%; }
+.jx .recharts-tooltip-wrapper { unicode-bidi: isolate; }
 .jx-price { text-align: end; font-size: 13px; font-variant-numeric: tabular-nums; }
 .jx-price b { display: block; }
 .is-pos { color: var(--up); } .is-neg { color: var(--down); }
@@ -196,7 +200,7 @@
 .jx-ask { display: flex; gap: 8px; margin-top: 12px; } .jx-ask .jx-input { flex: 1; }
 
 /* practice / roi */
-.jx-tip { background: var(--accent); border-radius: 12px; padding: 12px 16px; font-size: 14px; color: var(--blue-d); margin-bottom: 14px; }
+.jx-tip { background: var(--accent); border-radius: 12px; padding: 12px 16px; font-size: 14px; color: var(--blue-d); margin-block-end: 14px; }
 .jx-stats { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 12px; }
 @media (min-width: 700px) { .jx-stats { grid-template-columns: repeat(4, minmax(0,1fr)); } }
 .jx-stat { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 14px; }
@@ -209,7 +213,7 @@
 .jx-form-row { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
 .jx-btn-row { display: flex; flex-wrap: wrap; gap: 10px; }
 .jx-result-big { font-family: 'Syne', sans-serif; font-size: clamp(30px, 6vw, 46px); font-weight: 800; color: var(--blue-d); font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
-.jx-risk { padding: 12px 16px; border-radius: 12px; background: var(--tint); font-size: 14px; margin-top: 14px; }
+.jx-risk { padding: 12px 16px; border-radius: 12px; background: var(--tint); font-size: 14px; margin-block-start: 14px; }
 .jx-summary { display: grid; gap: 14px; margin: 18px 0; }
 .jx-summary li { list-style: none; padding: 18px 20px; border: 1px solid var(--line); border-radius: 16px; background: var(--panel); font-size: 18px; }
 .jx-summary { padding: 0; }
@@ -217,7 +221,7 @@
 /* modal */
 .jx-modal { position: fixed; inset: 0; background: rgba(4,7,18,.75); display: grid; place-items: center; padding: 16px; z-index: 100; }
 .jx-modal__card { background: var(--panel); border-radius: 18px; padding: 24px; width: min(100%, 440px); display: grid; gap: 12px; animation: jx-in .25s both; }
-.jx-modal__actions { display: flex; gap: 10px; justify-content: flex-end; flex-wrap: wrap; margin-top: 6px; }
+.jx-modal__actions { display: flex; gap: 10px; justify-content: flex-end; flex-wrap: wrap; margin-block-start: 6px; }
 
 @media (max-width: 640px) {
   .jx-header { grid-template-columns: 1fr auto; } .jx-progress { grid-column: 1 / -1; grid-row: 2; padding-bottom: 8px; }

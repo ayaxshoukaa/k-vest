@@ -57,10 +57,16 @@ export function fmtPct(value: number | null | undefined, unavailable = 'Unavaila
   return `${value > 0 ? '+' : ''}${value.toFixed(2)}%`;
 }
 
-export function fmtTime(value: string | null | undefined): string | null {
+export function fmtTime(value: string | null | undefined, language: Language = 'en'): string | null {
   if (!value) return null;
   const d = new Date(value);
-  return Number.isNaN(d.getTime()) ? null : d.toLocaleString('en-GB', { dateStyle: 'medium', timeStyle: 'short' });
+  return Number.isNaN(d.getTime())
+    ? null
+    : new Intl.DateTimeFormat(language === 'ar' ? 'ar-KW' : 'en-KW', {
+      dateStyle: 'medium',
+      timeStyle: 'short',
+      timeZone: 'Asia/Kuwait',
+    }).format(d);
 }
 
 export function errMsg(error: unknown, fallback: string): string {

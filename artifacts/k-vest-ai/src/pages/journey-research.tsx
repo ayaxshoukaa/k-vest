@@ -9,6 +9,7 @@ import {
   useGetMarketScanner,
 } from '@workspace/api-client-react';
 import { DataWarning, JourneyShell, type JourneyCtx } from '@/components/journey/shell';
+import { BidiValue } from '@/components/bidi-value';
 import { InvestmentLoader } from '@/components/investment-loader';
 import { errMsg, friendlyWarning } from '@/lib/journey';
 
@@ -72,14 +73,14 @@ function ResearchBody({ ctx }: { ctx: JourneyCtx }) {
       <section className="jx-card" aria-label={tr('Conversation', 'المحادثة')}>
         <div className="jx-chips" role="group" aria-label={tr('Your companies', 'شركاتك')}>
           {state.watchlistSymbols.map((s) => (
-            <button key={s} type="button" className="jx-chip" aria-pressed={s === symbol} onClick={() => setSymbol(s)} data-testid={`button-company-${s}`}>
-              {nameOf(s)} <small>({s})</small>
+            <button key={s} type="button" className="jx-chip" dir="auto" aria-pressed={s === symbol} onClick={() => setSymbol(s)} data-testid={`button-company-${s}`}>
+              {nameOf(s)} <small><BidiValue>({s})</BidiValue></small>
             </button>
           ))}
         </div>
-        <div className="jx-btn-row" style={{ marginTop: 14 }}>
-          <button type="button" className="jx-btn" disabled={analyze.isPending || !symbol} onClick={() => void ask(first)} data-testid="button-analyze">
-            {tr('Analyze', 'حلّل')} {nameOf(symbol)}
+        <div className="jx-btn-row" style={{ marginBlockStart: 14 }}>
+          <button type="button" className="jx-btn" dir="auto" disabled={analyze.isPending || !symbol} onClick={() => void ask(first)} data-testid="button-analyze">
+            {tr('Analyze', 'حلّل')} <bdi dir="auto">{nameOf(symbol)}</bdi>
           </button>
         </div>
         <div className="jx-chat" aria-live="polite" data-testid="list-chat">
@@ -89,7 +90,7 @@ function ResearchBody({ ctx }: { ctx: JourneyCtx }) {
                 <div className="jx-markdown" dir="auto" lang={isAr ? 'ar' : 'en'} data-testid={`markdown-answer-${i}`}>
                   <ReactMarkdown>{m.text}</ReactMarkdown>
                 </div>
-              ) : m.text}
+              ) : <bdi dir="auto">{m.text}</bdi>}
               {m.role === 'ai' && (m.sample || m.stale || m.warning) && (
                 <small>{m.sample ? tr('Based on sample data, not live prices. ', 'مبني على بيانات تجريبية وليست أسعارًا حية. ') : m.stale ? tr('Based on delayed prices. ', 'مبني على أسعار متأخرة. ') : ''}{friendlyWarning(m.warning, isAr ? 'ar' : 'en')}</small>
               )}
@@ -112,14 +113,14 @@ function ResearchBody({ ctx }: { ctx: JourneyCtx }) {
         )}
         <DataWarning sample={false} tr={tr} />
         <p className="jx-muted">{tr('Suggested questions', 'أسئلة مقترحة')}</p>
-        <div className="jx-chips" style={{ marginTop: 8 }}>
+        <div className="jx-chips" style={{ marginBlockStart: 8 }}>
           {suggestions.map((q, i) => (
             <button key={q} type="button" className="jx-chip" disabled={analyze.isPending} onClick={() => void ask(q)} data-testid={`button-suggestion-${i + 1}`}>{q}</button>
           ))}
         </div>
         <form className="jx-ask" onSubmit={(e) => { e.preventDefault(); void ask(draft); }}>
           <label className="jx-sr" htmlFor="research-q">{tr('Your question', 'سؤالك')}</label>
-          <input id="research-q" className="jx-input" value={draft} onChange={(e) => setDraft(e.target.value)} maxLength={500}
+          <input id="research-q" className="jx-input" dir="auto" value={draft} onChange={(e) => setDraft(e.target.value)} maxLength={500}
             placeholder={tr('Ask a follow-up question', 'اطرح سؤالًا إضافيًا')} data-testid="input-research-question" />
           <button type="submit" className="jx-btn" disabled={analyze.isPending || !draft.trim()} aria-label={tr('Send', 'إرسال')} data-testid="button-send-question"><Send size={16} aria-hidden="true" className="jx-flip" /></button>
         </form>

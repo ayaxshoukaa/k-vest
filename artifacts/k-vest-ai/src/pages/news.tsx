@@ -1,14 +1,14 @@
 import { ArrowLeft, ArrowRight, Newspaper } from "lucide-react";
 import { Link } from "wouter";
 import { BrandMark } from "@/components/brand-mark";
-import { MarketNewsFeed, type NewsLanguage } from "@/components/market-news-feed";
+import { MarketNewsFeed } from "@/components/market-news-feed";
 import { useJourneyLanguage } from "@/lib/journey";
 import "./news.css";
 
 const newsCopy = {
   en: {
     vision: "Our vision",
-    back: "Back to your welcome page",
+    back: "Back to start",
     eyebrow: "DAILY MARKET NEWS",
     title: "Headlines, with context.",
     description: "Explore broader headlines about global markets and finance. These stories are not Kuwait-specific; open each one at its original publisher.",
@@ -19,7 +19,7 @@ const newsCopy = {
   },
   ar: {
     vision: "رؤيتنا",
-    back: "العودة إلى صفحة البداية",
+    back: "العودة إلى البداية",
     eyebrow: "أخبار السوق اليومية",
     title: "أخبار السوق في سياقها.",
     description: "اطّلع على عناوين أوسع عن الأسواق والتمويل عالميًا. هذه الأخبار ليست خاصة بالكويت؛ افتح كل خبر من مصدره الأصلي.",
@@ -42,7 +42,7 @@ export default function NewsPage() {
         </Link>
         <nav className="market-news-page__nav" aria-label={language === "ar" ? "التنقل الرئيسي" : "Main navigation"}>
           <Link href="/vision" className="jwelcome__vision-link" data-testid="link-news-vision">{text.vision}</Link>
-          <Link href="/journey/welcome" className="market-news-page__back" data-testid="link-news-welcome">
+          <Link href="/journey/welcome" className="market-news-page__back" aria-label={text.back} data-testid="link-news-welcome">
             {language === "ar" ? <ArrowRight size={15} aria-hidden="true" /> : <ArrowLeft size={15} aria-hidden="true" />}
             {text.back}
           </Link>

@@ -38,6 +38,15 @@ const queryClient = new QueryClient({
   }),
 });
 const basePath = import.meta.env.BASE_URL.replace(/\/$/, '');
+const arabicClerkLocalization = {
+  ...arSA,
+  formFieldInputPlaceholder__emailAddress: 'أدخل عنوان بريدك الإلكتروني',
+  formFieldInputPlaceholder__emailAddress_username: 'أدخل بريدك الإلكتروني أو اسم المستخدم',
+  formFieldInputPlaceholder__password: 'أدخل كلمة المرور',
+  formFieldInputPlaceholder__signUpPassword: 'أنشئ كلمة مرور',
+  formFieldInputPlaceholder__firstName: 'أدخل اسمك الأول',
+  formFieldInputPlaceholder__lastName: 'أدخل اسم العائلة',
+} satisfies typeof arSA;
 
 // Resolve the Clerk key for the actual incoming hostname, including custom domains.
 const clerkPubKey = publishableKeyFromHost(
@@ -87,15 +96,16 @@ const clerkAppearance = {
     headerSubtitle: 'text-[#BBCABF] text-sm',
     socialButtonsBlockButtonText: 'text-[#E1E2E9]',
     formFieldLabel: 'text-[#E1E2E9] text-sm font-medium',
-    footerActionLink: 'text-[#4EDEA3] hover:text-[#10B981]',
+    formFieldInputShowPasswordButton: 'min-h-11 min-w-11',
+    footerActionLink: 'inline-flex min-h-11 items-center text-[#4EDEA3] hover:text-[#10B981]',
     footerActionText: 'text-[#BBCABF] text-sm',
     dividerText: 'text-[#BBCABF]',
     identityPreviewEditButton: 'text-[#4EDEA3]',
     formFieldSuccessText: 'text-[#4EDEA3]',
     alertText: 'text-[#E1E2E9]',
-    logoBox: 'rounded-xl',
+    logoBox: 'min-h-11 rounded-xl',
     logoImage: 'object-contain',
-    socialButtonsBlockButton: 'rounded-xl border-white/10 bg-[#141D33] hover:bg-[#1A2739]',
+    socialButtonsBlockButton: 'min-h-11 rounded-xl border-white/10 bg-[#141D33] hover:bg-[#1A2739]',
     formButtonPrimary: 'kv-auth__login-button min-h-11 rounded-xl bg-gradient-to-r from-[#10B981] to-[#059669] font-semibold text-[#003824] shadow-lg shadow-[#10B981]/20 hover:brightness-110',
     formFieldInput: 'min-h-11 rounded-xl border-white/10 bg-[#090D16] text-[#E1E2E9] placeholder:text-[#86948A] focus:ring-2 focus:ring-[#10B981]/40',
     footerAction: 'border-t border-white/10',
@@ -184,7 +194,7 @@ function ClerkRoutes() {
       appearance={clerkAppearance}
       signInUrl={`${basePath}/sign-in`}
       signUpUrl={`${basePath}/sign-up`}
-      localization={language === 'ar' ? arSA : {
+      localization={language === 'ar' ? arabicClerkLocalization : {
         signIn: {
           start: {
             title: 'Sign in',

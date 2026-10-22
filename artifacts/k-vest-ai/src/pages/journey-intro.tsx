@@ -44,7 +44,7 @@ function IntroBody({ ctx, def }: { ctx: JourneyCtx; def: IntroDef }) {
     <section className="jx-intro" aria-labelledby="intro-title" data-testid={`section-intro-${def.next}`}>
       <div className="jx-intro__progress-group">
         <div className="jx-intro__progress-label">
-          <span>{stepText}</span>
+          <span><bdi dir="auto">{stepText}</bdi></span>
           <span>{tr('Your learning journey', 'رحلتك التعليمية')}</span>
         </div>
         <div

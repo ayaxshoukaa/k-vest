@@ -59,7 +59,8 @@
 
 .vision-page--rtl .vision-logo { object-position: right center; }
 .vision-page--rtl .vision-copy h1,
-.vision-page--rtl .vision-principle h3 { font-family: 'Plus Jakarta Sans', sans-serif; letter-spacing: 0; }
+.vision-page--rtl .vision-principle h3,
+.vision-page--rtl .vision-footer > span { font-family: 'Plus Jakarta Sans', 'Noto Sans Arabic', sans-serif; letter-spacing: 0; }
 .vision-page--rtl .vision-eyebrow { letter-spacing: 0; }
 .vision-page--rtl .vision-directional { transform: scaleX(-1); }
 
@@ -281,9 +282,11 @@
 .vision-path__line::before {
   content: '';
   position: absolute;
-  inset: 0 auto 0;
+  inset-block: 0;
+  inset-inline-start: 50%;
   width: 1px;
   background: rgba(255, 255, 255, .1);
+  transform: translateX(-50%);
 }
 
 .vision-path li:last-child .vision-path__line::before {

@@ -88,7 +88,7 @@ export function MarketNewsFeed({ language, limit }: MarketNewsFeedProps) {
       {query.data && (
         <>
           <div className="market-news-feed__meta" data-testid="status-market-news">
-            <span className={`market-news-feed__status is-${query.data.status}`}>
+            <span className={`market-news-feed__status is-${query.data.status}`} dir="auto">
               <i aria-hidden="true" />
               {query.data.status === "fresh"
                 ? text.source
@@ -120,12 +120,12 @@ export function MarketNewsFeed({ language, limit }: MarketNewsFeedProps) {
               {articles.map((article) => (
                 <article className="market-news-feed__article" key={article.id} data-testid={`card-market-news-${article.id}`}>
                   <div className="market-news-feed__article-meta">
-                    <span>{article.publisher}</span>
-                    <time dateTime={article.publishedAt ?? undefined}>
-                      {formatPublishedAt(article.publishedAt, language)}
+                    <span dir="auto">{article.publisher}</span>
+                    <time dir="auto" dateTime={article.publishedAt ?? undefined}>
+                      <bdi>{formatPublishedAt(article.publishedAt, language)}</bdi>
                     </time>
                   </div>
-                  <h3>{article.title}</h3>
+                  <h3 dir="auto">{article.title}</h3>
                   <a
                     href={article.url}
                     target="_blank"

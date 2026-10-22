@@ -5,6 +5,7 @@ import {
   useGetJourneyWeeklySummary,
 } from '@workspace/api-client-react';
 import { JourneyShell, type JourneyCtx } from '@/components/journey/shell';
+import { BidiValue } from '@/components/bidi-value';
 import { InvestmentArrows, InvestmentLoader } from '@/components/investment-loader';
 import { fmtKwd } from '@/lib/journey';
 import './journey-weekly-summary.css';
@@ -100,7 +101,7 @@ function WeeklySummaryBody({ ctx }: { ctx: JourneyCtx }) {
         <h1>{tr('Your practice portfolio this week', 'محفظة التدريب هذا الأسبوع')}</h1>
         <p className="jx-muted">
           <CalendarDays size={16} aria-hidden="true" />
-          {tr('Week of', 'أسبوع يبدأ في')} {formatWeekStart(summary.weekStart, isAr)}
+          {tr('Week of', 'أسبوع يبدأ في')} <BidiValue>{formatWeekStart(summary.weekStart, isAr)}</BidiValue>
           {' · '}
           {tr('Demo money only', 'مال تجريبي فقط')}
         </p>
@@ -118,7 +119,7 @@ function WeeklySummaryBody({ ctx }: { ctx: JourneyCtx }) {
         <div className="jx-stat jx-weekly-stat--change">
           <span>{tr('Gain or loss this week', 'الربح أو الخسارة هذا الأسبوع')}</span>
           <b className={valueUnavailable ? '' : isPositive ? 'is-pos' : 'is-neg'} data-testid="text-weekly-change">
-            {fmtKwd(summary.profitLossKwd, na)}
+            <BidiValue>{fmtKwd(summary.profitLossKwd, na)}</BidiValue>
           </b>
           <small>
             {valueUnavailable
@@ -131,7 +132,7 @@ function WeeklySummaryBody({ ctx }: { ctx: JourneyCtx }) {
 
         <div className="jx-stat">
           <span>{tr('Practice trades', 'صفقات التدريب')}</span>
-          <b data-testid="text-weekly-trade-count">{summary.tradeCount}</b>
+          <b data-testid="text-weekly-trade-count"><BidiValue>{summary.tradeCount}</BidiValue></b>
           <small>{tr('This week, using demo money.', 'هذا الأسبوع، باستخدام مال تجريبي.')}</small>
         </div>
 
@@ -140,8 +141,8 @@ function WeeklySummaryBody({ ctx }: { ctx: JourneyCtx }) {
             <span>{label}</span>
             {value ? (
               <>
-                <b className={value.profitLossKwd >= 0 ? 'is-pos' : 'is-neg'}>{value.companyName}</b>
-                <small>{fmtKwd(value.profitLossKwd, na)} {tr('this week', 'هذا الأسبوع')}</small>
+                <b className={value.profitLossKwd >= 0 ? 'is-pos' : 'is-neg'} dir="auto">{value.companyName}</b>
+                <small><BidiValue>{fmtKwd(value.profitLossKwd, na)}</BidiValue> {tr('this week', 'هذا الأسبوع')}</small>
               </>
             ) : (
               <>
@@ -166,7 +167,7 @@ function WeeklySummaryBody({ ctx }: { ctx: JourneyCtx }) {
                 <div className="jx-weekly-challenge__heading">
                   <h3>{tr(copy.title[0], copy.title[1])}</h3>
                   <span className="jx-weekly-challenge__count" data-testid={`text-weekly-challenge-count-${challenge.challengeId}`}>
-                    {challenge.progress}/{challenge.goal}
+                    <BidiValue>{challenge.progress}/{challenge.goal}</BidiValue>
                   </span>
                 </div>
                 <p className="jx-muted">{tr(copy.description[0], copy.description[1])}</p>

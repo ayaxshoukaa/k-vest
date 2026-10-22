@@ -13,6 +13,7 @@ import {
 } from '@workspace/api-client-react';
 import { DataWarning, JourneyShell, Sparkline, type JourneyCtx } from '@/components/journey/shell';
 import { CompanyLogo } from '@/components/company-logo';
+import { BidiValue } from '@/components/bidi-value';
 import { InvestmentArrows, InvestmentLoader, LearningStockRowSkeleton } from '@/components/investment-loader';
 import { RatingInfo, RatingPresentation } from '@/components/rating-presentation';
 import { errMsg, fmtKwd, fmtPct, fmtTime } from '@/lib/journey';
@@ -34,17 +35,17 @@ function StockRow({ s, selected, active, onStar, onOpen, ctx }: {
       <button type="button" className="jx-row__main" onClick={onOpen} aria-expanded={active} aria-controls="journey-company-details" data-testid={`button-open-${s.symbol}`}>
         <div className="jx-row__company-brand">
           <CompanyLogo key={s.symbol} symbol={s.symbol} companyName={s.companyName} />
-          <strong>{s.companyName}</strong>
+          <strong dir="auto">{s.companyName}</strong>
         </div>
         <div className="jx-row__meta">
-          <span>{s.symbol}{s.sample ? ` · ${tr('Sample', 'تجريبي')}` : ''}</span>
+          <span dir="auto">{s.symbol}{s.sample ? ` · ${tr('Sample', 'تجريبي')}` : ''}</span>
         </div>
         <RatingPresentation rating={s.rating} language={language} />
       </button>
       <Sparkline points={s.sparkline} />
       <div className="jx-price">
-        <b>{fmtKwd(s.priceKwd, na)}</b>
-        <span className={(s.changePercent ?? 0) >= 0 ? 'is-pos' : 'is-neg'}>{fmtPct(s.changePercent, na)}</span>
+        <b><BidiValue>{fmtKwd(s.priceKwd, na)}</BidiValue></b>
+        <span className={(s.changePercent ?? 0) >= 0 ? 'is-pos' : 'is-neg'}><BidiValue>{fmtPct(s.changePercent, na)}</BidiValue></span>
       </div>
     </li>
   );
@@ -93,7 +94,7 @@ function Detail({ symbol, ctx }: { symbol: string; ctx: JourneyCtx }) {
     );
   }
   const { stock, warning, refreshStatus, lastUpdatedAt } = q.data;
-  const time = fmtTime(stock.marketTime ?? lastUpdatedAt);
+  const time = fmtTime(stock.marketTime ?? lastUpdatedAt, isAr ? 'ar' : 'en');
   return (
     <div className="jx-card" data-testid={`panel-detail-${symbol}`}>
       <DataWarning
@@ -107,11 +108,11 @@ function Detail({ symbol, ctx }: { symbol: string; ctx: JourneyCtx }) {
       <div className="jx-detail-company-heading">
         <CompanyLogo key={stock.symbol} symbol={stock.symbol} companyName={stock.companyName} />
         <div>
-          <h2>{stock.companyName}</h2>
-          <p className="jx-muted">{stock.symbol}{stock.sector ? ` · ${stock.sector}` : ''}</p>
+          <h2 dir="auto">{stock.companyName}</h2>
+          <p className="jx-muted" dir="auto">{stock.symbol}{stock.sector ? ` · ${stock.sector}` : ''}</p>
         </div>
       </div>
-      <p className="jx-result-big" style={{ marginTop: 10 }} data-testid="text-detail-price">{fmtKwd(stock.priceKwd, na)}</p>
+      <p className="jx-result-big" style={{ marginBlockStart: 10 }} data-testid="text-detail-price"><BidiValue>{fmtKwd(stock.priceKwd, na)}</BidiValue></p>
       <section className="jx-detail-chart" aria-labelledby="company-price-chart-title" aria-describedby="company-price-chart-caption">
         <h3 id="company-price-chart-title">{tr('Price over the last 30 days', 'السعر خلال آخر 30 يومًا')}</h3>
         <p id="company-price-chart-caption" className="jx-muted">
@@ -125,7 +126,7 @@ function Detail({ symbol, ctx }: { symbol: string; ctx: JourneyCtx }) {
                 <XAxis
                   dataKey="label"
                   reversed={isAr}
-                  tick={{ fill: '#BBCABF', fontSize: 11 }}
+                  tick={{ fill: '#BBCABF', fontSize: 11, style: { direction: isAr ? 'rtl' : 'ltr', unicodeBidi: 'isolate' } }}
                   tickLine={false}
                   axisLine={false}
                   minTickGap={24}
@@ -137,8 +138,8 @@ function Detail({ symbol, ctx }: { symbol: string; ctx: JourneyCtx }) {
                   contentStyle={{ background: '#090D16', border: '1px solid rgba(255,255,255,.12)', borderRadius: 10 }}
                   labelStyle={{ color: '#BBCABF' }}
                   itemStyle={{ color: '#E1E2E9' }}
-                  labelFormatter={(label) => String(label)}
-                  formatter={(value) => [fmtKwd(Number(value), na), tr('Price', 'السعر')]}
+                  labelFormatter={(label) => <BidiValue>{String(label)}</BidiValue>}
+                  formatter={(value) => [<BidiValue>{fmtKwd(Number(value), na)}</BidiValue>, tr('Price', 'السعر')]}
                 />
                 <Line
                   type="monotone"
@@ -157,18 +158,18 @@ function Detail({ symbol, ctx }: { symbol: string; ctx: JourneyCtx }) {
         )}
       </section>
       <dl className="jx-kv">
-        <div><dt>{tr('Change', 'التغيّر')}</dt><dd>{fmtKwd(stock.changeKwd, na)} ({fmtPct(stock.changePercent, na)})</dd></div>
-        <div><dt>{tr('Volume', 'حجم التداول')}</dt><dd>{stock.volume === null ? na : stock.volume.toLocaleString('en-US')}</dd></div>
-        <div><dt>{tr('Momentum', 'الزخم')}</dt><dd>{fmtPct(stock.momentumPercent, na)}</dd></div>
+        <div><dt>{tr('Change', 'التغيّر')}</dt><dd><BidiValue>{fmtKwd(stock.changeKwd, na)} ({fmtPct(stock.changePercent, na)})</BidiValue></dd></div>
+        <div><dt>{tr('Volume', 'حجم التداول')}</dt><dd><BidiValue>{stock.volume === null ? na : stock.volume.toLocaleString('en-US')}</BidiValue></dd></div>
+        <div><dt>{tr('Momentum', 'الزخم')}</dt><dd><BidiValue>{fmtPct(stock.momentumPercent, na)}</BidiValue></dd></div>
         <div><dt>{tr('Rating', 'التقييم')}</dt><dd><RatingPresentation rating={stock.rating} language={language} /></dd></div>
       </dl>
-      {time && <p className="jx-muted" style={{ marginTop: 10 }}>{tr('Quote time', 'وقت السعر')}: {time}</p>}
+      {time && <p className="jx-muted" style={{ marginBlockStart: 10 }}>{tr('Quote time', 'وقت السعر')}: <BidiValue>{time}</BidiValue></p>}
     </div>
   );
 }
 
 function ScanBody({ ctx }: { ctx: JourneyCtx }) {
-  const { tr, state } = ctx;
+  const { tr, state, isAr } = ctx;
   const scanner = useGetMarketScanner({ query: { queryKey: getGetMarketScannerQueryKey(), retry: false } });
   const save = useSaveJourneyWatchlist();
   const [selected, setSelected] = useState<string[]>(state.watchlistSymbols);
@@ -264,7 +265,11 @@ function ScanBody({ ctx }: { ctx: JourneyCtx }) {
         {changeChartData.length > 0 ? (
           <div className="jx-change-chart__plot" role="img" aria-labelledby="scan-change-heading" aria-describedby="scan-change-caption">
             <ResponsiveContainer width="100%" height={Math.max(240, changeChartData.length * 34 + 48)}>
-              <BarChart data={changeChartData} layout="vertical" margin={{ top: 8, right: 18, bottom: 8, left: 4 }}>
+              <BarChart
+                data={changeChartData}
+                layout="vertical"
+                margin={isAr ? { top: 8, right: 4, bottom: 8, left: 18 } : { top: 8, right: 18, bottom: 8, left: 4 }}
+              >
                 <CartesianGrid stroke="rgba(255,255,255,.08)" strokeDasharray="3 3" vertical />
                 <XAxis
                   type="number"
@@ -276,8 +281,9 @@ function ScanBody({ ctx }: { ctx: JourneyCtx }) {
                 <YAxis
                   type="category"
                   dataKey="symbol"
+                  orientation={isAr ? 'right' : 'left'}
                   width={72}
-                  tick={{ fill: '#E1E2E9', fontSize: 12 }}
+                  tick={{ fill: '#E1E2E9', fontSize: 12, style: { direction: 'ltr', unicodeBidi: 'isolate' } }}
                   axisLine={false}
                   tickLine={false}
                 />
@@ -286,7 +292,7 @@ function ScanBody({ ctx }: { ctx: JourneyCtx }) {
                   contentStyle={{ background: '#090D16', border: '1px solid rgba(255,255,255,.14)', borderRadius: 10, color: '#E1E2E9' }}
                   labelFormatter={(label) => {
                     const point = changeChartData.find((item) => item.symbol === String(label));
-                    return point ? `${point.companyName} (${point.symbol})` : String(label);
+                    return point ? <bdi dir="auto">{`${point.companyName} (${point.symbol})`}</bdi> : <bdi dir="auto">{String(label)}</bdi>;
                   }}
                   formatter={(value) => [`${Number(value).toFixed(2)}%`, tr('Daily change', 'التغيّر اليومي')]}
                 />
@@ -348,7 +354,7 @@ function ScanBody({ ctx }: { ctx: JourneyCtx }) {
 
         <aside id="journey-company-details" aria-label={tr('Details', 'التفاصيل')}>
           {open && (
-            <button type="button" className="jx-btn jx-btn--ghost jx-btn--sm" style={{ marginBottom: 12 }}
+            <button type="button" className="jx-btn jx-btn--ghost jx-btn--sm" style={{ marginBlockEnd: 12 }}
               data-testid="button-close-company-details" onClick={() => {
                 const symbol = open;
                 setOpen(null);

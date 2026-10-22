@@ -3,10 +3,11 @@ import { Link, useLocation } from 'wouter';
 import { CalendarDays, RotateCcw } from 'lucide-react';
 import { useResetJourney } from '@workspace/api-client-react';
 import { ConfirmDialog, JourneyShell, type JourneyCtx } from '@/components/journey/shell';
+import { BidiValue } from '@/components/bidi-value';
 import { errMsg, fmtKwd, fmtPct, stepPath } from '@/lib/journey';
 
 function FinishBody({ ctx }: { ctx: JourneyCtx }) {
-  const { tr, state } = ctx;
+  const { tr, state, isAr } = ctx;
   const na = tr('Unavailable', 'غير متاح');
   const reset = useResetJourney();
   const [, setLocation] = useLocation();
@@ -33,15 +34,15 @@ function FinishBody({ ctx }: { ctx: JourneyCtx }) {
       <h1 id="finish-title">{tr('You took your first look at stocks.', 'ألقيت أول نظرة على الأسهم.')}</h1>
       <ul className="jx-summary">
         <li data-testid="text-summary-stocks">
-          {tr(`You selected ${state.watchlistSymbols.length} stock(s): `, `اخترت ${state.watchlistSymbols.length} سهمًا: `)}
-          <strong>{state.watchlistSymbols.join(', ') || na}</strong>
+          {isAr ? <>اخترت <BidiValue>{state.watchlistSymbols.length}</BidiValue> سهمًا: </> : <>You selected <BidiValue>{state.watchlistSymbols.length}</BidiValue> stock(s): </>}
+          <strong dir="ltr"><BidiValue>{state.watchlistSymbols.join(', ') || na}</BidiValue></strong>
         </li>
         <li data-testid="text-summary-demo">
           {tr('Demo portfolio: ', 'المحفظة التجريبية: ')}
-          <strong>{fmtKwd(state.portfolioValueKwd, na)}</strong> ({tr('ROI', 'العائد')} {fmtPct(state.roiPercent, na)})
+          <strong><BidiValue>{fmtKwd(state.portfolioValueKwd, na)}</BidiValue></strong> ({tr('ROI', 'العائد')} <BidiValue>{fmtPct(state.roiPercent, na)}</BidiValue>)
         </li>
         <li data-testid="text-summary-calculator">
-          {r ? <>{tr('Calculator for ', 'الحاسبة لـ ')}{r.symbol}: <strong>{fmtKwd(r.finalValueKwd)}</strong> ({fmtPct(r.roiPercent)})</> : tr('Calculator: no result saved.', 'الحاسبة: لا توجد نتيجة محفوظة.')}
+          {r ? <>{tr('Calculator for ', 'الحاسبة لـ ')}<BidiValue>{r.symbol}</BidiValue>: <strong><BidiValue>{fmtKwd(r.finalValueKwd)}</BidiValue></strong> (<BidiValue>{fmtPct(r.roiPercent)}</BidiValue>)</> : tr('Calculator: no result saved.', 'الحاسبة: لا توجد نتيجة محفوظة.')}
         </li>
       </ul>
       <div className="jx-chips" data-testid="nav-revisit">

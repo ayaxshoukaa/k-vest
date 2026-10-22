@@ -102,10 +102,12 @@
 }
 
 .market-news-feed__read-link {
-  margin-top: auto;
+  margin-block-start: auto;
   display: inline-flex;
+  min-height: 44px;
   align-items: center;
   gap: 7px;
+  padding-block: 6px;
   color: #48d9b2;
   font-size: 12px;
   font-weight: 700;
@@ -134,7 +136,7 @@
 }
 
 .market-news-feed__retry {
-  min-height: 38px;
+  min-height: 44px;
   padding: 0 13px;
   display: inline-flex;
   align-items: center;
