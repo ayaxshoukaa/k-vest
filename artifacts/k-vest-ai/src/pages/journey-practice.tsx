@@ -7,10 +7,9 @@ import {
   useGetMarketScanner,
   useGetMarketStock,
   useResetJourneyWallet,
-  useSkipJourneyPractice,
 } from '@workspace/api-client-react';
 import { ConfirmDialog, DataWarning, JourneyShell, type JourneyCtx } from '@/components/journey/shell';
-import { errMsg, fmtKwd, fmtTime, mergeSymbols, stepIndex } from '@/lib/journey';
+import { errMsg, fmtKwd, fmtTime, mergeSymbols } from '@/lib/journey';
 
 function PracticeBody({ ctx }: { ctx: JourneyCtx }) {
   const { tr, state } = ctx;
@@ -18,7 +17,6 @@ function PracticeBody({ ctx }: { ctx: JourneyCtx }) {
   const scanner = useGetMarketScanner({ query: { queryKey: getGetMarketScannerQueryKey(), retry: false } });
   const trade = useCreateJourneyTrade();
   const reset = useResetJourneyWallet();
-  const skip = useSkipJourneyPractice();
   const symbols = state.watchlistSymbols;
   const allSymbols = mergeSymbols([...symbols, ...state.holdings.map((h) => h.symbol)], (scanner.data?.stocks ?? []).map((x) => x.symbol));
   const [symbol, setSymbol] = useState(symbols[0] ?? '');
@@ -54,17 +52,6 @@ function PracticeBody({ ctx }: { ctx: JourneyCtx }) {
     }
   };
 
-  const doSkip = async () => {
-    setError(null);
-    try {
-      const res = await skip.mutateAsync({ data: {} });
-      ctx.setState(res);
-      ctx.go(res.furthestStep >= stepIndex('roi-intro') ? 'roi-intro' : res.currentStep);
-    } catch (e) {
-      setError(errMsg(e, tr('Could not skip right now.', 'تعذّر التخطي الآن.')));
-    }
-  };
-
   if (!symbols.length) {
     return (
       <div className="jx-card jx-error" data-testid="status-practice-empty">
@@ -74,7 +61,7 @@ function PracticeBody({ ctx }: { ctx: JourneyCtx }) {
     );
   }
 
-  const busy = trade.isPending || skip.isPending || ctx.advancing;
+  const busy = trade.isPending || ctx.advancing;
   const hasTrades = state.trades.length > 0;
   const anySample = state.holdings.some((h) => h.sample) || state.trades.some((t) => t.sample) || !!stock?.sample;
   const anyStale = state.holdings.some((h) => h.stale) || !!stock?.stale;
@@ -107,7 +94,7 @@ function PracticeBody({ ctx }: { ctx: JourneyCtx }) {
           <h2 id="trade-h">{tr('Place a demo trade', 'نفّذ صفقة تجريبية')}</h2>
           <p className="jx-tip" data-testid="text-first-trade-tip">{hasTrades
             ? tr('First trade done. Watch how value and profit or loss move with the price, then continue when ready.', 'تمت أول صفقة. راقب كيف تتغير القيمة والربح أو الخسارة مع السعر، ثم تابع عندما تكون جاهزًا.')
-            : tr('Tip: start small. Buy 1 or 2 shares and watch how the value moves.', 'نصيحة: ابدأ بالقليل. اشترِ سهمًا أو سهمين وراقب تغيّر القيمة.')}</p>
+            : tr('Try a practice trade to see how it works. Trading is optional—continue whenever you’re ready.', 'جرّب صفقة تدريبية لتعرف كيف تعمل. التداول اختياري—تابع متى شئت.')}</p>
           <div className="jx-form">
             <label className="jx-label">{tr('Company', 'الشركة')}
               <select className="jx-input" value={symbol} onChange={(e) => setSymbol(e.target.value)} data-testid="select-trade-company">
@@ -172,8 +159,7 @@ function PracticeBody({ ctx }: { ctx: JourneyCtx }) {
           <RotateCcw size={16} aria-hidden="true" /> {tr('Reset wallet', 'إعادة ضبط المحفظة')}
         </button>
         <div className="jx-btn-row">
-          {!hasTrades && <button type="button" className="jx-btn jx-btn--ghost" disabled={busy} onClick={() => void doSkip()} data-testid="button-skip-practice">{tr('Skip practice', 'تخطَّ التدريب')}</button>}
-          <button type="button" className="jx-btn" disabled={busy || !hasTrades} onClick={() => void ctx.advance('practice', 'roi-intro')} data-testid="button-practice-next">
+          <button type="button" className="jx-btn" disabled={busy} onClick={() => void ctx.advance('practice', 'roi-intro')} data-testid="button-practice-next">
             {tr('Next', 'التالي')} <ArrowRight size={18} aria-hidden="true" className="jx-flip" />
           </button>
         </div>

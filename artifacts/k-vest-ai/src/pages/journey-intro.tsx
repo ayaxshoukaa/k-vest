@@ -37,7 +37,7 @@ const defs: Record<string, IntroDef> = {
     lines: [
       ['You get 1,000 KWD of pretend money. Nothing here is real.', 'لديك 1,000 دينار من المال التجريبي. لا شيء هنا حقيقي.'],
       ['Buy and sell whole shares and watch what happens.', 'اشترِ وبِع أسهمًا كاملة وراقب النتيجة.'],
-      ['Making a trade is optional. You can skip it.', 'إجراء صفقة اختياري. يمكنك تخطيه.'],
+      ['A practice trade is optional. You can continue without making one.', 'الصفقة التدريبية اختيارية. يمكنك المتابعة دون إجرائها.'],
     ],
     cta: ['Open the practice wallet', 'افتح محفظة التدريب'],
   },

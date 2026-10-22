@@ -211,14 +211,13 @@ export async function advanceJourney(
   if (fromStep === "research" && !progress.researchCompleted) {
     throw new JourneyError("Complete one AI company analysis before continuing.");
   }
-  if (fromStep === "practice" && !progress.practiceSkipped) {
+  let practiceSkipped = false;
+  if (fromStep === "practice") {
     const trade = await getMongoCollections().demoTrades.findOne(
       { userId },
       { projection: { id: 1 } },
     );
-    if (!trade) {
-      throw new JourneyError("Make one practice trade or choose Skip to continue.");
-    }
+    practiceSkipped = !trade;
   }
   if (fromStep === "roi" && !progress.roiResult) {
     throw new JourneyError("Calculate your scenario before finishing.");
@@ -226,7 +225,14 @@ export async function advanceJourney(
 
   await getMongoCollections().journeyProgress.updateOne(
     { userId },
-    { $set: { currentStep: nextStep, updatedAt: new Date() }, $max: { furthestStep: nextIndex } },
+    {
+      $set: {
+        currentStep: nextStep,
+        updatedAt: new Date(),
+        ...(fromStep === "practice" ? { practiceSkipped } : {}),
+      },
+      $max: { furthestStep: nextIndex },
+    },
   );
   return getJourneyState(userId);
 }
