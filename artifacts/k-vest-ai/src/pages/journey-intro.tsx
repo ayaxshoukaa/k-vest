@@ -1,71 +1,74 @@
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Calculator, Search, Sparkles, Wallet, type LucideIcon } from 'lucide-react';
 import type { JourneyStep } from '@workspace/api-client-react';
 import { JourneyShell, type JourneyCtx } from '@/components/journey/shell';
 
 interface IntroDef {
   from: JourneyStep;
   next: JourneyStep;
-  n: string;
+  step: 1 | 2 | 3 | 4;
+  Icon: LucideIcon;
   title: [string, string];
-  lines: [string, string][];
-  cta: [string, string];
+  description: [string, string];
 }
 
 const defs: Record<string, IntroDef> = {
   scan: {
-    from: 'scan-intro', next: 'scan', n: '01',
+    from: 'scan-intro', next: 'scan', step: 1, Icon: Search,
     title: ['Scan the market', 'استكشف السوق'],
-    lines: [
-      ['See companies listed on Boursa Kuwait in one place.', 'شاهد الشركات المدرجة في بورصة الكويت في مكان واحد.'],
-      ['Tap the star on any company that catches your eye.', 'اضغط على النجمة بجانب أي شركة تلفت انتباهك.'],
-      ['Choose at least one, or let us pick for you.', 'اختر شركة واحدة على الأقل، أو دعنا نختار لك.'],
-    ],
-    cta: ['Start scanning', 'ابدأ الاستكشاف'],
+    description: ['Browse Kuwait-listed companies and save any that catch your interest.', 'تصفّح الشركات المدرجة في الكويت واحفظ ما يلفت انتباهك.'],
   },
   research: {
-    from: 'research-intro', next: 'research', n: '02',
+    from: 'research-intro', next: 'research', step: 2, Icon: Sparkles,
     title: ['Research a company', 'ابحث عن شركة'],
-    lines: [
-      ['Ask our AI helper to explain a company in plain words.', 'اطلب من المساعد الذكي شرح الشركة بكلمات بسيطة.'],
-      ['You will see strengths, risks and an outlook.', 'ستشاهد نقاط القوة والمخاطر والتوقعات.'],
-    ],
-    cta: ['Start researching', 'ابدأ البحث'],
+    description: ['Ask the AI helper to explain a company’s strengths and risks in plain language.', 'اطلب من المساعد الذكي شرح نقاط قوة الشركة ومخاطرها بكلمات بسيطة.'],
   },
   practice: {
-    from: 'practice-intro', next: 'practice', n: '03',
+    from: 'practice-intro', next: 'practice', step: 3, Icon: Wallet,
     title: ['Practice with demo money', 'تدرّب بمال تجريبي'],
-    lines: [
-      ['You get 1,000 KWD of pretend money. Nothing here is real.', 'لديك 1,000 دينار من المال التجريبي. لا شيء هنا حقيقي.'],
-      ['Buy and sell whole shares and watch what happens.', 'اشترِ وبِع أسهمًا كاملة وراقب النتيجة.'],
-      ['A practice trade is optional. You can continue without making one.', 'الصفقة التدريبية اختيارية. يمكنك المتابعة دون إجرائها.'],
-    ],
-    cta: ['Open the practice wallet', 'افتح محفظة التدريب'],
+    description: ['Try a trade with 1,000 KWD of demo money. Trading is optional.', 'جرّب التداول باستخدام 1,000 دينار تجريبي. التداول اختياري.'],
   },
   roi: {
-    from: 'roi-intro', next: 'roi', n: '04',
+    from: 'roi-intro', next: 'roi', step: 4, Icon: Calculator,
     title: ['Understand return on investment', 'افهم العائد على الاستثمار'],
-    lines: [
-      ['Try what-if numbers: a budget, a buy price and a target.', 'جرّب أرقامًا افتراضية: ميزانية وسعر شراء وسعر مستهدف.'],
-      ['See profit, loss and yearly return, calculated for you.', 'شاهد الربح والخسارة والعائد السنوي محسوبة لك.'],
-      ['The calculator is optional. You can finish the journey without it.', 'الحاسبة اختيارية. يمكنك إنهاء الرحلة دون استخدامها.'],
-    ],
-    cta: ['Open the calculator', 'افتح الحاسبة'],
+    description: ['Explore possible returns with a budget and target price. The calculator is optional.', 'استكشف العائد المحتمل باستخدام ميزانية وسعر مستهدف. الحاسبة اختيارية.'],
   },
 };
 
 function IntroBody({ ctx, def }: { ctx: JourneyCtx; def: IntroDef }) {
-  const { tr } = ctx;
+  const { tr, isAr } = ctx;
+  const Icon = def.Icon;
+  const stepText = isAr
+    ? `الخطوة ${new Intl.NumberFormat('ar-KW').format(def.step)} من ${new Intl.NumberFormat('ar-KW').format(4)}`
+    : `Step ${def.step} of 4`;
   return (
     <section className="jx-intro" aria-labelledby="intro-title" data-testid={`section-intro-${def.next}`}>
-      <span className="jx-intro__num" aria-hidden="true">{def.n}</span>
-      <h1 id="intro-title">{tr(...def.title)}</h1>
-      <ul>
-        {def.lines.map((l, i) => <li key={i} data-testid={`text-intro-line-${i + 1}`}>{tr(...l)}</li>)}
-      </ul>
+      <div className="jx-intro__progress-group">
+        <div className="jx-intro__progress-label">
+          <span>{stepText}</span>
+          <span>{tr('Your learning journey', 'رحلتك التعليمية')}</span>
+        </div>
+        <div
+          className="jx-intro__progress-track"
+          role="progressbar"
+          aria-label={tr('Learning journey progress', 'تقدّم الرحلة التعليمية')}
+          aria-valuemin={1}
+          aria-valuemax={4}
+          aria-valuenow={def.step}
+          aria-valuetext={stepText}
+          data-testid="progress-intro-phase"
+        >
+          <span className="jx-intro__progress-fill" style={{ width: `${(def.step / 4) * 100}%` }} />
+        </div>
+      </div>
+      <div className="jx-intro__icon" aria-hidden="true"><Icon size={38} strokeWidth={1.8} /></div>
+      <div className="jx-intro__copy">
+        <h1 id="intro-title">{tr(...def.title)}</h1>
+        <p data-testid="text-intro-description">{tr(...def.description)}</p>
+      </div>
       {ctx.advanceError && <p className="jx-field-error" role="alert" data-testid="text-advance-error">{ctx.advanceError}</p>}
       <div className="jx-intro__actions">
         <button type="button" className="jx-btn" disabled={ctx.advancing} onClick={() => void ctx.advance(def.from, def.next)} data-testid={`button-intro-${def.next}`}>
-          {tr(...def.cta)} <ArrowRight size={18} aria-hidden="true" className="jx-flip" />
+          {tr('Next', 'التالي')} <ArrowRight size={18} aria-hidden="true" className="jx-flip" />
         </button>
       </div>
     </section>
