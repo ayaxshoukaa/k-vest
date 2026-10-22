@@ -39,8 +39,8 @@ Standalone Vercel API builds should resolve shared workspace packages through bu
 
 **How to apply:** Build project-reference declarations and runtime JS before the API bundle, and point the package's `types`/`import` exports at those generated files.
 
-K-Vest deployment decision: the user chose to deploy the website and API as separate Vercel projects rather than as one multi-service project.
+K-Vest deployment decision: keep the website and API in the single `k-vest` Vercel project using the repository-root multi-service configuration; the separate API project was deleted.
 
-**Why:** The user wants to keep the website deployment separate and deploy the API independently.
+**Why:** The user asked to fix the website after deleting the separate API project.
 
-**How to apply:** Configure the frontend with the deployed API origin and allow only the website's exact origin in the API. Verify guest-session cookies across the two origins because browser third-party-cookie policies can affect guest progress.
+**How to apply:** Set the Vercel project root to the repository root, keep frontend API calls same-origin at `/api`, and ensure API runtime variables are configured on the `k-vest` project.

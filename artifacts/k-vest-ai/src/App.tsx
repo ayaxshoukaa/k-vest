@@ -1,17 +1,15 @@
-import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { MutationCache, QueryCache, QueryClient, QueryClientProvider, useQueryClient } from '@tanstack/react-query';
 import { arSA } from '@clerk/localizations';
 import {
   ClerkProvider,
   SignIn,
   SignUp,
-  useAuth,
   useClerk,
 } from '@clerk/react';
 import { publishableKeyFromHost } from '@clerk/react/internal';
 import { shadcn } from '@clerk/themes';
 import { Redirect, Route, Switch, useLocation, Router as WouterRouter } from 'wouter';
-import { setAuthTokenGetter, setBaseUrl } from '@workspace/api-client-react';
 import { ErrorBoundary } from '@/components/error-boundary';
 import { AuthEntry } from '@/components/auth-entry';
 import { AuthGate } from '@/components/auth-gate';
@@ -40,8 +38,6 @@ const queryClient = new QueryClient({
   }),
 });
 const basePath = import.meta.env.BASE_URL.replace(/\/$/, '');
-const apiBaseUrl = import.meta.env.VITE_API_BASE_URL?.trim().replace(/\/+$/, '') || null;
-setBaseUrl(apiBaseUrl);
 
 const arabicClerkLocalization = {
   ...arSA,
@@ -179,22 +175,6 @@ function SignUpPage() {
   );
 }
 
-function ApiAuthBridge() {
-  const { getToken } = useAuth();
-
-  useLayoutEffect(() => {
-    if (!apiBaseUrl) {
-      setAuthTokenGetter(null);
-      return;
-    }
-
-    setAuthTokenGetter(() => getToken());
-    return () => setAuthTokenGetter(null);
-  }, [getToken]);
-
-  return null;
-}
-
 function ClerkRoutes() {
   const [, setLocation] = useLocation();
   const [language, setLanguage] = useState<Language>(readLanguage);
@@ -234,7 +214,6 @@ function ClerkRoutes() {
       routerPush={(to) => setLocation(stripBase(to))}
       routerReplace={(to) => setLocation(stripBase(to), { replace: true })}
     >
-      <ApiAuthBridge />
       <GuestAccessProvider>
       <ClerkQueryClientCacheInvalidator />
       <RoutedErrorBoundary>
