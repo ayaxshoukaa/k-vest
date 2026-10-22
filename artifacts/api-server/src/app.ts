@@ -1,9 +1,10 @@
 import express, { type Express } from "express";
+import type { IncomingMessage, ServerResponse } from "node:http";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import { clerkMiddleware } from "@clerk/express";
 import { publishableKeyFromHost } from "@clerk/shared/keys";
-import pinoHttp from "pino-http";
+import pinoHttp, { type Options as PinoHttpOptions } from "pino-http";
 import router from "./routes";
 import { logger } from "./lib/logger";
 import {
@@ -17,16 +18,18 @@ const app: Express = express();
 
 app.use(
   pinoHttp({
-    logger,
+    // The API package and pino-http can resolve separate pino type instances
+    // in Vercel's pnpm workspace install, although the logger is compatible at runtime.
+    logger: logger as unknown as PinoHttpOptions["logger"],
     serializers: {
-      req(req) {
+      req(req: IncomingMessage & { id: string | number | object }) {
         return {
           id: req.id,
           method: req.method,
           url: req.url?.split("?")[0],
         };
       },
-      res(res) {
+      res(res: ServerResponse) {
         return {
           statusCode: res.statusCode,
         };
