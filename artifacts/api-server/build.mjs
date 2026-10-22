@@ -11,6 +11,16 @@ globalThis.require = createRequire(import.meta.url);
 const artifactDir = path.dirname(fileURLToPath(import.meta.url));
 
 async function buildAll() {
+  const apiZodDir = path.resolve(artifactDir, "../../lib/api-zod");
+  await esbuild({
+    entryPoints: [path.resolve(apiZodDir, "src/index.ts")],
+    platform: "node",
+    bundle: true,
+    format: "esm",
+    outfile: path.resolve(apiZodDir, "dist/index.js"),
+    logLevel: "silent",
+  });
+
   const distDir = path.resolve(artifactDir, "dist");
   await rm(distDir, { recursive: true, force: true });
 
