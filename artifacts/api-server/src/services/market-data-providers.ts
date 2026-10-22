@@ -1,5 +1,5 @@
-import YahooFinance from "yahoo-finance2";
 import { logger } from "../lib/logger";
+import { createYahooFinanceClient } from "./yahoo-finance-client";
 
 const OANOR_BASE_URL = "https://api.oanor.com/kuwait-stock-api/v1";
 const REQUEST_TIMEOUT_MS = 12_000;
@@ -12,7 +12,7 @@ export interface YahooCompanyProfile {
   description: string | null;
 }
 
-function shortenCompanyDescription(value: string | undefined): string | null {
+function shortenCompanyDescription(value: string | null | undefined): string | null {
   const normalized = value?.replace(/\s+/g, " ").trim();
   if (!normalized) return null;
   if (normalized.length <= 360) return normalized;
@@ -200,8 +200,44 @@ export class OanorMarketDataProvider {
   }
 }
 
+interface YahooFinanceHistoryClient {
+  quoteSummary(
+    symbol: string,
+    queryOptions: { modules: ["assetProfile"] },
+    moduleOptions: {
+      validateResult: true;
+      fetchOptions: { signal: AbortSignal };
+    },
+  ): Promise<{
+    assetProfile?: {
+      sectorDisp?: string | null;
+      sector?: string | null;
+      longBusinessSummary?: string | null;
+      description?: string | null;
+    } | null;
+  }>;
+  chart(
+    symbol: string,
+    queryOptions: {
+      period1: Date;
+      period2: Date;
+      interval: "1d";
+      return: "array";
+    },
+    moduleOptions: {
+      validateResult: true;
+      fetchOptions: { signal: AbortSignal };
+    },
+  ): Promise<{
+    quotes: Array<{
+      date: Date;
+      close: number | null;
+    }>;
+  }>;
+}
+
 export class YahooHistoryProvider {
-  private readonly yahooFinance = new YahooFinance({
+  private readonly yahooFinance = createYahooFinanceClient<YahooFinanceHistoryClient>({
     suppressNotices: ["yahooSurvey"],
     queue: { concurrency: 3, interval: 250 },
   });

@@ -1,6 +1,6 @@
 import { MarketQuotesResponseRefreshStatus, type MarketQuote, type MarketQuotesResponse } from "@workspace/api-zod";
-import * as YahooFinanceModule from "yahoo-finance2";
 import { logger } from "../lib/logger";
+import { createYahooFinanceClient } from "./yahoo-finance-client";
 
 const CACHE_TTL_MS = 3 * 60 * 1000;
 const FAILURE_RETRY_MS = 30 * 1000;
@@ -42,12 +42,8 @@ interface YahooFinanceClient {
   ): Promise<ProviderQuote[]>;
 }
 
-const YahooFinanceConstructor = YahooFinanceModule.default as unknown as new (
-  options: { suppressNotices: string[] },
-) => YahooFinanceClient;
-
 class YahooFinanceQuoteProvider implements MarketQuoteProvider {
-  private readonly yahooFinance = new YahooFinanceConstructor({
+  private readonly yahooFinance = createYahooFinanceClient<YahooFinanceClient>({
     suppressNotices: ["yahooSurvey"],
   });
 

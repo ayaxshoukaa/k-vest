@@ -1,5 +1,5 @@
-import YahooFinance from "yahoo-finance2";
 import { GetMarketNewsResponse } from "@workspace/api-zod";
+import { createYahooFinanceClient } from "./yahoo-finance-client";
 
 const CACHE_TTL_MS = 5 * 60 * 1000;
 const MAX_STALE_MS = 24 * 60 * 60 * 1000;
@@ -13,20 +13,36 @@ type CachedNews = {
   cachedAt: number;
 };
 
-const yahooFinance = new YahooFinance({
+interface YahooNewsItem {
+  uuid?: unknown;
+  title?: unknown;
+  publisher?: unknown;
+  link?: unknown;
+  providerPublishTime?: unknown;
+}
+
+interface YahooFinanceNewsClient {
+  search(
+    query: string,
+    searchOptions: {
+      lang: string;
+      region: string;
+      quotesCount: number;
+      newsCount: number;
+      enableFuzzyQuery: boolean;
+    },
+    moduleOptions: { fetchOptions: { signal: AbortSignal } },
+  ): Promise<{ news: YahooNewsItem[] }>;
+}
+
+const yahooFinance = createYahooFinanceClient<YahooFinanceNewsClient>({
   suppressNotices: ["yahooSurvey"],
   queue: { concurrency: 2, interval: 300 },
 });
 
 let cachedNews: CachedNews | null = null;
 
-function toArticle(item: {
-  uuid?: unknown;
-  title?: unknown;
-  publisher?: unknown;
-  link?: unknown;
-  providerPublishTime?: unknown;
-}): MarketNewsArticle | null {
+function toArticle(item: YahooNewsItem): MarketNewsArticle | null {
   if (
     typeof item.title !== "string"
     || typeof item.publisher !== "string"
