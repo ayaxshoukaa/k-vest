@@ -1,11 +1,16 @@
-import OpenAI from "openai";
+import * as OpenAISdk from "openai";
+import type { ClientOptions, OpenAI as OpenAIClient } from "openai";
 
 export const OPENROUTER_MODEL = "openai/gpt-4o-mini";
 
-let cachedKey: string | undefined;
-let cachedClient: OpenAI | undefined;
+const OpenAIConstructor = OpenAISdk.OpenAI as unknown as new (
+  options: ClientOptions,
+) => OpenAIClient;
 
-export function getOpenRouterClient(): OpenAI {
+let cachedKey: string | undefined;
+let cachedClient: OpenAIClient | undefined;
+
+export function getOpenRouterClient(): OpenAIClient {
   const apiKey = process.env.OPENROUTER_API_KEY?.trim();
   if (!apiKey) {
     throw new Error("OPENROUTER_API_KEY must be set to enable AI research.");
@@ -13,7 +18,7 @@ export function getOpenRouterClient(): OpenAI {
 
   if (!cachedClient || cachedKey !== apiKey) {
     cachedKey = apiKey;
-    cachedClient = new OpenAI({
+    cachedClient = new OpenAIConstructor({
       apiKey,
       baseURL: "https://openrouter.ai/api/v1",
       timeout: 30_000,
