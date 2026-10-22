@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { ArrowRight, RefreshCw, Send } from 'lucide-react';
+import ReactMarkdown from 'react-markdown';
 import {
   getGetJourneyStateQueryKey,
   useAnalyzeJourneyCompany,
@@ -83,7 +84,11 @@ function ResearchBody({ ctx }: { ctx: JourneyCtx }) {
         <div className="jx-chat" aria-live="polite" data-testid="list-chat">
           {msgs.map((m, i) => (
             <div key={i} className={`jx-bubble jx-bubble--${m.role}`} data-testid={`bubble-${m.role}-${i}`}>
-              {m.text}
+              {m.role === 'ai' ? (
+                <div className="jx-markdown" dir="auto" lang={isAr ? 'ar' : 'en'} data-testid={`markdown-answer-${i}`}>
+                  <ReactMarkdown>{m.text}</ReactMarkdown>
+                </div>
+              ) : m.text}
               {m.role === 'ai' && (m.sample || m.stale || m.warning) && (
                 <small>{m.sample ? tr('Based on sample data, not live prices. ', 'مبني على بيانات تجريبية وليست أسعارًا حية. ') : m.stale ? tr('Based on delayed prices. ', 'مبني على أسعار متأخرة. ') : ''}{friendlyWarning(m.warning, isAr ? 'ar' : 'en')}</small>
               )}

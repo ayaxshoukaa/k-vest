@@ -114,8 +114,20 @@
 .jx-chat { display: grid; gap: 12px; margin: 14px 0; }
 .jx-bubble { max-width: 92%; padding: 12px 16px; border-radius: 16px; white-space: pre-wrap; overflow-wrap: anywhere; animation: jx-in .35s both; }
 .jx-bubble--user { justify-self: end; background: var(--orange); color: #1b1110; font-weight: 700; border-end-end-radius: 4px; }
-.jx-bubble--ai { justify-self: start; background: var(--tint); border: 1px solid var(--line); border-end-start-radius: 4px; }
+.jx-bubble--ai { justify-self: start; min-width: 0; background: var(--tint); border: 1px solid var(--line); border-end-start-radius: 4px; white-space: normal; }
 .jx-bubble--ai small { display: block; margin-top: 8px; color: var(--soft); }
+.jx-markdown { min-width: 0; max-width: 100%; overflow-wrap: anywhere; text-align: start; line-height: 1.7; }
+.jx-markdown > :first-child { margin-block-start: 0; }
+.jx-markdown > :last-child { margin-block-end: 0; }
+.jx-markdown p { margin-block: 0 10px; }
+.jx-markdown :is(ul, ol) { margin-block: 0 10px; padding-inline-start: 1.4em; }
+.jx-markdown li + li { margin-block-start: 4px; }
+.jx-markdown :is(h1, h2, h3, h4, h5, h6) { margin-block: 0 8px; color: inherit; font: inherit; font-weight: 700; }
+.jx-markdown strong { color: #fff; font-weight: 700; }
+.jx-markdown a { color: var(--blue); text-decoration: underline; text-underline-offset: 2px; overflow-wrap: anywhere; }
+.jx-markdown blockquote { margin: 8px 0; border-inline-start: 3px solid var(--blue); padding-inline-start: 12px; color: var(--soft); }
+.jx-markdown pre { max-width: 100%; overflow-x: auto; white-space: pre; }
+.jx-markdown code { overflow-wrap: anywhere; }
 .jx-typing { display: inline-flex; gap: 5px; padding: 6px 2px; }
 .jx-typing i { width: 8px; height: 8px; border-radius: 50%; background: var(--blue); animation: jx-bounce 1.1s infinite; }
 .jx-typing i:nth-child(2) { animation-delay: .15s; } .jx-typing i:nth-child(3) { animation-delay: .3s; }
